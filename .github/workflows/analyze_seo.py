@@ -67,17 +67,35 @@ def main():
         # SEO анализ через advisor
         print(f'\n🔬 Запускаю SEO анализ...')
 
+        # Извлекаем ключевые слова из title и content
+        target_keywords = []
+        if title:
+            # Простая токенизация title
+            target_keywords.extend([w.lower() for w in title.split() if len(w) > 3])
+
+        # Если нет ключевых слов, используем общие для юридического AI
+        if not target_keywords:
+            target_keywords = ['legal', 'ai', 'юридический', 'искусственный интеллект', 'автоматизация']
+
+        print(f'  Целевые ключевые слова: {", ".join(target_keywords[:5])}...')
+
         # Формируем markdown-контент для advisor
         markdown_content = f"# {title}\n\n{content_text}"
-        seo_report = advisor.analyze_content(markdown_content)
+        seo_report = advisor.analyze_content(markdown_content, target_keywords)
 
-        print(f'  SEO Score: {seo_report.get("score", 0)}/100')
+        # seo_report это SEOAnalysisReport dataclass, нужно извлечь данные
+        predicted_position = seo_report.predicted_position
+        overall_score = max(0, min(100, int((1 - (predicted_position / 100)) * 100)))  # Конвертируем позицию в score
+
+        print(f'  Predicted Position: {predicted_position:.1f}')
+        print(f'  SEO Score: {overall_score}/100')
 
         # Сборка результатов
         results = {
             'timestamp': datetime.now().isoformat(),
             'site_url': SITE_URL,
-            'overall_score': seo_report.get('score', 0),
+            'overall_score': overall_score,
+            'predicted_position': predicted_position,
             'page_metadata': {
                 'title': title,
                 'title_length': len(title),
@@ -90,7 +108,14 @@ def main():
                 'internal_links': len(meta_analysis.get('links', {}).get('internal', [])),
                 'external_links': len(meta_analysis.get('links', {}).get('external', []))
             },
-            'seo_analysis': seo_report,
+            'seo_analysis': {
+                'predicted_position': predicted_position,
+                'content_metrics': seo_report.content_metrics,
+                'keyword_analysis': seo_report.keyword_analysis,
+                'feature_scores': seo_report.feature_scores,
+                'recommendations': seo_report.recommendations if hasattr(seo_report, 'recommendations') else {},
+                'priorities': seo_report.priorities if hasattr(seo_report, 'priorities') else []
+            },
             'raw_page_data': {
                 'status_code': status_code,
                 'headings': content_analysis.get('headings', {})
@@ -149,11 +174,19 @@ def create_markdown_summary(results):
 
         # Рекомендации
         seo_analysis = results.get('seo_analysis', {})
-        if isinstance(seo_analysis, dict) and 'recommendations' in seo_analysis:
-            recommendations = seo_analysis['recommendations']
-            if recommendations:
+        if isinstance(seo_analysis, dict):
+            recommendations_dict = seo_analysis.get('recommendations', {})
+
+            # recommendations может быть Dict[str, List[str]] по категориям
+            all_recommendations = []
+            if isinstance(recommendations_dict, dict):
+                for category, recs in recommendations_dict.items():
+                    if isinstance(recs, list):
+                        all_recommendations.extend(recs)
+
+            if all_recommendations:
                 f.write('## 🎯 Рекомендации по улучшению\n\n')
-                for i, rec in enumerate(recommendations[:10], 1):
+                for i, rec in enumerate(all_recommendations[:10], 1):
                     f.write(f'{i}. {rec}\n')
                 f.write('\n')
 
