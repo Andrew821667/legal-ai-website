@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""SEO Analysis Script for GitHub Actions"""
+"""SEO Analysis Script for GitHub Actions - Enhanced with debug output"""
 
 import json
 import sys
@@ -9,68 +9,167 @@ sys.path.insert(0, 'seo-tools')
 
 SITE_URL = 'https://legal-ai-website-iota.vercel.app'
 
-try:
-    from seo_ai_models.models.seo_advisor.advisor import SEOAdvisor
-    from seo_ai_models.parsers.parsing_pipeline import ParsingPipeline
+def main():
+    try:
+        print('🔍 Импортирую модули...')
+        from seo_ai_models.parsers.parsing_pipeline import ParsingPipeline
+        from seo_ai_models.models.seo_advisor.advisor import SEOAdvisor
 
-    print('✅ Modules imported successfully')
+        print('✅ Модули импортированы успешно')
 
-    pipeline = ParsingPipeline()
-    advisor = SEOAdvisor()
+        # Инициализация
+        pipeline = ParsingPipeline()
+        advisor = SEOAdvisor()
 
-    print(f'Analyzing: {SITE_URL}')
+        print(f'🌐 Анализирую сайт: {SITE_URL}')
 
-    page_data = pipeline.analyze_url(SITE_URL)
+        # Парсинг страницы
+        page_data = pipeline.analyze_url(SITE_URL)
 
-    if page_data and 'content' in page_data:
-        seo_report = advisor.analyze_content(page_data['content'])
-    else:
-        seo_report = {'score': 0, 'error': 'No content'}
+        print(f'\n📊 Результат парсинга:')
+        print(f'  Success: {page_data.get("success")}')
+        print(f'  Status code: {page_data.get("status_code")}')
 
-    results = {
-        'timestamp': datetime.now().isoformat(),
-        'site_url': SITE_URL,
-        'page_data': page_data,
-        'seo_analysis': seo_report,
-        'overall_score': seo_report.get('score', 0)
-    }
+        if not page_data.get('success'):
+            print(f'  ❌ Ошибка: {page_data.get("error")}')
+            create_error_report(page_data)
+            sys.exit(1)
 
-    report_file = f'seo-reports/report-{datetime.now().strftime("%Y-%m-%d")}.json'
-    with open(report_file, 'w', encoding='utf-8') as f:
-        json.dump(results, f, ensure_ascii=False, indent=2)
+        print(f'  ✅ Страница успешно загружена')
 
-    with open('seo-reports/SUMMARY.md', 'w') as f:
-        f.write(f'# 🔍 SEO Analysis Report\n\n')
+        # Извлечение контента для анализа
+        content_analysis = page_data.get('content_analysis', {})
+        meta_analysis = page_data.get('meta_analysis', {})
+
+        # Формируем контент для SEO анализа
+        content_text = content_analysis.get('content', {}).get('all_text', '')
+        title = meta_analysis.get('meta_tags', {}).get('title', '')
+        description = meta_analysis.get('meta_tags', {}).get('description', '')
+
+        print(f'\n📝 Найденный контент:')
+        print(f'  Title: {title[:80]}...' if len(title) > 80 else f'  Title: {title}')
+        print(f'  Description: {description[:80]}...' if len(description) > 80 else f'  Description: {description}')
+        print(f'  Content length: {len(content_text)} символов')
+        print(f'  Word count: {len(content_text.split())} слов')
+
+        # SEO анализ через advisor
+        print(f'\n🔬 Запускаю SEO анализ...')
+
+        # Формируем markdown-контент для advisor
+        markdown_content = f"# {title}\n\n{content_text}"
+        seo_report = advisor.analyze_content(markdown_content)
+
+        print(f'  SEO Score: {seo_report.get("score", 0)}/100')
+
+        # Сборка результатов
+        results = {
+            'timestamp': datetime.now().isoformat(),
+            'site_url': SITE_URL,
+            'overall_score': seo_report.get('score', 0),
+            'page_metadata': {
+                'title': title,
+                'title_length': len(title),
+                'description': description,
+                'description_length': len(description),
+                'word_count': len(content_text.split()),
+                'content_length': len(content_text),
+                'h1_count': len(content_analysis.get('headings', {}).get('h1', [])),
+                'h2_count': len(content_analysis.get('headings', {}).get('h2', [])),
+                'internal_links': len(meta_analysis.get('links', {}).get('internal', [])),
+                'external_links': len(meta_analysis.get('links', {}).get('external', []))
+            },
+            'seo_analysis': seo_report,
+            'raw_page_data': {
+                'success': page_data.get('success'),
+                'status_code': page_data.get('status_code'),
+                'headings': content_analysis.get('headings', {})
+            }
+        }
+
+        # Сохранение JSON отчета
+        report_file = f'seo-reports/report-{datetime.now().strftime("%Y-%m-%d")}.json'
+        with open(report_file, 'w', encoding='utf-8') as f:
+            json.dump(results, f, ensure_ascii=False, indent=2)
+
+        print(f'\n💾 JSON отчет сохранен: {report_file}')
+
+        # Создание Markdown summary
+        create_markdown_summary(results)
+
+        print(f'\n✅ Анализ завершен! Общий score: {results["overall_score"]}/100')
+
+    except Exception as e:
+        print(f'\n❌ Критическая ошибка: {e}')
+        import traceback
+        traceback.print_exc()
+
+        # Создаем error report
+        create_error_report({'error': str(e), 'traceback': traceback.format_exc()})
+        sys.exit(1)
+
+
+def create_markdown_summary(results):
+    """Создание Markdown отчета"""
+    with open('seo-reports/SUMMARY.md', 'w', encoding='utf-8') as f:
+        f.write('# 🔍 SEO Analysis Report\n\n')
         f.write(f'**Date:** {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}\n\n')
-        f.write(f'**Site:** {SITE_URL}\n\n')
+        f.write(f'**Site:** {results["site_url"]}\n\n')
         f.write(f'**Overall Score:** {results["overall_score"]}/100\n\n')
 
-        if results['overall_score'] >= 80:
+        # Статус
+        score = results["overall_score"]
+        if score >= 80:
             f.write('**Status:** ✅ Отлично\n\n')
-        elif results['overall_score'] >= 60:
+        elif score >= 60:
             f.write('**Status:** ⚠️ Хорошо, но есть улучшения\n\n')
         else:
             f.write('**Status:** ❌ Требуется оптимизация\n\n')
 
-        if page_data:
-            f.write('## 📊 Метаданные\n\n')
-            if 'title' in page_data:
-                f.write(f'- Title: {page_data["title"]}\n')
-            if 'meta_description' in page_data:
-                f.write(f'- Description: {page_data["meta_description"]}\n')
-            f.write('\n')
+        # Метаданные страницы
+        meta = results.get('page_metadata', {})
+        f.write('## 📊 Метаданные страницы\n\n')
+        f.write(f'- **Title:** {meta.get("title", "N/A")} ({meta.get("title_length", 0)} символов)\n')
+        f.write(f'- **Meta Description:** {"✅ Есть" if meta.get("description") else "❌ Нет"} ({meta.get("description_length", 0)} символов)\n')
+        f.write(f'- **H1:** {meta.get("h1_count", 0)} шт\n')
+        f.write(f'- **H2:** {meta.get("h2_count", 0)} шт\n')
+        f.write(f'- **Слов:** {meta.get("word_count", 0)}\n')
+        f.write(f'- **Внутренних ссылок:** {meta.get("internal_links", 0)}\n')
+        f.write(f'- **Внешних ссылок:** {meta.get("external_links", 0)}\n\n')
 
-        if isinstance(seo_report, dict) and 'recommendations' in seo_report:
-            f.write('## 🎯 Рекомендации\n\n')
-            for i, rec in enumerate(seo_report['recommendations'][:10], 1):
-                f.write(f'{i}. {rec}\n')
+        # Рекомендации
+        seo_analysis = results.get('seo_analysis', {})
+        if isinstance(seo_analysis, dict) and 'recommendations' in seo_analysis:
+            recommendations = seo_analysis['recommendations']
+            if recommendations:
+                f.write('## 🎯 Рекомендации по улучшению\n\n')
+                for i, rec in enumerate(recommendations[:10], 1):
+                    f.write(f'{i}. {rec}\n')
+                f.write('\n')
 
-        f.write('\n---\n\n*Powered by SEO AI Models*\n')
+        f.write('\n---\n\n')
+        f.write('*Powered by SEO AI Models*\n')
 
-    print(f'✅ Analysis complete! Score: {results["overall_score"]}/100')
+    print(f'📄 Markdown summary создан: seo-reports/SUMMARY.md')
 
-except Exception as e:
-    print(f'❌ Error: {e}')
-    import traceback
-    traceback.print_exc()
-    sys.exit(1)
+
+def create_error_report(error_data):
+    """Создание error report при ошибке"""
+    try:
+        with open('seo-reports/ERROR.md', 'w', encoding='utf-8') as f:
+            f.write('# ❌ SEO Analysis Error\n\n')
+            f.write(f'**Date:** {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}\n\n')
+            f.write(f'**Site:** {SITE_URL}\n\n')
+            f.write('## Error Details\n\n')
+            f.write(f'```\n{error_data.get("error", "Unknown error")}\n```\n\n')
+
+            if 'traceback' in error_data:
+                f.write('## Traceback\n\n')
+                f.write(f'```\n{error_data["traceback"]}\n```\n')
+
+        print('📝 Error report создан: seo-reports/ERROR.md')
+    except Exception as e:
+        print(f'⚠️ Не удалось создать error report: {e}')
+
+
+if __name__ == "__main__":
+    main()
