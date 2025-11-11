@@ -40,13 +40,13 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           mkdir -p seo-reports
-          cd seo-tools
-          python -c "
+
+          cat > analyze.py << 'ENDPYTHON'
 import json
 import sys
 from datetime import datetime
 
-sys.path.insert(0, '.')
+sys.path.insert(0, 'seo-tools')
 
 SITE_URL = 'https://legal-ai-website-iota.vercel.app'
 
@@ -54,7 +54,7 @@ try:
     from seo_ai_models.models.seo_advisor.advisor import SEOAdvisor
     from seo_ai_models.parsers.parsing_pipeline import ParsingPipeline
 
-    print('Modules imported successfully')
+    print('✅ Modules imported successfully')
 
     pipeline = ParsingPipeline()
     advisor = SEOAdvisor()
@@ -66,7 +66,7 @@ try:
     if page_data and 'content' in page_data:
         seo_report = advisor.analyze_content(page_data['content'])
     else:
-        seo_report = {}
+        seo_report = {'score': 0, 'error': 'No content'}
 
     results = {
         'timestamp': datetime.now().isoformat(),
@@ -76,23 +76,48 @@ try:
         'overall_score': seo_report.get('score', 0)
     }
 
-    with open('../seo-reports/report.json', 'w', encoding='utf-8') as f:
+    report_file = f'seo-reports/report-{datetime.now().strftime("%Y-%m-%d")}.json'
+    with open(report_file, 'w', encoding='utf-8') as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
 
-    with open('../seo-reports/SUMMARY.md', 'w') as f:
-        f.write(f'# SEO Analysis Report\\n\\n')
-        f.write(f'Date: {datetime.now().strftime(\"%Y-%m-%d %H:%M:%S\")}\\n\\n')
-        f.write(f'Site: {SITE_URL}\\n\\n')
-        f.write(f'Score: {results[\"overall_score\"]}/100\\n')
+    with open('seo-reports/SUMMARY.md', 'w') as f:
+        f.write(f'# 🔍 SEO Analysis Report\n\n')
+        f.write(f'**Date:** {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}\n\n')
+        f.write(f'**Site:** {SITE_URL}\n\n')
+        f.write(f'**Overall Score:** {results["overall_score"]}/100\n\n')
 
-    print('Analysis complete!')
+        if results['overall_score'] >= 80:
+            f.write('**Status:** ✅ Отлично\n\n')
+        elif results['overall_score'] >= 60:
+            f.write('**Status:** ⚠️ Хорошо, но есть улучшения\n\n')
+        else:
+            f.write('**Status:** ❌ Требуется оптимизация\n\n')
+
+        if page_data:
+            f.write('## 📊 Метаданные\n\n')
+            if 'title' in page_data:
+                f.write(f'- Title: {page_data["title"]}\n')
+            if 'meta_description' in page_data:
+                f.write(f'- Description: {page_data["meta_description"]}\n')
+            f.write('\n')
+
+        if isinstance(seo_report, dict) and 'recommendations' in seo_report:
+            f.write('## 🎯 Рекомендации\n\n')
+            for i, rec in enumerate(seo_report['recommendations'][:10], 1):
+                f.write(f'{i}. {rec}\n')
+
+        f.write('\n---\n\n*Powered by SEO AI Models*\n')
+
+    print(f'✅ Analysis complete! Score: {results["overall_score"]}/100')
 
 except Exception as e:
-    print(f'Error: {e}')
+    print(f'❌ Error: {e}')
     import traceback
     traceback.print_exc()
     sys.exit(1)
-"
+ENDPYTHON
+
+          python analyze.py
 
       - name: Upload report
         uses: actions/upload-artifact@v4
@@ -102,4 +127,22 @@ except Exception as e:
           retention-days: 90
 
       - name: Display Summary
-        run: cat seo-reports/SUMMARY.md
+        run: |
+          echo "📊 SEO Analysis Summary:"
+          cat seo-reports/SUMMARY.md
+
+      - name: Create Issue
+        if: github.event_name == 'schedule'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const summary = fs.readFileSync('seo-reports/SUMMARY.md', 'utf8');
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `📊 SEO Report ${new Date().toLocaleDateString('ru-RU')}`,
+              body: summary,
+              labels: ['seo', 'automated']
+            });
