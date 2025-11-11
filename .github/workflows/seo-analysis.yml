@@ -31,10 +31,9 @@ jobs:
           python -m playwright install chromium
 
       - name: Run SEO analysis
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           mkdir -p seo-reports
+          pip install requests
           python .github/workflows/analyze_seo.py
 
       - name: Upload report
@@ -49,17 +48,54 @@ jobs:
           echo "📊 SEO Analysis Summary:"
           cat seo-reports/SUMMARY.md
 
-      - name: Create Issue
+      - name: Create Summary Issue
         if: github.event_name == 'schedule'
         uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs');
             const summary = fs.readFileSync('seo-reports/SUMMARY.md', 'utf8');
+
+            // Читаем JSON отчет для детальных данных
+            const reportFiles = fs.readdirSync('seo-reports').filter(f => f.endsWith('.json'));
+            const reportData = JSON.parse(fs.readFileSync(`seo-reports/${reportFiles[0]}`, 'utf8'));
+
+            // Создаем основной issue с summary
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `📊 SEO Report ${new Date().toLocaleDateString('ru-RU')}`,
-              body: summary,
-              labels: ['seo', 'automated']
+              title: `📊 SEO Report ${new Date().toISOString().split('T')[0]} - Score: ${reportData.overall_score}/100`,
+              body: `${summary}\n\n---\n\n**Predicted Position:** ${reportData.predicted_position}\n**Readability:** ${reportData.seo_analysis.content_metrics.readability * 100}/100\n**E-E-A-T Score:** ${(reportData.seo_analysis.content_metrics.overall_eeat_score * 100).toFixed(0)}/100\n\n[Download full report](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})`,
+              labels: ['seo', 'report', 'automated']
             });
+
+      - name: Create Priority Issues
+        if: github.event_name == 'schedule'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const reportFiles = fs.readdirSync('seo-reports').filter(f => f.endsWith('.json'));
+            const reportData = JSON.parse(fs.readFileSync(`seo-reports/${reportFiles[0]}`, 'utf8'));
+
+            // Берем топ-5 приоритетных задач
+            const topTasks = reportData.seo_analysis.priorities.slice(0, 5);
+
+            for (const task of topTasks) {
+              let label = 'seo-medium';
+              if (task.priority_score >= 0.7) {
+                label = 'seo-critical';
+              } else if (task.priority_score >= 0.5) {
+                label = 'seo-high';
+              }
+
+              const body = `**Priority Score:** ${task.priority_score.toFixed(2)}\n**Impact:** ${task.impact.toFixed(2)}\n**Effort:** ${task.effort.toFixed(2)}\n\n**Feature:** ${task.feature}\n\n---\n\n*Автоматически создано из SEO анализа ${new Date().toISOString().split('T')[0]}*`;
+
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: `[SEO] ${task.task}`,
+                body: body,
+                labels: ['seo', 'improvement', label, 'automated']
+              });
+            }
