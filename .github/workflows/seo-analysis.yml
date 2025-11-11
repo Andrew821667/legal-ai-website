@@ -61,7 +61,7 @@ jobs:
           from seo_analyzer import SEOAdvisor, ContentAnalyzer, EEATAnalyzer
 
           # URL сайта для анализа
-          SITE_URL = "https://legal-ai-pro.vercel.app"  # TODO: заменить на реальный URL
+          SITE_URL = "https://legal-ai-website-iota.vercel.app"
 
           # Страницы для анализа
           pages = [
