@@ -42,20 +42,34 @@ export default function AboutTeam() {
     { icon: "🏢", number: "20+", label: "компаний-клиентов" },
   ];
 
-  const technologies = [
-    "Python",
-    "TypeScript",
-    "OpenAI GPT-4",
-    "Claude",
-    "LangChain",
-    "Pinecone",
-    "PostgreSQL",
-    "Next.js",
-    "FastAPI",
-    "Docker",
-    "1C Integration",
-    "REST API",
-  ];
+  const technologies = {
+    ai: [
+      "OpenAI GPT-4",
+      "Claude",
+      "YandexGPT",
+      "GigaChat (Сбер)",
+      "LangChain",
+    ],
+    backend: [
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "Pinecone",
+      "Docker",
+    ],
+    frontend: [
+      "TypeScript",
+      "Next.js",
+      "React",
+      "TailwindCSS",
+    ],
+    integrations: [
+      "1C Integration",
+      "REST API",
+      "Telegram API",
+      "Email",
+    ],
+  };
 
   return (
     <section className="py-20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700">
@@ -131,15 +145,93 @@ export default function AboutTeam() {
           <h3 className="text-2xl font-bold text-white mb-6 text-center">
             Технологический стек
           </h3>
-          <div className="flex flex-wrap justify-center gap-3">
-            {technologies.map((tech, index) => (
-              <span
-                key={index}
-                className="bg-slate-800 text-slate-300 px-4 py-2 rounded-lg text-sm font-medium border border-slate-700 hover:border-amber-500 transition-colors"
-              >
-                {tech}
-              </span>
-            ))}
+
+          {/* Russian AI highlight */}
+          <div className="bg-green-500/20 border border-green-500/50 rounded-xl p-4 mb-6 text-center">
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <span className="text-2xl">🇷🇺</span>
+              <h4 className="text-lg font-bold text-green-400">
+                Работаем с российскими AI-решениями
+              </h4>
+            </div>
+            <p className="text-slate-300 text-sm">
+              YandexGPT, GigaChat — для соответствия требованиям импортозамещения
+            </p>
+          </div>
+
+          {/* Tech categories */}
+          <div className="space-y-6">
+            {/* AI Models */}
+            <div>
+              <h4 className="text-sm font-semibold text-slate-400 mb-3 text-center">
+                AI-модели
+              </h4>
+              <div className="flex flex-wrap justify-center gap-3">
+                {technologies.ai.map((tech, index) => (
+                  <span
+                    key={index}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium border transition-colors ${
+                      tech.includes("Yandex") || tech.includes("GigaChat")
+                        ? "bg-green-800 text-green-100 border-green-600 hover:border-green-400"
+                        : "bg-slate-800 text-slate-300 border-slate-700 hover:border-amber-500"
+                    }`}
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Backend */}
+            <div>
+              <h4 className="text-sm font-semibold text-slate-400 mb-3 text-center">
+                Backend
+              </h4>
+              <div className="flex flex-wrap justify-center gap-3">
+                {technologies.backend.map((tech, index) => (
+                  <span
+                    key={index}
+                    className="bg-slate-800 text-slate-300 px-4 py-2 rounded-lg text-sm font-medium border border-slate-700 hover:border-amber-500 transition-colors"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Frontend */}
+            <div>
+              <h4 className="text-sm font-semibold text-slate-400 mb-3 text-center">
+                Frontend
+              </h4>
+              <div className="flex flex-wrap justify-center gap-3">
+                {technologies.frontend.map((tech, index) => (
+                  <span
+                    key={index}
+                    className="bg-slate-800 text-slate-300 px-4 py-2 rounded-lg text-sm font-medium border border-slate-700 hover:border-amber-500 transition-colors"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Integrations */}
+            <div>
+              <h4 className="text-sm font-semibold text-slate-400 mb-3 text-center">
+                Интеграции
+              </h4>
+              <div className="flex flex-wrap justify-center gap-3">
+                {technologies.integrations.map((tech, index) => (
+                  <span
+                    key={index}
+                    className="bg-slate-800 text-slate-300 px-4 py-2 rounded-lg text-sm font-medium border border-slate-700 hover:border-amber-500 transition-colors"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 

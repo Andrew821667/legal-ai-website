@@ -11,6 +11,11 @@ export default function Features() {
       description: "Не консультируем — разрабатываем и внедряем AI-системы под ключ."
     },
     {
+      icon: "🇷🇺",
+      title: "Российские AI",
+      description: "Работаем с YandexGPT и GigaChat. Соответствие требованиям импортозамещения."
+    },
+    {
       icon: "📊",
       title: "80%+ экономия",
       description: "Реальное сокращение времени на рутинные задачи юротдела."
@@ -36,7 +41,7 @@ export default function Features() {
         </div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {features.map((feature, index) => (
             <div
               key={index}
