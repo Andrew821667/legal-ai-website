@@ -155,9 +155,14 @@ export default function Services() {
               </div>
 
               {/* CTA Button */}
-              <button className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 px-4 rounded-lg transition-all">
+              <a
+                href="https://t.me/legal_ai_helper_new_bot"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full text-center bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 px-4 rounded-lg transition-all"
+              >
                 Подробнее →
-              </button>
+              </a>
             </div>
           ))}
         </div>
