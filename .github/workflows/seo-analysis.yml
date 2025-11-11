@@ -1,0 +1,213 @@
+name: Automatic SEO Analysis
+
+on:
+  # Запуск по расписанию (каждое воскресенье в 03:00 UTC)
+  schedule:
+    - cron: '0 3 * * 0'
+
+  # Возможность запустить вручную
+  workflow_dispatch:
+
+  # Запуск после деплоя в production
+  push:
+    branches:
+      - main
+    paths:
+      - 'app/**'
+      - 'components/**'
+      - 'public/**'
+
+jobs:
+  seo-analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout website repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Checkout SEO AI Models
+        uses: actions/checkout@v4
+        with:
+          repository: Andrew821667/seo-ai-models
+          path: seo-tools
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          cd seo-tools
+          pip install -r requirements.txt
+          playwright install chromium
+
+      - name: Run SEO analysis
+        env:
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          cd seo-tools
+
+          # Создаём скрипт для анализа сайта
+          cat > analyze_site.py << 'EOF'
+          import os
+          import json
+          from datetime import datetime
+          from seo_analyzer import SEOAdvisor, ContentAnalyzer, EEATAnalyzer
+
+          # URL сайта для анализа
+          SITE_URL = "https://legal-ai-pro.vercel.app"  # TODO: заменить на реальный URL
+
+          # Страницы для анализа
+          pages = [
+              f"{SITE_URL}/",
+              f"{SITE_URL}/#features",
+              f"{SITE_URL}/#services",
+              f"{SITE_URL}/#cases",
+              f"{SITE_URL}/#about",
+              f"{SITE_URL}/#calculator",
+          ]
+
+          results = {
+              "timestamp": datetime.now().isoformat(),
+              "site_url": SITE_URL,
+              "pages_analyzed": [],
+              "overall_score": 0,
+              "recommendations": []
+          }
+
+          advisor = SEOAdvisor()
+          content_analyzer = ContentAnalyzer()
+          eeat_analyzer = EEATAnalyzer()
+
+          total_score = 0
+
+          for page_url in pages:
+              print(f"Analyzing: {page_url}")
+
+              try:
+                  # SEO анализ
+                  seo_result = advisor.analyze(page_url)
+
+                  # Контент анализ
+                  content_result = content_analyzer.analyze(page_url)
+
+                  # E-E-A-T анализ
+                  eeat_result = eeat_analyzer.analyze(page_url)
+
+                  page_score = (
+                      seo_result.get('score', 0) +
+                      content_result.get('score', 0) +
+                      eeat_result.get('score', 0)
+                  ) / 3
+
+                  total_score += page_score
+
+                  page_data = {
+                      "url": page_url,
+                      "score": round(page_score, 2),
+                      "seo": seo_result,
+                      "content": content_result,
+                      "eeat": eeat_result
+                  }
+
+                  results["pages_analyzed"].append(page_data)
+
+                  # Собираем рекомендации
+                  if seo_result.get('recommendations'):
+                      results["recommendations"].extend(seo_result['recommendations'])
+
+              except Exception as e:
+                  print(f"Error analyzing {page_url}: {str(e)}")
+
+          # Общий score
+          results["overall_score"] = round(total_score / len(pages), 2) if pages else 0
+
+          # Сохраняем результаты
+          os.makedirs('../seo-reports', exist_ok=True)
+          report_file = f'../seo-reports/report-{datetime.now().strftime("%Y-%m-%d")}.json'
+
+          with open(report_file, 'w', encoding='utf-8') as f:
+              json.dump(results, f, ensure_ascii=False, indent=2)
+
+          print(f"\n✅ Analysis complete!")
+          print(f"Overall Score: {results['overall_score']}/100")
+          print(f"Report saved to: {report_file}")
+
+          # Создаём markdown summary
+          with open('../seo-reports/SUMMARY.md', 'w', encoding='utf-8') as f:
+              f.write(f"# SEO Analysis Report\n\n")
+              f.write(f"**Date:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+              f.write(f"**Overall Score:** {results['overall_score']}/100\n\n")
+
+              f.write(f"## Pages Analyzed ({len(results['pages_analyzed'])})\n\n")
+              for page in results['pages_analyzed']:
+                  f.write(f"- [{page['url']}]({page['url']}) - Score: {page['score']}/100\n")
+
+              f.write(f"\n## Top Recommendations\n\n")
+              unique_recommendations = list(set(results['recommendations'][:10]))
+              for i, rec in enumerate(unique_recommendations, 1):
+                  f.write(f"{i}. {rec}\n")
+          EOF
+
+          # Запускаем анализ
+          python analyze_site.py
+
+      - name: Upload SEO report
+        uses: actions/upload-artifact@v4
+        with:
+          name: seo-analysis-report
+          path: seo-reports/
+          retention-days: 90
+
+      - name: Create Issue with recommendations
+        if: github.event_name == 'schedule'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const summary = fs.readFileSync('seo-reports/SUMMARY.md', 'utf8');
+            const reportData = JSON.parse(fs.readFileSync('seo-reports/report-' + new Date().toISOString().split('T')[0] + '.json', 'utf8'));
+
+            const issueBody = `${summary}
+
+            ## Detailed Report
+
+            Full analysis report is available in [workflow artifacts](${context.payload.repository.html_url}/actions/runs/${context.runId}).
+
+            **Overall Score: ${reportData.overall_score}/100**
+
+            ### Critical Issues
+            ${reportData.recommendations.filter(r => r.includes('critical') || r.includes('важно')).map(r => `- ⚠️ ${r}`).join('\n') || 'None'}
+
+            ### Next Steps
+            1. Review detailed report in artifacts
+            2. Implement critical recommendations
+            3. Monitor score improvements
+
+            ---
+            *Автоматически создано SEO AI Models*`;
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[SEO Report] ${new Date().toLocaleDateString('ru-RU')} - Score: ${reportData.overall_score}/100`,
+              body: issueBody,
+              labels: ['seo', 'automated', 'analysis']
+            });
+
+      - name: Comment on PR (if triggered by push)
+        if: github.event_name == 'push'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const summary = fs.readFileSync('seo-reports/SUMMARY.md', 'utf8');
+
+            console.log('📊 SEO Analysis completed');
+            console.log(summary);
