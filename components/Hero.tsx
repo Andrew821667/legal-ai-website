@@ -35,12 +35,20 @@ export default function Hero() {
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-delay-3">
-          <button className="bg-amber-600 hover:bg-amber-700 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg">
+          <a
+            href="#calculator"
+            className="bg-amber-600 hover:bg-amber-700 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg"
+          >
             Рассчитать экономию для моей компании
-          </button>
-          <button className="bg-white/10 hover:bg-white/20 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all backdrop-blur-sm border border-white/30">
+          </a>
+          <a
+            href="https://t.me/legal_ai_helper_new_bot?start=demo"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-white/10 hover:bg-white/20 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all backdrop-blur-sm border border-white/30"
+          >
             Смотреть демо →
-          </button>
+          </a>
         </div>
 
         {/* Scroll indicator */}

@@ -51,10 +51,12 @@ export default function Footer() {
             {/* Social Links */}
             <div className="flex gap-4">
               <a
-                href="#"
+                href="https://t.me/legal_ai_helper_new_bot"
                 className="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white p-3 rounded-lg transition-all"
                 aria-label="Telegram Бот"
                 title="Telegram Бот"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18.717-.962 3.383-1.362 4.486-.168.464-.5 1.395-.882 1.395-.297 0-.54-.18-.748-.333-.208-.153-1.024-.668-1.562-.998-.16-.098-.718-.443-.718-.808 0-.235.248-.428.553-.645.787-.558 1.738-1.234 2.278-1.638.27-.202.135-.32-.15-.12-.672.473-1.946 1.293-2.345 1.554-.18.118-.36.235-.652.235-.382 0-.803-.118-1.215-.235-.472-.135-.922-.27-1.362-.405-.27-.083-.54-.166-.54-.41 0-.258.27-.345.54-.432.472-.152 4.77-1.838 5.562-2.155.09-.036.27-.09.36-.09.18 0 .36.09.36.333 0 .055-.018.11-.027.164z"/>
@@ -145,10 +147,12 @@ export default function Footer() {
               <div>
                 <div className="text-white font-medium mb-1">Telegram Бот</div>
                 <a
-                  href="#"
+                  href="https://t.me/legal_ai_helper_new_bot"
                   className="text-slate-400 hover:text-amber-500 transition-colors text-sm"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  @legal_ai_bot (временная ссылка)
+                  @legal_ai_helper_new_bot
                 </a>
               </div>
             </div>
@@ -157,10 +161,12 @@ export default function Footer() {
               <div>
                 <div className="text-white font-medium mb-1">Telegram Канал</div>
                 <a
-                  href="#"
+                  href="https://t.me/legal_ai_pro"
                   className="text-slate-400 hover:text-amber-500 transition-colors text-sm"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  @legal_ai_channel (временная ссылка)
+                  @legal_ai_pro
                 </a>
               </div>
             </div>

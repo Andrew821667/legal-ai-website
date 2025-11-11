@@ -184,9 +184,14 @@ export default function ROICalculator() {
               <p className="text-slate-300 mb-4">
                 Впечатляющие цифры? Давайте обсудим внедрение для вашей компании
               </p>
-              <button className="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg">
+              <a
+                href="https://t.me/legal_ai_helper_new_bot"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg"
+              >
                 Обсудить внедрение в Telegram →
-              </button>
+              </a>
             </div>
           </div>
         </div>

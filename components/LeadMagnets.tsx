@@ -112,15 +112,20 @@ export default function LeadMagnets() {
               </ul>
 
               {/* CTA Button */}
-              <button
-                className={`w-full font-semibold py-4 px-6 rounded-lg text-lg transition-all transform hover:scale-105 ${
+              <a
+                href={`https://t.me/legal_ai_helper_new_bot?start=${
+                  index === 0 ? "consultation" : index === 1 ? "checklist" : "demo"
+                }`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`block w-full text-center font-semibold py-4 px-6 rounded-lg text-lg transition-all transform hover:scale-105 ${
                   magnet.popular
                     ? "bg-amber-600 hover:bg-amber-700 text-white shadow-lg"
                     : "bg-slate-900 hover:bg-slate-800 text-white"
                 }`}
               >
                 {magnet.cta} →
-              </button>
+              </a>
             </div>
           ))}
         </div>

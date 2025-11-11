@@ -68,9 +68,14 @@ export default function Features() {
           <p className="text-lg text-slate-700 mb-6">
             Готовы обсудить ваш проект?
           </p>
-          <button className="bg-amber-600 hover:bg-amber-700 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg">
+          <a
+            href="https://t.me/legal_ai_helper_new_bot"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block bg-amber-600 hover:bg-amber-700 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg"
+          >
             Написать нам в Telegram →
-          </button>
+          </a>
         </div>
       </div>
     </section>

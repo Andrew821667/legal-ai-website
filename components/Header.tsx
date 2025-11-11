@@ -59,8 +59,10 @@ export default function Header() {
           {/* Desktop CTA Button */}
           <div className="hidden md:block">
             <a
-              href="#"
+              href="https://t.me/legal_ai_helper_new_bot"
               className="bg-amber-600 hover:bg-amber-700 text-white font-semibold px-6 py-3 rounded-lg transition-all transform hover:scale-105"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               Написать в Telegram →
             </a>
@@ -121,9 +123,11 @@ export default function Header() {
                 </a>
               ))}
               <a
-                href="#"
+                href="https://t.me/legal_ai_helper_new_bot"
                 className="block mt-4 bg-amber-600 hover:bg-amber-700 text-white font-semibold px-4 py-3 rounded-lg text-center transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 Написать в Telegram →
               </a>

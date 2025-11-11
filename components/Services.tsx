@@ -170,9 +170,14 @@ export default function Services() {
           <p className="text-xl text-slate-300 mb-6 max-w-2xl mx-auto">
             Мы разрабатываем индивидуальные решения под специфику вашего бизнеса
           </p>
-          <button className="bg-amber-600 hover:bg-amber-700 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg">
+          <a
+            href="https://t.me/legal_ai_helper_new_bot"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block bg-amber-600 hover:bg-amber-700 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg"
+          >
             Обсудить ваш проект →
-          </button>
+          </a>
         </div>
       </div>
     </section>

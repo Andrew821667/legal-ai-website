@@ -246,12 +246,20 @@ export default function AboutTeam() {
               проконсультируем по вашей задаче
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <button className="bg-amber-600 hover:bg-amber-700 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg">
+              <a
+                href="https://t.me/legal_ai_helper_new_bot"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-amber-600 hover:bg-amber-700 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg"
+              >
                 Написать в Telegram →
-              </button>
-              <button className="bg-white/10 hover:bg-white/20 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all border border-white/30">
+              </a>
+              <a
+                href="mailto:a.popov.gv@gmail.com"
+                className="bg-white/10 hover:bg-white/20 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all border border-white/30"
+              >
                 Email: a.popov.gv@gmail.com
-              </button>
+              </a>
             </div>
           </div>
         </div>
