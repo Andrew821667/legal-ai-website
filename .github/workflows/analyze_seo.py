@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""SEO Analysis Script for GitHub Actions - Enhanced with debug output"""
+"""SEO Analysis Script for GitHub Actions - Fixed to work around ParsingPipeline bug"""
 
 import json
 import sys
 from datetime import datetime
+import requests
+from bs4 import BeautifulSoup
 
 sys.path.insert(0, 'seo-tools')
 
@@ -12,34 +14,44 @@ SITE_URL = 'https://legal-ai-website-iota.vercel.app'
 def main():
     try:
         print('🔍 Импортирую модули...')
-        from seo_ai_models.parsers.parsing_pipeline import ParsingPipeline
         from seo_ai_models.models.seo_advisor.advisor import SEOAdvisor
+        from seo_ai_models.parsers.extractors.content_extractor import ContentExtractor
+        from seo_ai_models.parsers.extractors.meta_extractor import MetaExtractor
 
         print('✅ Модули импортированы успешно')
 
-        # Инициализация
-        pipeline = ParsingPipeline()
+        # Инициализация (без ParsingPipeline из-за бага)
         advisor = SEOAdvisor()
+        content_extractor = ContentExtractor()
+        meta_extractor = MetaExtractor()
 
         print(f'🌐 Анализирую сайт: {SITE_URL}')
 
-        # Парсинг страницы
-        page_data = pipeline.analyze_url(SITE_URL)
+        # Парсинг страницы напрямую через requests
+        print('📥 Загружаю HTML...')
+        response = requests.get(SITE_URL, headers={
+            'User-Agent': 'Mozilla/5.0 (compatible; SEO-Analyzer/1.0)'
+        }, timeout=30)
+        response.raise_for_status()
+
+        html_content = response.text
+        status_code = response.status_code
 
         print(f'\n📊 Результат парсинга:')
-        print(f'  Success: {page_data.get("success")}')
-        print(f'  Status code: {page_data.get("status_code")}')
+        print(f'  Status code: {status_code}')
+        print(f'  Content length: {len(html_content)} символов')
 
-        if not page_data.get('success'):
-            print(f'  ❌ Ошибка: {page_data.get("error")}')
-            create_error_report(page_data)
+        if status_code != 200:
+            print(f'  ❌ Неожиданный status code: {status_code}')
+            create_error_report({'error': f'HTTP {status_code}'})
             sys.exit(1)
 
         print(f'  ✅ Страница успешно загружена')
 
-        # Извлечение контента для анализа
-        content_analysis = page_data.get('content_analysis', {})
-        meta_analysis = page_data.get('meta_analysis', {})
+        # Извлечение контента через seo-ai-models экстракторы
+        print('🔬 Извлекаю контент и метаданные...')
+        content_analysis = content_extractor.extract_content(html_content, SITE_URL)
+        meta_analysis = meta_extractor.extract_meta_information(html_content, SITE_URL)
 
         # Формируем контент для SEO анализа
         content_text = content_analysis.get('content', {}).get('all_text', '')
@@ -80,8 +92,7 @@ def main():
             },
             'seo_analysis': seo_report,
             'raw_page_data': {
-                'success': page_data.get('success'),
-                'status_code': page_data.get('status_code'),
+                'status_code': status_code,
                 'headings': content_analysis.get('headings', {})
             }
         }
