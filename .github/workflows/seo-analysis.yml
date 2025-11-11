@@ -27,7 +27,7 @@ jobs:
         run: |
           cd seo-tools
           pip install -e .
-          pip install playwright
+          pip install playwright beautifulsoup4 lxml
           python -m playwright install chromium
 
       - name: Run SEO analysis
