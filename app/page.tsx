@@ -4,6 +4,7 @@ import ROICalculator from "@/components/ROICalculator";
 import Services from "@/components/Services";
 import CaseStudies from "@/components/CaseStudies";
 import LeadMagnets from "@/components/LeadMagnets";
+import AboutTeam from "@/components/AboutTeam";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
       <Services />
       <CaseStudies />
       <LeadMagnets />
+      <AboutTeam />
     </main>
   );
 }

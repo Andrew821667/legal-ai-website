@@ -1,0 +1,169 @@
+export default function AboutTeam() {
+  const expertise = [
+    {
+      icon: "⚖️",
+      title: "Юридическая практика",
+      description: "20+ лет опыта в крупных компаниях",
+      details: [
+        "CLO в агрохолдингах, банках, холдингах",
+        "Договоры, M&A, банкротства (200+ процедур)",
+        "Земельное право, ВЭД",
+        "Международные переговоры (English)",
+      ],
+    },
+    {
+      icon: "💻",
+      title: "Разработка ПО",
+      description: "Практический опыт программирования",
+      details: [
+        "Python (AI/ML, backend)",
+        "TypeScript/React (frontend)",
+        "OpenAI GPT-4, Claude, векторные БД",
+        "Интеграции (1C, CRM, API)",
+      ],
+    },
+    {
+      icon: "🤖",
+      title: "AI/ML экспертиза",
+      description: "Разработка интеллектуальных систем",
+      details: [
+        "RAG системы (Retrieval-Augmented Generation)",
+        "Fine-tuning моделей под отрасль",
+        "Prompt engineering и оптимизация",
+        "Мультиагентные архитектуры",
+      ],
+    },
+  ];
+
+  const achievements = [
+    { icon: "📊", number: "200+", label: "процедур банкротства" },
+    { icon: "📋", number: "1000+", label: "автоматизированных договоров" },
+    { icon: "⏱️", number: "80%+", label: "экономия времени юротдела" },
+    { icon: "🏢", number: "20+", label: "компаний-клиентов" },
+  ];
+
+  const technologies = [
+    "Python",
+    "TypeScript",
+    "OpenAI GPT-4",
+    "Claude",
+    "LangChain",
+    "Pinecone",
+    "PostgreSQL",
+    "Next.js",
+    "FastAPI",
+    "Docker",
+    "1C Integration",
+    "REST API",
+  ];
+
+  return (
+    <section className="py-20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            О нашей команде
+          </h2>
+          <p className="text-xl text-slate-300 max-w-3xl mx-auto">
+            Мы — юристы, которые самостоятельно разрабатывают программные
+            решения. Уникальное сочетание глубокой юридической экспертизы и
+            технических навыков в AI/ML.
+          </p>
+        </div>
+
+        {/* Expertise Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          {expertise.map((item, index) => (
+            <div
+              key={index}
+              className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20"
+            >
+              {/* Icon */}
+              <div className="text-5xl mb-4">{item.icon}</div>
+
+              {/* Title */}
+              <h3 className="text-2xl font-bold text-white mb-2">
+                {item.title}
+              </h3>
+
+              {/* Description */}
+              <p className="text-slate-300 mb-4">{item.description}</p>
+
+              {/* Details */}
+              <ul className="space-y-2">
+                {item.details.map((detail, idx) => (
+                  <li
+                    key={idx}
+                    className="text-slate-400 text-sm flex items-start gap-2"
+                  >
+                    <span className="text-amber-500">•</span>
+                    {detail}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* Achievements */}
+        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 md:p-12 border border-white/20 mb-16">
+          <h3 className="text-3xl font-bold text-white mb-8 text-center">
+            Достижения в цифрах
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {achievements.map((achievement, index) => (
+              <div key={index} className="text-center">
+                <div className="text-4xl mb-2">{achievement.icon}</div>
+                <div className="text-4xl font-bold text-amber-400 mb-2">
+                  {achievement.number}
+                </div>
+                <div className="text-slate-300 text-sm">
+                  {achievement.label}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Technologies */}
+        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 mb-16">
+          <h3 className="text-2xl font-bold text-white mb-6 text-center">
+            Технологический стек
+          </h3>
+          <div className="flex flex-wrap justify-center gap-3">
+            {technologies.map((tech, index) => (
+              <span
+                key={index}
+                className="bg-slate-800 text-slate-300 px-4 py-2 rounded-lg text-sm font-medium border border-slate-700 hover:border-amber-500 transition-colors"
+              >
+                {tech}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Contact CTA */}
+        <div className="text-center">
+          <div className="bg-amber-500/20 backdrop-blur-sm rounded-2xl p-8 md:p-12 border border-amber-500/50">
+            <h3 className="text-3xl font-bold text-white mb-4">
+              Готовы обсудить ваш проект?
+            </h3>
+            <p className="text-xl text-slate-300 mb-6 max-w-2xl mx-auto">
+              Свяжитесь с нами через Telegram — ответим на вопросы и
+              проконсультируем по вашей задаче
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <button className="bg-amber-600 hover:bg-amber-700 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg">
+                Написать в Telegram →
+              </button>
+              <button className="bg-white/10 hover:bg-white/20 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all border border-white/30">
+                Email: a.popov.gv@gmail.com
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
