@@ -1,29 +1,28 @@
 name: Automatic SEO Analysis
 
 on:
-  # Запуск по расписанию (каждое воскресенье в 03:00 UTC)
   schedule:
     - cron: '0 3 * * 0'
-
-  # Возможность запустить вручную
   workflow_dispatch:
-
-  # Запуск после деплоя в production
   push:
     branches:
       - main
     paths:
       - 'app/**'
       - 'components/**'
-      - 'public/**'
 
 jobs:
   seo-analysis:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      - name: Checkout website
         uses: actions/checkout@v4
+
+      - name: Checkout SEO AI Models
+        uses: actions/checkout@v4
+        with:
+          repository: Andrew821667/seo-ai-models
+          path: seo-tools
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -32,7 +31,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install playwright beautifulsoup4 requests openai
+          cd seo-tools
+          pip install -e .
           playwright install chromium
 
       - name: Run SEO analysis
@@ -40,232 +40,61 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           mkdir -p seo-reports
+          cd seo-tools
+          python -c "
+import json
+import sys
+from datetime import datetime
 
-          cat > analyze_seo.py << 'EOF'
-          import asyncio
-          import json
-          import os
-          from datetime import datetime
-          from playwright.async_api import async_playwright
-          from bs4 import BeautifulSoup
+sys.path.insert(0, '.')
 
-          SITE_URL = "https://legal-ai-website-iota.vercel.app"
+SITE_URL = 'https://legal-ai-website-iota.vercel.app'
 
-          async def analyze_page(url):
-              """Анализ одной страницы"""
-              async with async_playwright() as p:
-                  browser = await p.chromium.launch()
-                  page = await browser.new_page()
+try:
+    from seo_ai_models.models.seo_advisor.advisor import SEOAdvisor
+    from seo_ai_models.parsers.parsing_pipeline import ParsingPipeline
 
-                  try:
-                      await page.goto(url, wait_until='networkidle', timeout=30000)
-                      content = await page.content()
+    print('Modules imported successfully')
 
-                      soup = BeautifulSoup(content, 'html.parser')
+    pipeline = ParsingPipeline()
+    advisor = SEOAdvisor()
 
-                      # SEO метрики
-                      title = soup.find('title')
-                      meta_desc = soup.find('meta', attrs={'name': 'description'})
-                      h1_tags = soup.find_all('h1')
-                      h2_tags = soup.find_all('h2')
-                      images = soup.find_all('img')
-                      links = soup.find_all('a')
+    print(f'Analyzing: {SITE_URL}')
 
-                      # Подсчёт слов
-                      text = soup.get_text()
-                      words = len(text.split())
+    page_data = pipeline.analyze_url(SITE_URL)
 
-                      # Анализ изображений
-                      images_without_alt = [img for img in images if not img.get('alt')]
+    if page_data and 'content' in page_data:
+        seo_report = advisor.analyze_content(page_data['content'])
+    else:
+        seo_report = {}
 
-                      # Внутренние ссылки
-                      internal_links = [link for link in links if link.get('href', '').startswith('/') or SITE_URL in link.get('href', '')]
+    results = {
+        'timestamp': datetime.now().isoformat(),
+        'site_url': SITE_URL,
+        'page_data': page_data,
+        'seo_analysis': seo_report,
+        'overall_score': seo_report.get('score', 0)
+    }
 
-                      result = {
-                          "url": url,
-                          "title": title.text if title else None,
-                          "title_length": len(title.text) if title else 0,
-                          "meta_description": meta_desc.get('content') if meta_desc else None,
-                          "meta_desc_length": len(meta_desc.get('content', '')) if meta_desc else 0,
-                          "h1_count": len(h1_tags),
-                          "h1_texts": [h1.text.strip() for h1 in h1_tags],
-                          "h2_count": len(h2_tags),
-                          "word_count": words,
-                          "images_total": len(images),
-                          "images_without_alt": len(images_without_alt),
-                          "internal_links": len(internal_links),
-                          "total_links": len(links),
-                      }
+    with open('../seo-reports/report.json', 'w', encoding='utf-8') as f:
+        json.dump(results, f, ensure_ascii=False, indent=2)
 
-                      # Вычисление score
-                      score = 0
-                      max_score = 100
+    with open('../seo-reports/SUMMARY.md', 'w') as f:
+        f.write(f'# SEO Analysis Report\\n\\n')
+        f.write(f'Date: {datetime.now().strftime(\"%Y-%m-%d %H:%M:%S\")}\\n\\n')
+        f.write(f'Site: {SITE_URL}\\n\\n')
+        f.write(f'Score: {results[\"overall_score\"]}/100\\n')
 
-                      # Title (20 points)
-                      if result['title'] and 30 <= result['title_length'] <= 60:
-                          score += 20
-                      elif result['title']:
-                          score += 10
+    print('Analysis complete!')
 
-                      # Meta description (15 points)
-                      if result['meta_description'] and 120 <= result['meta_desc_length'] <= 160:
-                          score += 15
-                      elif result['meta_description']:
-                          score += 8
+except Exception as e:
+    print(f'Error: {e}')
+    import traceback
+    traceback.print_exc()
+    sys.exit(1)
+"
 
-                      # H1 (15 points)
-                      if result['h1_count'] == 1:
-                          score += 15
-                      elif result['h1_count'] > 0:
-                          score += 8
-
-                      # Content (20 points)
-                      if result['word_count'] >= 300:
-                          score += 20
-                      elif result['word_count'] >= 150:
-                          score += 10
-
-                      # Images alt (15 points)
-                      if result['images_total'] > 0:
-                          alt_ratio = 1 - (result['images_without_alt'] / result['images_total'])
-                          score += int(15 * alt_ratio)
-                      else:
-                          score += 15
-
-                      # Internal links (15 points)
-                      if result['internal_links'] >= 5:
-                          score += 15
-                      elif result['internal_links'] >= 3:
-                          score += 10
-                      elif result['internal_links'] >= 1:
-                          score += 5
-
-                      result['score'] = min(score, max_score)
-
-                      # Рекомендации
-                      recommendations = []
-
-                      if not result['title']:
-                          recommendations.append("❌ Отсутствует <title> тег")
-                      elif result['title_length'] < 30:
-                          recommendations.append("⚠️ Title слишком короткий (рекомендуется 30-60 символов)")
-                      elif result['title_length'] > 60:
-                          recommendations.append("⚠️ Title слишком длинный (рекомендуется 30-60 символов)")
-
-                      if not result['meta_description']:
-                          recommendations.append("❌ Отсутствует meta description")
-                      elif result['meta_desc_length'] < 120:
-                          recommendations.append("⚠️ Meta description слишком короткий (рекомендуется 120-160 символов)")
-                      elif result['meta_desc_length'] > 160:
-                          recommendations.append("⚠️ Meta description слишком длинный (рекомендуется 120-160 символов)")
-
-                      if result['h1_count'] == 0:
-                          recommendations.append("❌ Отсутствует H1 заголовок")
-                      elif result['h1_count'] > 1:
-                          recommendations.append("⚠️ Несколько H1 заголовков (рекомендуется один)")
-
-                      if result['word_count'] < 300:
-                          recommendations.append(f"⚠️ Мало контента ({result['word_count']} слов, рекомендуется 300+)")
-
-                      if result['images_without_alt'] > 0:
-                          recommendations.append(f"⚠️ {result['images_without_alt']} изображений без alt текста")
-
-                      if result['internal_links'] < 3:
-                          recommendations.append(f"⚠️ Мало внутренних ссылок ({result['internal_links']}, рекомендуется 3+)")
-
-                      result['recommendations'] = recommendations
-
-                      await browser.close()
-                      return result
-
-                  except Exception as e:
-                      await browser.close()
-                      return {
-                          "url": url,
-                          "error": str(e),
-                          "score": 0
-                      }
-
-          async def main():
-              pages = [
-                  SITE_URL + "/",
-              ]
-
-              results = []
-              for page_url in pages:
-                  print(f"Analyzing: {page_url}")
-                  result = await analyze_page(page_url)
-                  results.append(result)
-                  print(f"Score: {result.get('score', 0)}/100")
-
-              # Общий отчёт
-              total_score = sum(r.get('score', 0) for r in results) / len(results) if results else 0
-
-              report = {
-                  "timestamp": datetime.now().isoformat(),
-                  "site_url": SITE_URL,
-                  "overall_score": round(total_score, 2),
-                  "pages_analyzed": results
-              }
-
-              # Сохранение JSON
-              report_file = f'seo-reports/report-{datetime.now().strftime("%Y-%m-%d")}.json'
-              with open(report_file, 'w', encoding='utf-8') as f:
-                  json.dump(report, f, ensure_ascii=False, indent=2)
-
-              print(f"\n✅ Analysis complete!")
-              print(f"Overall Score: {report['overall_score']}/100")
-
-              # Markdown summary
-              with open('seo-reports/SUMMARY.md', 'w', encoding='utf-8') as f:
-                  f.write(f"# 🔍 SEO Analysis Report\n\n")
-                  f.write(f"**Date:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
-                  f.write(f"**Overall Score:** {report['overall_score']}/100\n\n")
-
-                  if report['overall_score'] >= 80:
-                      f.write(f"**Status:** ✅ Отлично\n\n")
-                  elif report['overall_score'] >= 60:
-                      f.write(f"**Status:** ⚠️ Хорошо, но есть улучшения\n\n")
-                  else:
-                      f.write(f"**Status:** ❌ Требуется оптимизация\n\n")
-
-                  f.write(f"## 📊 Проанализированные страницы\n\n")
-                  for page in results:
-                      if 'error' not in page:
-                          f.write(f"### [{page['url']}]({page['url']})\n\n")
-                          f.write(f"**Score:** {page['score']}/100\n\n")
-                          f.write(f"**Метрики:**\n")
-                          f.write(f"- Title: {page['title_length']} символов\n")
-                          f.write(f"- Meta description: {page['meta_desc_length']} символов\n")
-                          f.write(f"- H1: {page['h1_count']}\n")
-                          f.write(f"- Слов: {page['word_count']}\n")
-                          f.write(f"- Изображений: {page['images_total']} (без alt: {page['images_without_alt']})\n")
-                          f.write(f"- Внутренних ссылок: {page['internal_links']}\n\n")
-
-                          if page['recommendations']:
-                              f.write(f"**Рекомендации:**\n")
-                              for rec in page['recommendations']:
-                                  f.write(f"- {rec}\n")
-                              f.write(f"\n")
-                      else:
-                          f.write(f"### ❌ {page['url']}\n\n")
-                          f.write(f"Error: {page['error']}\n\n")
-
-                  # GPT анализ (если есть ключ)
-                  if os.getenv('OPENAI_API_KEY'):
-                      f.write(f"\n## 🤖 AI Рекомендации\n\n")
-                      f.write(f"_GPT анализ будет добавлен в следующей версии_\n\n")
-
-                  f.write(f"\n---\n\n")
-                  f.write(f"*Автоматически создано Legal AI PRO SEO Analyzer*\n")
-
-          if __name__ == "__main__":
-              asyncio.run(main())
-          EOF
-
-          python analyze_seo.py
-
-      - name: Upload SEO report
+      - name: Upload report
         uses: actions/upload-artifact@v4
         with:
           name: seo-analysis-report
@@ -273,45 +102,4 @@ jobs:
           retention-days: 90
 
       - name: Display Summary
-        run: |
-          echo "📊 SEO Analysis Summary:"
-          cat seo-reports/SUMMARY.md
-
-      - name: Create Issue with recommendations
-        if: github.event_name == 'schedule'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const fs = require('fs');
-            const summary = fs.readFileSync('seo-reports/SUMMARY.md', 'utf8');
-            const reportFile = 'seo-reports/report-' + new Date().toISOString().split('T')[0] + '.json';
-
-            let reportData = { overall_score: 0 };
-            try {
-              reportData = JSON.parse(fs.readFileSync(reportFile, 'utf8'));
-            } catch (e) {
-              console.log('Could not read report file');
-            }
-
-            const issueBody = `${summary}
-
-            ## 📎 Детальный отчёт
-
-            Полный JSON отчёт доступен в [workflow artifacts](${context.payload.repository.html_url}/actions/runs/${context.runId}).
-
-            ## 🎯 Следующие шаги
-
-            1. Просмотрите рекомендации выше
-            2. Реализуйте критические исправления
-            3. Запустите анализ повторно для проверки
-
-            ---
-            *Автоматически создано SEO AI Analyzer*`;
-
-            await github.rest.issues.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title: `📊 SEO Report ${new Date().toLocaleDateString('ru-RU')} - Score: ${reportData.overall_score}/100`,
-              body: issueBody,
-              labels: ['seo', 'automated']
-            });
+        run: cat seo-reports/SUMMARY.md
