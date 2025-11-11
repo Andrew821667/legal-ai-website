@@ -45,20 +45,25 @@ export default function Features() {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-slate-200"
+              className="group bg-white rounded-xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 border border-slate-200 hover:border-amber-300 relative overflow-hidden"
             >
-              {/* Icon */}
-              <div className="text-5xl mb-4">{feature.icon}</div>
+              {/* Glow effect on hover */}
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-400/0 to-amber-600/0 group-hover:from-amber-400/5 group-hover:to-amber-600/5 transition-all duration-500 rounded-xl"></div>
 
-              {/* Title */}
-              <h3 className="text-xl font-bold text-slate-900 mb-3">
-                {feature.title}
-              </h3>
+              <div className="relative z-10">
+                {/* Icon */}
+                <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">{feature.icon}</div>
 
-              {/* Description */}
-              <p className="text-slate-600 leading-relaxed">
-                {feature.description}
-              </p>
+                {/* Title */}
+                <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-amber-700 transition-colors">
+                  {feature.title}
+                </h3>
+
+                {/* Description */}
+                <p className="text-slate-600 leading-relaxed">
+                  {feature.description}
+                </p>
+              </div>
             </div>
           ))}
         </div>

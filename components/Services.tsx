@@ -137,15 +137,19 @@ export default function Services() {
           {services.map((service, index) => (
             <div
               key={index}
-              className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-200 flex flex-col"
+              className="group bg-white rounded-xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 border border-slate-200 hover:border-amber-300 flex flex-col relative overflow-hidden transform hover:-translate-y-2"
             >
-              {/* Icon */}
-              <div className="text-5xl mb-4">{service.icon}</div>
+              {/* Glow effect on hover */}
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-400/0 to-amber-600/0 group-hover:from-amber-400/5 group-hover:to-amber-600/5 transition-all duration-500 rounded-xl"></div>
 
-              {/* Title */}
-              <h3 className="text-xl font-bold text-slate-900 mb-3">
-                {service.title}
-              </h3>
+              <div className="relative z-10 flex flex-col h-full">
+                {/* Icon */}
+                <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">{service.icon}</div>
+
+                {/* Title */}
+                <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-amber-700 transition-colors">
+                  {service.title}
+                </h3>
 
               {/* Description */}
               <p className="text-slate-600 text-sm mb-4 leading-relaxed flex-grow">
@@ -167,15 +171,16 @@ export default function Services() {
                 {service.price}
               </div>
 
-              {/* CTA Button */}
-              <a
-                href="https://t.me/legal_ai_helper_new_bot"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full text-center bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 px-4 rounded-lg transition-all"
-              >
-                Подробнее →
-              </a>
+                {/* CTA Button */}
+                <a
+                  href="https://t.me/legal_ai_helper_new_bot"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block w-full text-center bg-slate-900 hover:bg-amber-600 text-white font-semibold py-3 px-4 rounded-lg transition-all transform hover:scale-105"
+                >
+                  Подробнее →
+                </a>
+              </div>
             </div>
           ))}
         </div>
