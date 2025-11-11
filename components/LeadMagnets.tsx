@@ -1,4 +1,11 @@
+"use client";
+
+import { useScrollAnimation } from "@/lib/hooks/useScrollAnimation";
+
 export default function LeadMagnets() {
+  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
+  const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation({ threshold: 0.05 });
+
   const magnets = [
     {
       icon: "📞",
@@ -51,7 +58,7 @@ export default function LeadMagnets() {
     <section className="py-20 bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <div ref={headerRef} className={`text-center mb-16 scroll-reveal ${headerVisible ? 'visible' : ''}`}>
           <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
             Начните бесплатно
           </h2>
@@ -61,11 +68,11 @@ export default function LeadMagnets() {
         </div>
 
         {/* Magnets Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {magnets.map((magnet, index) => (
             <div
               key={index}
-              className={`bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border-2 ${
+              className={`stagger-item ${gridVisible ? 'visible' : ''} bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border-2 ${
                 magnet.popular
                   ? "border-amber-500 relative"
                   : "border-slate-200"

@@ -1,8 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useScrollAnimation } from "@/lib/hooks/useScrollAnimation";
 
 export default function ROICalculator() {
+  const { ref: sectionRef, isVisible: sectionVisible } = useScrollAnimation({ threshold: 0.1 });
+
   // Form state
   const [lawyers, setLawyers] = useState(5);
   const [salary, setSalary] = useState(150000);
@@ -52,7 +55,7 @@ export default function ROICalculator() {
     <section id="calculator" className="py-20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-12">
+        <div ref={sectionRef} className={`text-center mb-12 scroll-reveal ${sectionVisible ? 'visible' : ''}`}>
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Рассчитайте вашу экономию
           </h2>
@@ -61,7 +64,7 @@ export default function ROICalculator() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+        <div className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-start scroll-reveal ${sectionVisible ? 'visible' : ''}`}>
           {/* Input Form */}
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
             <h3 className="text-2xl font-bold text-white mb-6">

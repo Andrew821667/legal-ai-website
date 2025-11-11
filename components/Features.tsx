@@ -1,4 +1,11 @@
+"use client";
+
+import { useScrollAnimation } from "@/lib/hooks/useScrollAnimation";
+
 export default function Features() {
+  const { ref: sectionRef, isVisible: sectionVisible } = useScrollAnimation();
+  const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation({ threshold: 0.05 });
+
   const features = [
     {
       icon: "💼",
@@ -31,7 +38,7 @@ export default function Features() {
     <section id="features" className="py-20 bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <div ref={sectionRef} className={`text-center mb-16 scroll-reveal ${sectionVisible ? 'visible' : ''}`}>
           <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
             Почему мы?
           </h2>
@@ -41,11 +48,11 @@ export default function Features() {
         </div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {features.map((feature, index) => (
             <div
               key={index}
-              className="group bg-white rounded-xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 border border-slate-200 hover:border-amber-300 relative overflow-hidden"
+              className={`stagger-item ${gridVisible ? 'visible' : ''} group bg-white rounded-xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 border border-slate-200 hover:border-amber-300 relative overflow-hidden`}
             >
               {/* Glow effect on hover */}
               <div className="absolute inset-0 bg-gradient-to-br from-amber-400/0 to-amber-600/0 group-hover:from-amber-400/5 group-hover:to-amber-600/5 transition-all duration-500 rounded-xl"></div>

@@ -1,4 +1,11 @@
+"use client";
+
+import { useScrollAnimation } from "@/lib/hooks/useScrollAnimation";
+
 export default function Services() {
+  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
+  const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation({ threshold: 0.05 });
+
   const services = [
     {
       icon: "📋",
@@ -123,7 +130,7 @@ export default function Services() {
     <section id="services" className="py-20 bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <div ref={headerRef} className={`text-center mb-16 scroll-reveal ${headerVisible ? 'visible' : ''}`}>
           <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
             Наши услуги
           </h2>
@@ -133,11 +140,11 @@ export default function Services() {
         </div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service, index) => (
             <div
               key={index}
-              className="group bg-white rounded-xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 border border-slate-200 hover:border-amber-300 flex flex-col relative overflow-hidden transform hover:-translate-y-2"
+              className={`stagger-item ${gridVisible ? 'visible' : ''} group bg-white rounded-xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 border border-slate-200 hover:border-amber-300 flex flex-col relative overflow-hidden transform hover:-translate-y-2`}
             >
               {/* Glow effect on hover */}
               <div className="absolute inset-0 bg-gradient-to-br from-amber-400/0 to-amber-600/0 group-hover:from-amber-400/5 group-hover:to-amber-600/5 transition-all duration-500 rounded-xl"></div>

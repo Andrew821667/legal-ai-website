@@ -1,4 +1,11 @@
+"use client";
+
+import { useScrollAnimation } from "@/lib/hooks/useScrollAnimation";
+
 export default function AboutTeam() {
+  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
+  const { ref: expertiseRef, isVisible: expertiseVisible } = useScrollAnimation({ threshold: 0.05 });
+
   const expertise = [
     {
       icon: "⚖️",
@@ -75,7 +82,7 @@ export default function AboutTeam() {
     <section id="about" className="py-20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <div ref={headerRef} className={`text-center mb-16 scroll-reveal ${headerVisible ? 'visible' : ''}`}>
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
             О нашей команде
           </h2>
@@ -87,11 +94,11 @@ export default function AboutTeam() {
         </div>
 
         {/* Expertise Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+        <div ref={expertiseRef} className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           {expertise.map((item, index) => (
             <div
               key={index}
-              className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20"
+              className={`stagger-item ${expertiseVisible ? 'visible' : ''} bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/40 transition-all duration-500`}
             >
               {/* Icon */}
               <div className="text-5xl mb-4">{item.icon}</div>
