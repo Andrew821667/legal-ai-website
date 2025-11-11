@@ -22,141 +22,248 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout website repository
+      - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          ref: main
-
-      - name: Checkout SEO AI Models
-        uses: actions/checkout@v4
-        with:
-          repository: Andrew821667/seo-ai-models
-          path: seo-tools
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: 'pip'
 
       - name: Install dependencies
         run: |
-          cd seo-tools
-          pip install -r requirements.txt
+          pip install playwright beautifulsoup4 requests openai
           playwright install chromium
 
       - name: Run SEO analysis
         env:
-          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          cd seo-tools
+          mkdir -p seo-reports
 
-          # Создаём скрипт для анализа сайта
-          cat > analyze_site.py << 'EOF'
-          import os
+          cat > analyze_seo.py << 'EOF'
+          import asyncio
           import json
+          import os
           from datetime import datetime
-          from seo_analyzer import SEOAdvisor, ContentAnalyzer, EEATAnalyzer
+          from playwright.async_api import async_playwright
+          from bs4 import BeautifulSoup
 
-          # URL сайта для анализа
           SITE_URL = "https://legal-ai-website-iota.vercel.app"
 
-          # Страницы для анализа
-          pages = [
-              f"{SITE_URL}/",
-              f"{SITE_URL}/#features",
-              f"{SITE_URL}/#services",
-              f"{SITE_URL}/#cases",
-              f"{SITE_URL}/#about",
-              f"{SITE_URL}/#calculator",
-          ]
+          async def analyze_page(url):
+              """Анализ одной страницы"""
+              async with async_playwright() as p:
+                  browser = await p.chromium.launch()
+                  page = await browser.new_page()
 
-          results = {
-              "timestamp": datetime.now().isoformat(),
-              "site_url": SITE_URL,
-              "pages_analyzed": [],
-              "overall_score": 0,
-              "recommendations": []
-          }
+                  try:
+                      await page.goto(url, wait_until='networkidle', timeout=30000)
+                      content = await page.content()
 
-          advisor = SEOAdvisor()
-          content_analyzer = ContentAnalyzer()
-          eeat_analyzer = EEATAnalyzer()
+                      soup = BeautifulSoup(content, 'html.parser')
 
-          total_score = 0
+                      # SEO метрики
+                      title = soup.find('title')
+                      meta_desc = soup.find('meta', attrs={'name': 'description'})
+                      h1_tags = soup.find_all('h1')
+                      h2_tags = soup.find_all('h2')
+                      images = soup.find_all('img')
+                      links = soup.find_all('a')
 
-          for page_url in pages:
-              print(f"Analyzing: {page_url}")
+                      # Подсчёт слов
+                      text = soup.get_text()
+                      words = len(text.split())
 
-              try:
-                  # SEO анализ
-                  seo_result = advisor.analyze(page_url)
+                      # Анализ изображений
+                      images_without_alt = [img for img in images if not img.get('alt')]
 
-                  # Контент анализ
-                  content_result = content_analyzer.analyze(page_url)
+                      # Внутренние ссылки
+                      internal_links = [link for link in links if link.get('href', '').startswith('/') or SITE_URL in link.get('href', '')]
 
-                  # E-E-A-T анализ
-                  eeat_result = eeat_analyzer.analyze(page_url)
+                      result = {
+                          "url": url,
+                          "title": title.text if title else None,
+                          "title_length": len(title.text) if title else 0,
+                          "meta_description": meta_desc.get('content') if meta_desc else None,
+                          "meta_desc_length": len(meta_desc.get('content', '')) if meta_desc else 0,
+                          "h1_count": len(h1_tags),
+                          "h1_texts": [h1.text.strip() for h1 in h1_tags],
+                          "h2_count": len(h2_tags),
+                          "word_count": words,
+                          "images_total": len(images),
+                          "images_without_alt": len(images_without_alt),
+                          "internal_links": len(internal_links),
+                          "total_links": len(links),
+                      }
 
-                  page_score = (
-                      seo_result.get('score', 0) +
-                      content_result.get('score', 0) +
-                      eeat_result.get('score', 0)
-                  ) / 3
+                      # Вычисление score
+                      score = 0
+                      max_score = 100
 
-                  total_score += page_score
+                      # Title (20 points)
+                      if result['title'] and 30 <= result['title_length'] <= 60:
+                          score += 20
+                      elif result['title']:
+                          score += 10
 
-                  page_data = {
-                      "url": page_url,
-                      "score": round(page_score, 2),
-                      "seo": seo_result,
-                      "content": content_result,
-                      "eeat": eeat_result
-                  }
+                      # Meta description (15 points)
+                      if result['meta_description'] and 120 <= result['meta_desc_length'] <= 160:
+                          score += 15
+                      elif result['meta_description']:
+                          score += 8
 
-                  results["pages_analyzed"].append(page_data)
+                      # H1 (15 points)
+                      if result['h1_count'] == 1:
+                          score += 15
+                      elif result['h1_count'] > 0:
+                          score += 8
 
-                  # Собираем рекомендации
-                  if seo_result.get('recommendations'):
-                      results["recommendations"].extend(seo_result['recommendations'])
+                      # Content (20 points)
+                      if result['word_count'] >= 300:
+                          score += 20
+                      elif result['word_count'] >= 150:
+                          score += 10
 
-              except Exception as e:
-                  print(f"Error analyzing {page_url}: {str(e)}")
+                      # Images alt (15 points)
+                      if result['images_total'] > 0:
+                          alt_ratio = 1 - (result['images_without_alt'] / result['images_total'])
+                          score += int(15 * alt_ratio)
+                      else:
+                          score += 15
 
-          # Общий score
-          results["overall_score"] = round(total_score / len(pages), 2) if pages else 0
+                      # Internal links (15 points)
+                      if result['internal_links'] >= 5:
+                          score += 15
+                      elif result['internal_links'] >= 3:
+                          score += 10
+                      elif result['internal_links'] >= 1:
+                          score += 5
 
-          # Сохраняем результаты
-          os.makedirs('../seo-reports', exist_ok=True)
-          report_file = f'../seo-reports/report-{datetime.now().strftime("%Y-%m-%d")}.json'
+                      result['score'] = min(score, max_score)
 
-          with open(report_file, 'w', encoding='utf-8') as f:
-              json.dump(results, f, ensure_ascii=False, indent=2)
+                      # Рекомендации
+                      recommendations = []
 
-          print(f"\n✅ Analysis complete!")
-          print(f"Overall Score: {results['overall_score']}/100")
-          print(f"Report saved to: {report_file}")
+                      if not result['title']:
+                          recommendations.append("❌ Отсутствует <title> тег")
+                      elif result['title_length'] < 30:
+                          recommendations.append("⚠️ Title слишком короткий (рекомендуется 30-60 символов)")
+                      elif result['title_length'] > 60:
+                          recommendations.append("⚠️ Title слишком длинный (рекомендуется 30-60 символов)")
 
-          # Создаём markdown summary
-          with open('../seo-reports/SUMMARY.md', 'w', encoding='utf-8') as f:
-              f.write(f"# SEO Analysis Report\n\n")
-              f.write(f"**Date:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
-              f.write(f"**Overall Score:** {results['overall_score']}/100\n\n")
+                      if not result['meta_description']:
+                          recommendations.append("❌ Отсутствует meta description")
+                      elif result['meta_desc_length'] < 120:
+                          recommendations.append("⚠️ Meta description слишком короткий (рекомендуется 120-160 символов)")
+                      elif result['meta_desc_length'] > 160:
+                          recommendations.append("⚠️ Meta description слишком длинный (рекомендуется 120-160 символов)")
 
-              f.write(f"## Pages Analyzed ({len(results['pages_analyzed'])})\n\n")
-              for page in results['pages_analyzed']:
-                  f.write(f"- [{page['url']}]({page['url']}) - Score: {page['score']}/100\n")
+                      if result['h1_count'] == 0:
+                          recommendations.append("❌ Отсутствует H1 заголовок")
+                      elif result['h1_count'] > 1:
+                          recommendations.append("⚠️ Несколько H1 заголовков (рекомендуется один)")
 
-              f.write(f"\n## Top Recommendations\n\n")
-              unique_recommendations = list(set(results['recommendations'][:10]))
-              for i, rec in enumerate(unique_recommendations, 1):
-                  f.write(f"{i}. {rec}\n")
+                      if result['word_count'] < 300:
+                          recommendations.append(f"⚠️ Мало контента ({result['word_count']} слов, рекомендуется 300+)")
+
+                      if result['images_without_alt'] > 0:
+                          recommendations.append(f"⚠️ {result['images_without_alt']} изображений без alt текста")
+
+                      if result['internal_links'] < 3:
+                          recommendations.append(f"⚠️ Мало внутренних ссылок ({result['internal_links']}, рекомендуется 3+)")
+
+                      result['recommendations'] = recommendations
+
+                      await browser.close()
+                      return result
+
+                  except Exception as e:
+                      await browser.close()
+                      return {
+                          "url": url,
+                          "error": str(e),
+                          "score": 0
+                      }
+
+          async def main():
+              pages = [
+                  SITE_URL + "/",
+              ]
+
+              results = []
+              for page_url in pages:
+                  print(f"Analyzing: {page_url}")
+                  result = await analyze_page(page_url)
+                  results.append(result)
+                  print(f"Score: {result.get('score', 0)}/100")
+
+              # Общий отчёт
+              total_score = sum(r.get('score', 0) for r in results) / len(results) if results else 0
+
+              report = {
+                  "timestamp": datetime.now().isoformat(),
+                  "site_url": SITE_URL,
+                  "overall_score": round(total_score, 2),
+                  "pages_analyzed": results
+              }
+
+              # Сохранение JSON
+              report_file = f'seo-reports/report-{datetime.now().strftime("%Y-%m-%d")}.json'
+              with open(report_file, 'w', encoding='utf-8') as f:
+                  json.dump(report, f, ensure_ascii=False, indent=2)
+
+              print(f"\n✅ Analysis complete!")
+              print(f"Overall Score: {report['overall_score']}/100")
+
+              # Markdown summary
+              with open('seo-reports/SUMMARY.md', 'w', encoding='utf-8') as f:
+                  f.write(f"# 🔍 SEO Analysis Report\n\n")
+                  f.write(f"**Date:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+                  f.write(f"**Overall Score:** {report['overall_score']}/100\n\n")
+
+                  if report['overall_score'] >= 80:
+                      f.write(f"**Status:** ✅ Отлично\n\n")
+                  elif report['overall_score'] >= 60:
+                      f.write(f"**Status:** ⚠️ Хорошо, но есть улучшения\n\n")
+                  else:
+                      f.write(f"**Status:** ❌ Требуется оптимизация\n\n")
+
+                  f.write(f"## 📊 Проанализированные страницы\n\n")
+                  for page in results:
+                      if 'error' not in page:
+                          f.write(f"### [{page['url']}]({page['url']})\n\n")
+                          f.write(f"**Score:** {page['score']}/100\n\n")
+                          f.write(f"**Метрики:**\n")
+                          f.write(f"- Title: {page['title_length']} символов\n")
+                          f.write(f"- Meta description: {page['meta_desc_length']} символов\n")
+                          f.write(f"- H1: {page['h1_count']}\n")
+                          f.write(f"- Слов: {page['word_count']}\n")
+                          f.write(f"- Изображений: {page['images_total']} (без alt: {page['images_without_alt']})\n")
+                          f.write(f"- Внутренних ссылок: {page['internal_links']}\n\n")
+
+                          if page['recommendations']:
+                              f.write(f"**Рекомендации:**\n")
+                              for rec in page['recommendations']:
+                                  f.write(f"- {rec}\n")
+                              f.write(f"\n")
+                      else:
+                          f.write(f"### ❌ {page['url']}\n\n")
+                          f.write(f"Error: {page['error']}\n\n")
+
+                  # GPT анализ (если есть ключ)
+                  if os.getenv('OPENAI_API_KEY'):
+                      f.write(f"\n## 🤖 AI Рекомендации\n\n")
+                      f.write(f"_GPT анализ будет добавлен в следующей версии_\n\n")
+
+                  f.write(f"\n---\n\n")
+                  f.write(f"*Автоматически создано Legal AI PRO SEO Analyzer*\n")
+
+          if __name__ == "__main__":
+              asyncio.run(main())
           EOF
 
-          # Запускаем анализ
-          python analyze_site.py
+          python analyze_seo.py
 
       - name: Upload SEO report
         uses: actions/upload-artifact@v4
@@ -165,6 +272,11 @@ jobs:
           path: seo-reports/
           retention-days: 90
 
+      - name: Display Summary
+        run: |
+          echo "📊 SEO Analysis Summary:"
+          cat seo-reports/SUMMARY.md
+
       - name: Create Issue with recommendations
         if: github.event_name == 'schedule'
         uses: actions/github-script@v7
@@ -172,42 +284,34 @@ jobs:
           script: |
             const fs = require('fs');
             const summary = fs.readFileSync('seo-reports/SUMMARY.md', 'utf8');
-            const reportData = JSON.parse(fs.readFileSync('seo-reports/report-' + new Date().toISOString().split('T')[0] + '.json', 'utf8'));
+            const reportFile = 'seo-reports/report-' + new Date().toISOString().split('T')[0] + '.json';
+
+            let reportData = { overall_score: 0 };
+            try {
+              reportData = JSON.parse(fs.readFileSync(reportFile, 'utf8'));
+            } catch (e) {
+              console.log('Could not read report file');
+            }
 
             const issueBody = `${summary}
 
-            ## Detailed Report
+            ## 📎 Детальный отчёт
 
-            Full analysis report is available in [workflow artifacts](${context.payload.repository.html_url}/actions/runs/${context.runId}).
+            Полный JSON отчёт доступен в [workflow artifacts](${context.payload.repository.html_url}/actions/runs/${context.runId}).
 
-            **Overall Score: ${reportData.overall_score}/100**
+            ## 🎯 Следующие шаги
 
-            ### Critical Issues
-            ${reportData.recommendations.filter(r => r.includes('critical') || r.includes('важно')).map(r => `- ⚠️ ${r}`).join('\n') || 'None'}
-
-            ### Next Steps
-            1. Review detailed report in artifacts
-            2. Implement critical recommendations
-            3. Monitor score improvements
+            1. Просмотрите рекомендации выше
+            2. Реализуйте критические исправления
+            3. Запустите анализ повторно для проверки
 
             ---
-            *Автоматически создано SEO AI Models*`;
+            *Автоматически создано SEO AI Analyzer*`;
 
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `[SEO Report] ${new Date().toLocaleDateString('ru-RU')} - Score: ${reportData.overall_score}/100`,
+              title: `📊 SEO Report ${new Date().toLocaleDateString('ru-RU')} - Score: ${reportData.overall_score}/100`,
               body: issueBody,
-              labels: ['seo', 'automated', 'analysis']
+              labels: ['seo', 'automated']
             });
-
-      - name: Comment on PR (if triggered by push)
-        if: github.event_name == 'push'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const fs = require('fs');
-            const summary = fs.readFileSync('seo-reports/SUMMARY.md', 'utf8');
-
-            console.log('📊 SEO Analysis completed');
-            console.log(summary);
