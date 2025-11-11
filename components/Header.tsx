@@ -38,7 +38,7 @@ export default function Header() {
             <a href="#" className="flex items-center gap-3 group">
               <div className="text-2xl">🤖</div>
               <span className="text-xl font-bold text-white group-hover:text-amber-400 transition-colors">
-                Legal AI
+                Legal AI PRO
               </span>
             </a>
           </div>

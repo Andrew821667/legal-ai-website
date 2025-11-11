@@ -28,7 +28,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
           {/* Brand Column */}
           <div className="lg:col-span-2">
-            <h3 className="text-2xl font-bold text-white mb-4">Legal AI</h3>
+            <h3 className="text-2xl font-bold text-white mb-4">Legal AI PRO</h3>
             <p className="text-slate-400 mb-6 leading-relaxed">
               Юристы, самостоятельно разрабатывающие AI-решения для автоматизации
               юридической работы.
@@ -176,7 +176,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-slate-500 text-sm">
-            © {new Date().getFullYear()} Legal AI. Все права защищены.
+            © {new Date().getFullYear()} Legal AI PRO. Все права защищены.
           </p>
           <div className="flex gap-6 text-sm">
             <a href="#" className="text-slate-500 hover:text-amber-500 transition-colors">
