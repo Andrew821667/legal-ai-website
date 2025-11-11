@@ -49,7 +49,7 @@ export default function ROICalculator() {
   };
 
   return (
-    <section className="py-20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700">
+    <section id="calculator" className="py-20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-12">
