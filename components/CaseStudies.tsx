@@ -1,0 +1,221 @@
+export default function CaseStudies() {
+  const cases = [
+    {
+      industry: "Агрохолдинг",
+      icon: "🌾",
+      problem: {
+        title: "Проблема",
+        points: [
+          "50+ договоров в месяц",
+          "2 юриста не успевают проверять",
+          "Пропускали критические условия",
+          "2-4 часа на проверку одного договора",
+        ],
+      },
+      solution: {
+        title: "Решение",
+        points: [
+          "Разработали AI-систему анализа договоров",
+          "Обучили на внутренних шаблонах компании",
+          "Интегрировали с 1C и корпоративной почтой",
+          "Автоматическое выявление рисков",
+        ],
+      },
+      results: {
+        title: "Результаты",
+        metrics: [
+          { label: "Время проверки", value: "2-4 ч → 30 мин", highlight: "8x быстрее" },
+          { label: "Выявление рисков", value: "95%+", highlight: "автоматически" },
+          { label: "Экономия времени", value: "80 часов/мес", highlight: "2 ставки юриста" },
+          { label: "ROI", value: "4 месяца", highlight: "окупаемость" },
+        ],
+      },
+      testimonial:
+        "До внедрения AI тонули в договорах. Теперь система за 5 минут находит все риски, а мы фокусируемся на сложных вопросах. Лучшее вложение года!",
+      role: "Главный юрист",
+    },
+    {
+      industry: "Банк",
+      icon: "🏦",
+      problem: {
+        title: "Проблема",
+        points: [
+          "200+ процедур банкротства одновременно",
+          "Мониторинг КАД по всем делам вручную",
+          "Пропуск сроков из-за человеческого фактора",
+          "Огромный объем процессуальных документов",
+        ],
+      },
+      solution: {
+        title: "Решение",
+        points: [
+          "Автоматизация мониторинга картотеки арбитражных дел",
+          "AI-генерация процессуальных документов",
+          "Уведомления о критических сроках",
+          "Анализ судебной практики по аналогичным делам",
+        ],
+      },
+      results: {
+        title: "Результаты",
+        metrics: [
+          { label: "Мониторинг дел", value: "24/7", highlight: "автоматически" },
+          { label: "Пропущенных сроков", value: "0", highlight: "за 6 месяцев" },
+          { label: "Генерация документов", value: "15 мин", highlight: "вместо 3 часов" },
+          { label: "Экономия", value: "3 млн ₽/год", highlight: "на ФОТ" },
+        ],
+      },
+      testimonial:
+        "Раньше 2 юриста только мониторингом занимались. Теперь система сама следит за всеми делами и предупреждает о важных событиях. Высвободили людей на аналитику.",
+      role: "Начальник юридического управления",
+    },
+    {
+      industry: "Холдинг",
+      icon: "🏢",
+      problem: {
+        title: "Проблема",
+        points: [
+          "Due Diligence занимала 2-3 недели",
+          "Анализ сотен документов вручную",
+          "Высокий риск пропустить важные детали",
+          "Задержки в закрытии сделок M&A",
+        ],
+      },
+      solution: {
+        title: "Решение",
+        points: [
+          "AI-система для автоматизированного Due Diligence",
+          "Анализ правоустанавливающих документов",
+          "Выявление юридических рисков и обременений",
+          "Структурированные отчеты для руководства",
+        ],
+      },
+      results: {
+        title: "Результаты",
+        metrics: [
+          { label: "Время DD", value: "2-3 недели → 2 дня", highlight: "10x быстрее" },
+          { label: "Анализ документов", value: "500+ за день", highlight: "автоматически" },
+          { label: "Выявленные риски", value: "85%+", highlight: "точность" },
+          { label: "Ускорение сделок", value: "в 5 раз", highlight: "быстрее" },
+        ],
+      },
+      testimonial:
+        "Due Diligence из бутылочного горлышка превратился в конкурентное преимущество. Можем быстро оценивать активы и принимать решения о сделках.",
+      role: "Директор по правовым вопросам",
+    },
+  ];
+
+  return (
+    <section className="py-20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            Кейсы и результаты
+          </h2>
+          <p className="text-xl text-slate-300 max-w-2xl mx-auto">
+            Реальные проекты с измеримыми результатами
+          </p>
+        </div>
+
+        {/* Cases */}
+        <div className="space-y-12">
+          {cases.map((caseStudy, index) => (
+            <div
+              key={index}
+              className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 md:p-12 border border-white/20"
+            >
+              {/* Header */}
+              <div className="flex items-center gap-4 mb-8">
+                <div className="text-5xl">{caseStudy.icon}</div>
+                <h3 className="text-3xl font-bold text-white">
+                  {caseStudy.industry}
+                </h3>
+              </div>
+
+              {/* Problem, Solution, Results Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                {/* Problem */}
+                <div>
+                  <h4 className="text-xl font-bold text-red-400 mb-4 flex items-center gap-2">
+                    <span>❌</span> {caseStudy.problem.title}
+                  </h4>
+                  <ul className="space-y-2">
+                    {caseStudy.problem.points.map((point, idx) => (
+                      <li key={idx} className="text-slate-300 text-sm">
+                        • {point}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Solution */}
+                <div>
+                  <h4 className="text-xl font-bold text-blue-400 mb-4 flex items-center gap-2">
+                    <span>🔧</span> {caseStudy.solution.title}
+                  </h4>
+                  <ul className="space-y-2">
+                    {caseStudy.solution.points.map((point, idx) => (
+                      <li key={idx} className="text-slate-300 text-sm">
+                        • {point}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Results */}
+                <div>
+                  <h4 className="text-xl font-bold text-green-400 mb-4 flex items-center gap-2">
+                    <span>✅</span> {caseStudy.results.title}
+                  </h4>
+                  <div className="space-y-3">
+                    {caseStudy.results.metrics.map((metric, idx) => (
+                      <div key={idx} className="bg-white/10 rounded-lg p-3">
+                        <div className="text-xs text-slate-400 mb-1">
+                          {metric.label}
+                        </div>
+                        <div className="text-amber-400 font-bold">
+                          {metric.value}
+                        </div>
+                        <div className="text-xs text-green-400">
+                          {metric.highlight}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Testimonial */}
+              <div className="bg-amber-500/20 border border-amber-500/50 rounded-xl p-6">
+                <div className="flex gap-4">
+                  <div className="text-3xl">💬</div>
+                  <div>
+                    <p className="text-slate-200 italic mb-3">
+                      "{caseStudy.testimonial}"
+                    </p>
+                    <p className="text-slate-400 text-sm">
+                      — {caseStudy.role}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom CTA */}
+        <div className="mt-16 text-center">
+          <h3 className="text-3xl font-bold text-white mb-4">
+            Хотите такие же результаты?
+          </h3>
+          <p className="text-xl text-slate-300 mb-6 max-w-2xl mx-auto">
+            Давайте обсудим как AI может трансформировать ваш юридический отдел
+          </p>
+          <button className="bg-amber-600 hover:bg-amber-700 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg">
+            Обсудить ваш проект в Telegram →
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}

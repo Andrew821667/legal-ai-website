@@ -7,14 +7,14 @@ export default function Hero() {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center">
         {/* Main heading */}
         <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 animate-fade-in">
-          Юристы, которые САМИ <br />
-          <span className="text-amber-400">пишут AI-код</span>
+          Юристы, самостоятельно <br />
+          <span className="text-amber-400">разрабатывающие AI-решения</span>
         </h1>
 
         {/* Subtitle */}
         <p className="text-xl md:text-2xl text-slate-300 mb-8 max-w-3xl mx-auto animate-fade-in-delay-1">
-          Разрабатываем AI-системы для автоматизации юридической работы.
-          Не консультируем — ДЕЛАЕМ.
+          Создаем интеллектуальные системы для автоматизации юридической работы.
+          Не консультируем — разрабатываем и внедряем.
         </p>
 
         {/* Stats */}
