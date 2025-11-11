@@ -188,20 +188,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Made with badge */}
-        <div className="mt-8 text-center">
-          <p className="text-slate-600 text-xs">
-            🤖 Создано с помощью{" "}
-            <a
-              href="https://claude.com/claude-code"
-              className="text-slate-500 hover:text-amber-500 transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Claude Code
-            </a>
-          </p>
-        </div>
       </div>
     </footer>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useScrollAnimation } from "@/lib/hooks/useScrollAnimation";
+import { Briefcase, Bot, Flag, TrendingUp, Zap } from "lucide-react";
 
 export default function Features() {
   const { ref: sectionRef, isVisible: sectionVisible } = useScrollAnimation();
@@ -8,27 +9,27 @@ export default function Features() {
 
   const features = [
     {
-      icon: "💼",
+      icon: Briefcase,
       title: "20+ лет практики",
       description: "Юридическая экспертиза + программирование. Понимаем специфику изнутри."
     },
     {
-      icon: "🤖",
+      icon: Bot,
       title: "Сами пишем код",
       description: "Не консультируем — разрабатываем и внедряем AI-системы под ключ."
     },
     {
-      icon: "🇷🇺",
+      icon: Flag,
       title: "Российские AI",
       description: "Работаем с YandexGPT и GigaChat. Соответствие требованиям импортозамещения."
     },
     {
-      icon: "📊",
+      icon: TrendingUp,
       title: "80%+ экономия",
       description: "Реальное сокращение времени на рутинные задачи юротдела."
     },
     {
-      icon: "⚡",
+      icon: Zap,
       title: "ROI 4-6 месяцев",
       description: "Быстрая окупаемость за счет автоматизации процессов."
     }
@@ -59,7 +60,9 @@ export default function Features() {
 
               <div className="relative z-10">
                 {/* Icon */}
-                <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">{feature.icon}</div>
+                <div className="mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                  <feature.icon className="w-12 h-12 text-amber-600 group-hover:text-amber-700" strokeWidth={1.5} />
+                </div>
 
                 {/* Title */}
                 <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-amber-700 transition-colors">

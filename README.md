@@ -189,7 +189,3 @@ website/
 ## 📄 Лицензия
 
 См. [LICENSE](LICENSE)
-
----
-
-**🤖 Создано с помощью [Claude Code](https://claude.com/claude-code)**

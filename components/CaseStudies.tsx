@@ -1,10 +1,10 @@
 "use client";
 
 import { useScrollAnimation } from "@/lib/hooks/useScrollAnimation";
+import { useScrollAnimationMultiple } from "@/lib/hooks/useScrollAnimationMultiple";
 
 export default function CaseStudies() {
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
-  const { ref: casesRef, isVisible: casesVisible } = useScrollAnimation({ threshold: 0.05 });
 
   const cases = [
     {
@@ -111,6 +111,11 @@ export default function CaseStudies() {
     },
   ];
 
+  const { setRef, visibleItems } = useScrollAnimationMultiple(cases.length, {
+    threshold: 0.15,
+    rootMargin: "0px 0px -100px 0px",
+  });
+
   return (
     <section id="cases" className="py-20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -125,11 +130,13 @@ export default function CaseStudies() {
         </div>
 
         {/* Cases */}
-        <div ref={casesRef} className="space-y-12">
+        <div className="space-y-12">
           {cases.map((caseStudy, index) => (
             <div
               key={index}
-              className={`stagger-item ${casesVisible ? 'visible' : ''} bg-white/10 backdrop-blur-sm rounded-2xl p-8 md:p-12 border border-white/20 hover:border-white/40 transition-all duration-500`}
+              ref={setRef(index)}
+              className={`scroll-reveal ${visibleItems[index] ? 'visible' : ''} bg-white/10 backdrop-blur-sm rounded-2xl p-8 md:p-12 border border-white/20 hover:border-white/40 transition-all duration-500`}
+              style={{ transitionDelay: `${index * 0.2}s` }}
             >
               {/* Header */}
               <div className="flex items-center gap-4 mb-8">

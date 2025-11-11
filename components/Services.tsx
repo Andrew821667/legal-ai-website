@@ -1,6 +1,7 @@
 "use client";
 
 import { useScrollAnimation } from "@/lib/hooks/useScrollAnimation";
+import { FileText, Scale, Building2, Sprout, ShieldCheck, BarChart3, Settings, Briefcase, Coins } from "lucide-react";
 
 export default function Services() {
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
@@ -8,7 +9,7 @@ export default function Services() {
 
   const services = [
     {
-      icon: "📋",
+      icon: FileText,
       title: "Договорная работа",
       description:
         "Анализ входящих договоров, генерация исходящих, выявление рисков за 5-10 минут. Обработка протоколов разногласий.",
@@ -21,7 +22,7 @@ export default function Services() {
       ],
     },
     {
-      icon: "⚖️",
+      icon: Scale,
       title: "Судебная работа",
       description:
         "Анализ судебной практики, генерация процессуальных документов, мониторинг картотеки арбитражных дел.",
@@ -34,7 +35,7 @@ export default function Services() {
       ],
     },
     {
-      icon: "🏢",
+      icon: Building2,
       title: "Корпоративное право и M&A",
       description:
         "Автоматизация Due Diligence, анализ сотен документов за часы. Корпоративный документооборот.",
@@ -47,7 +48,7 @@ export default function Services() {
       ],
     },
     {
-      icon: "🌾",
+      icon: Sprout,
       title: "Земельное право",
       description:
         "Анализ правоустанавливающих документов, работа с кадастром, оспаривание кадастровой стоимости.",
@@ -60,7 +61,7 @@ export default function Services() {
       ],
     },
     {
-      icon: "🛡️",
+      icon: ShieldCheck,
       title: "Комплаенс",
       description:
         "Мониторинг законодательства 24/7, санкционный комплаенс, персональные данные, антикоррупция.",
@@ -73,7 +74,7 @@ export default function Services() {
       ],
     },
     {
-      icon: "📊",
+      icon: BarChart3,
       title: "Аналитика",
       description:
         "Аналитика договорного портфеля, риск-дашборды для руководства, KPI юридического отдела.",
@@ -86,7 +87,7 @@ export default function Services() {
       ],
     },
     {
-      icon: "🔧",
+      icon: Settings,
       title: "Кастомные решения",
       description:
         "AI-ассистент для вашей отрасли, интеграции с CRM/ERP/1C, обучение на ваших данных.",
@@ -99,7 +100,7 @@ export default function Services() {
       ],
     },
     {
-      icon: "💼",
+      icon: Briefcase,
       title: "Аутсорсинг + AI",
       description:
         "Гибридная модель: опытный юрист + AI-инструменты. Договорная работа, судебное представительство.",
@@ -112,7 +113,7 @@ export default function Services() {
       ],
     },
     {
-      icon: "💰",
+      icon: Coins,
       title: "Налоговый комплаенс с AI-аналитикой",
       description:
         "AI-мониторинг налоговой практики и законодательства. Анализ изменений, прогнозирование рисков, автоматизация отчетности.",
@@ -151,7 +152,9 @@ export default function Services() {
 
               <div className="relative z-10 flex flex-col h-full">
                 {/* Icon */}
-                <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">{service.icon}</div>
+                <div className="mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                  <service.icon className="w-12 h-12 text-amber-600 group-hover:text-amber-700" strokeWidth={1.5} />
+                </div>
 
                 {/* Title */}
                 <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-amber-700 transition-colors">
