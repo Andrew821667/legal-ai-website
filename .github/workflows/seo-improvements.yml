@@ -12,7 +12,7 @@ on:
 
 jobs:
   improve-readability:
-    if: contains(github.event.issue.labels.*.name, 'seo-critical') || contains(github.event.issue.labels.*.name, 'seo-high')
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.issue.labels.*.name, 'seo-critical') || contains(github.event.issue.labels.*.name, 'seo-high')
     runs-on: ubuntu-latest
     permissions:
       contents: write
