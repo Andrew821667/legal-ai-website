@@ -124,41 +124,60 @@ def expand_content(text, target_words=1200):
     return response.choices[0].message.content.strip()
 
 def process_tsx_file(file_path, improvement_type):
-    """Обработать TSX файл"""
+    """Обработать TSX файл - упрощенный подход через целый файл"""
 
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
 
-    # Извлекаем текстовый контент (упрощенно, для главной страницы)
-    # В реальности нужен более сложный парсинг JSX
+    print(f'📄 File size: {len(content)} characters')
 
-    # Ищем большие текстовые блоки в JSX
-    text_blocks = re.findall(r'<(p|h[1-6]|div)[^>]*>(.*?)</\1>', content, re.DOTALL)
+    # Упрощенный подход: передаем весь контент GPT для улучшения
+    # GPT сам найдет текстовые блоки и улучшит их, сохраняя JSX структуру
 
-    modified_content = content
+    prompt = f"""Ты — эксперт по SEO и React/Next.js. Улучши ТОЛЬКО ТЕКСТОВЫЙ КОНТЕНТ в этом TSX файле:
 
-    for tag, text in text_blocks:
-        if len(text.strip()) < 50:  # Пропускаем короткие тексты
-            continue
+ТРЕБОВАНИЯ:
+1. СОХРАНИ ВСЮ JSX структуру, компоненты, импорты, экспорты
+2. СОХРАНИ все {{переменные}}, классы, стили
+3. Улучши только русский текст внутри тегов:
+   - Сократи длинные предложения (до 20 слов)
+   - Упрости сложные термины
+   - Добавь связанные термины для семантической связности
+   - Добавь переходы между разделами
+4. НЕ трогай код, только текст
+5. ВЕРНИ ВЕСЬ ФАЙЛ с улучшенным текстом
 
-        # Пропускаем если содержит JSX переменные
-        if '{' in text or '<' in text:
-            continue
+ФАЙЛ:
+```tsx
+{content[:10000]}
+```
 
-        original_text = text.strip()
+ВЕРНИ УЛУЧШЕННЫЙ ФАЙЛ ПОЛНОСТЬЮ:"""
 
-        # Применяем улучшения
-        if improvement_type == 'readability':
-            improved_text = improve_readability(original_text)
-        elif improvement_type == 'content_length':
-            improved_text = expand_content(original_text)
-        else:
-            improved_text = improve_readability(original_text)
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o",  # Используем GPT-4 для лучшего понимания кода
+            messages=[
+                {"role": "system", "content": "Ты эксперт по SEO-копирайтингу и React. Улучшаешь текст в TSX, сохраняя всю структуру кода."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.3,
+            max_tokens=10000
+        )
 
-        # Заменяем в контенте
-        modified_content = modified_content.replace(original_text, improved_text)
+        improved_content = response.choices[0].message.content.strip()
 
-    return modified_content
+        # Убираем markdown code blocks если GPT их добавил
+        if improved_content.startswith('```'):
+            lines = improved_content.split('\n')
+            improved_content = '\n'.join(lines[1:-1])  # Убираем первую и последнюю строку
+
+        print(f'✅ Content improved by GPT-4')
+        return improved_content
+
+    except Exception as e:
+        print(f'❌ Error improving content: {e}')
+        return content  # Возвращаем оригинал при ошибке
 
 def main():
     print(f'🤖 Starting AI improvements for Issue #{ISSUE_NUMBER}')
