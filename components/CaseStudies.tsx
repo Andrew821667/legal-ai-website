@@ -3,13 +3,88 @@
 import { useScrollAnimation } from "@/lib/hooks/useScrollAnimation";
 import { useScrollAnimationMultiple } from "@/lib/hooks/useScrollAnimationMultiple";
 
+// SVG Icons Components
+const AgroIcon = () => (
+  <svg viewBox="0 0 100 100" className="w-20 h-20">
+    {/* Wheat stalks */}
+    <g fill="#fbbf24">
+      <ellipse cx="35" cy="30" rx="3" ry="5" />
+      <ellipse cx="30" cy="38" rx="3" ry="5" />
+      <ellipse cx="40" cy="38" rx="3" ry="5" />
+      <ellipse cx="35" cy="46" rx="3" ry="5" />
+      <rect x="34" y="50" width="2" height="40" fill="#92400e" />
+
+      <ellipse cx="55" cy="25" rx="3" ry="5" />
+      <ellipse cx="50" cy="33" rx="3" ry="5" />
+      <ellipse cx="60" cy="33" rx="3" ry="5" />
+      <ellipse cx="55" cy="41" rx="3" ry="5" />
+      <rect x="54" y="45" width="2" height="45" fill="#92400e" />
+    </g>
+    {/* Document */}
+    <rect x="60" y="60" width="30" height="35" rx="2" fill="#fff" stroke="#3b82f6" strokeWidth="2" />
+    <line x1="65" y1="68" x2="85" y2="68" stroke="#1e293b" strokeWidth="1.5" />
+    <line x1="65" y1="75" x2="85" y2="75" stroke="#1e293b" strokeWidth="1.5" opacity="0.6" />
+    <line x1="65" y1="82" x2="80" y2="82" stroke="#1e293b" strokeWidth="1.5" opacity="0.6" />
+    {/* AI badge */}
+    <circle cx="82" cy="88" r="6" fill="#10b981" />
+    <text x="82" y="91" fontSize="6" fill="#fff" textAnchor="middle" fontWeight="bold">AI</text>
+  </svg>
+);
+
+const BankIcon = () => (
+  <svg viewBox="0 0 100 100" className="w-20 h-20">
+    {/* Bank building */}
+    <polygon points="50,20 20,35 20,40 80,40 80,35" fill="#3b82f6" />
+    <rect x="25" y="42" width="8" height="40" fill="#1e40af" />
+    <rect x="37" y="42" width="8" height="40" fill="#1e40af" />
+    <rect x="49" y="42" width="8" height="40" fill="#1e40af" />
+    <rect x="61" y="42" width="8" height="40" fill="#1e40af" />
+    <rect x="20" y="82" width="60" height="6" fill="#1e3a8a" />
+    {/* Digital elements */}
+    <circle cx="70" cy="60" r="12" fill="#10b981" opacity="0.9" />
+    <path d="M 65 60 L 68 63 L 75 55" stroke="#fff" strokeWidth="2" fill="none" strokeLinecap="round" />
+    {/* Circuit lines */}
+    <line x1="70" y1="45" x2="70" y2="48" stroke="#fbbf24" strokeWidth="2" />
+    <line x1="85" y1="60" x2="82" y2="60" stroke="#fbbf24" strokeWidth="2" />
+  </svg>
+);
+
+const HoldingIcon = () => (
+  <svg viewBox="0 0 100 100" className="w-20 h-20">
+    {/* Office building */}
+    <rect x="25" y="25" width="50" height="60" fill="#6366f1" />
+    <rect x="20" y="82" width="60" height="5" fill="#4338ca" />
+    {/* Windows */}
+    {[0, 1, 2, 3].map(row =>
+      [0, 1, 2, 3].map(col => (
+        <rect
+          key={`${row}-${col}`}
+          x={30 + col * 10}
+          y={32 + row * 12}
+          width="6"
+          height="8"
+          fill="#a5b4fc"
+          opacity="0.8"
+        />
+      ))
+    )}
+    {/* M&A arrows */}
+    <g opacity="0.9">
+      <circle cx="78" cy="35" r="10" fill="#10b981" />
+      <path d="M 73 35 L 78 30 L 83 35" stroke="#fff" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M 73 35 L 78 40 L 83 35" stroke="#fff" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+    </g>
+  </svg>
+);
+
 export default function CaseStudies() {
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
 
   const cases = [
     {
       industry: "Агрохолдинг",
-      icon: "🌾",
+      IconComponent: AgroIcon,
+      gradient: "from-amber-500 to-orange-500",
       problem: {
         title: "Проблема",
         points: [
@@ -43,7 +118,8 @@ export default function CaseStudies() {
     },
     {
       industry: "Банк",
-      icon: "🏦",
+      IconComponent: BankIcon,
+      gradient: "from-blue-500 to-indigo-600",
       problem: {
         title: "Проблема",
         points: [
@@ -77,7 +153,8 @@ export default function CaseStudies() {
     },
     {
       industry: "Холдинг",
-      icon: "🏢",
+      IconComponent: HoldingIcon,
+      gradient: "from-indigo-500 to-purple-600",
       problem: {
         title: "Проблема",
         points: [
@@ -140,7 +217,9 @@ export default function CaseStudies() {
             >
               {/* Header */}
               <div className="flex items-center gap-4 mb-8">
-                <div className="text-5xl">{caseStudy.icon}</div>
+                <div className={`p-4 rounded-2xl bg-gradient-to-br ${caseStudy.gradient} shadow-xl`}>
+                  <caseStudy.IconComponent />
+                </div>
                 <h3 className="text-3xl font-bold text-white">
                   {caseStudy.industry}
                 </h3>

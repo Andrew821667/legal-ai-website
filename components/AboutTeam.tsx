@@ -2,13 +2,129 @@
 
 import { useScrollAnimation } from "@/lib/hooks/useScrollAnimation";
 
+// SVG Icons
+const LegalIcon = () => (
+  <svg viewBox="0 0 100 100" className="w-16 h-16">
+    <g transform="translate(50, 50)">
+      {/* Balance beam */}
+      <line x1="-30" y1="-10" x2="30" y2="-10" stroke="#fbbf24" strokeWidth="3" />
+      <circle cx="0" cy="-10" r="4" fill="#f59e0b" />
+      {/* Stand */}
+      <rect x="-2" y="-10" width="4" height="40" fill="#92400e" />
+      <rect x="-15" y="28" width="30" height="5" rx="2" fill="#92400e" />
+      {/* Left scale */}
+      <line x1="-30" y1="-10" x2="-35" y2="5" stroke="#64748b" strokeWidth="2" />
+      <line x1="-25" y1="-10" x2="-20" y2="5" stroke="#64748b" strokeWidth="2" />
+      <ellipse cx="-27.5" cy="7" rx="12" ry="5" fill="#3b82f6" opacity="0.7" />
+      {/* Right scale */}
+      <line x1="30" y1="-10" x2="35" y2="5" stroke="#64748b" strokeWidth="2" />
+      <line x1="25" y1="-10" x2="20" y2="5" stroke="#64748b" strokeWidth="2" />
+      <ellipse cx="27.5" cy="7" rx="12" ry="5" fill="#3b82f6" opacity="0.7" />
+    </g>
+  </svg>
+);
+
+const CodeIcon = () => (
+  <svg viewBox="0 0 100 100" className="w-16 h-16">
+    {/* Monitor */}
+    <rect x="15" y="20" width="70" height="50" rx="3" fill="#1e293b" stroke="#3b82f6" strokeWidth="2" />
+    <rect x="20" y="25" width="60" height="40" fill="#0f172a" />
+    {/* Code */}
+    <text x="25" y="38" fontSize="8" fill="#22d3ee" fontFamily="monospace">&lt;AI/&gt;</text>
+    <text x="25" y="48" fontSize="8" fill="#a855f7" fontFamily="monospace">func()</text>
+    <text x="25" y="58" fontSize="8" fill="#10b981" fontFamily="monospace">{`{...}`}</text>
+    {/* Stand */}
+    <rect x="45" y="70" width="10" height="8" fill="#64748b" />
+    <rect x="30" y="78" width="40" height="3" fill="#64748b" />
+  </svg>
+);
+
+const AIIcon = () => (
+  <svg viewBox="0 0 100 100" className="w-16 h-16">
+    {/* AI Brain/Network */}
+    <circle cx="50" cy="50" r="25" fill="url(#aiGradient)" opacity="0.3" />
+    <circle cx="50" cy="50" r="15" fill="#a855f7" />
+    {/* Neural connections */}
+    <circle cx="30" cy="35" r="6" fill="#3b82f6" />
+    <circle cx="70" cy="35" r="6" fill="#ec4899" />
+    <circle cx="30" cy="65" r="6" fill="#10b981" />
+    <circle cx="70" cy="65" r="6" fill="#fbbf24" />
+    <line x1="50" y1="50" x2="30" y2="35" stroke="#3b82f6" strokeWidth="2" opacity="0.6" />
+    <line x1="50" y1="50" x2="70" y2="35" stroke="#ec4899" strokeWidth="2" opacity="0.6" />
+    <line x1="50" y1="50" x2="30" y2="65" stroke="#10b981" strokeWidth="2" opacity="0.6" />
+    <line x1="50" y1="50" x2="70" y2="65" stroke="#fbbf24" strokeWidth="2" opacity="0.6" />
+    {/* AI text */}
+    <text x="50" y="55" fontSize="12" fill="#fff" textAnchor="middle" fontWeight="bold">AI</text>
+    <defs>
+      <radialGradient id="aiGradient">
+        <stop offset="0%" stopColor="#a855f7" />
+        <stop offset="100%" stopColor="#ec4899" />
+      </radialGradient>
+    </defs>
+  </svg>
+);
+
+const ChartIcon = () => (
+  <svg viewBox="0 0 100 100" className="w-12 h-12">
+    <rect x="20" y="60" width="12" height="25" fill="#3b82f6" rx="2" />
+    <rect x="38" y="45" width="12" height="40" fill="#10b981" rx="2" />
+    <rect x="56" y="30" width="12" height="55" fill="#a855f7" rx="2" />
+    <rect x="74" y="50" width="12" height="35" fill="#f59e0b" rx="2" />
+  </svg>
+);
+
+const DocumentIcon = () => (
+  <svg viewBox="0 0 100 100" className="w-12 h-12">
+    <rect x="25" y="15" width="50" height="70" rx="4" fill="#fff" stroke="#3b82f6" strokeWidth="2" />
+    <line x1="35" y1="30" x2="65" y2="30" stroke="#1e293b" strokeWidth="2" />
+    <line x1="35" y1="42" x2="65" y2="42" stroke="#1e293b" strokeWidth="1.5" opacity="0.7" />
+    <line x1="35" y1="52" x2="60" y2="52" stroke="#1e293b" strokeWidth="1.5" opacity="0.7" />
+    <line x1="35" y1="62" x2="65" y2="62" stroke="#1e293b" strokeWidth="1.5" opacity="0.5" />
+    <circle cx="65" cy="72" r="8" fill="#10b981" />
+    <path d="M 61 72 L 64 75 L 69 69" stroke="#fff" strokeWidth="2" fill="none" />
+  </svg>
+);
+
+const ClockIcon = () => (
+  <svg viewBox="0 0 100 100" className="w-12 h-12">
+    <circle cx="50" cy="50" r="30" fill="#fff" stroke="#3b82f6" strokeWidth="3" />
+    <circle cx="50" cy="50" r="3" fill="#1e293b" />
+    <line x1="50" y1="50" x2="50" y2="30" stroke="#1e293b" strokeWidth="3" strokeLinecap="round" />
+    <line x1="50" y1="50" x2="65" y2="50" stroke="#10b981" strokeWidth="2" strokeLinecap="round" />
+    {/* Speed lines */}
+    <line x1="85" y1="40" x2="95" y2="35" stroke="#10b981" strokeWidth="2" strokeLinecap="round" />
+    <line x1="85" y1="50" x2="95" y2="50" stroke="#10b981" strokeWidth="2" strokeLinecap="round" />
+    <line x1="85" y1="60" x2="95" y2="65" stroke="#10b981" strokeWidth="2" strokeLinecap="round" />
+  </svg>
+);
+
+const BuildingIcon = () => (
+  <svg viewBox="0 0 100 100" className="w-12 h-12">
+    <rect x="30" y="30" width="40" height="55" fill="#6366f1" />
+    <rect x="25" y="82" width="50" height="5" fill="#4338ca" />
+    {[0, 1, 2, 3].map(row =>
+      [0, 1, 2].map(col => (
+        <rect
+          key={`${row}-${col}`}
+          x={35 + col * 10}
+          y={38 + row * 12}
+          width="6"
+          height="8"
+          fill="#a5b4fc"
+        />
+      ))
+    )}
+  </svg>
+);
+
 export default function AboutTeam() {
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
   const { ref: expertiseRef, isVisible: expertiseVisible } = useScrollAnimation({ threshold: 0.05 });
 
   const expertise = [
     {
-      icon: "⚖️",
+      IconComponent: LegalIcon,
+      gradient: "from-amber-500 to-orange-500",
       title: "Юридическая практика",
       description: "20+ лет опыта в крупных компаниях",
       details: [
@@ -19,7 +135,8 @@ export default function AboutTeam() {
       ],
     },
     {
-      icon: "💻",
+      IconComponent: CodeIcon,
+      gradient: "from-blue-500 to-cyan-500",
       title: "Разработка ПО",
       description: "Практический опыт программирования",
       details: [
@@ -30,7 +147,8 @@ export default function AboutTeam() {
       ],
     },
     {
-      icon: "🤖",
+      IconComponent: AIIcon,
+      gradient: "from-purple-500 to-pink-500",
       title: "AI/ML экспертиза",
       description: "Разработка интеллектуальных систем",
       details: [
@@ -43,10 +161,10 @@ export default function AboutTeam() {
   ];
 
   const achievements = [
-    { icon: "📊", number: "200+", label: "процедур банкротства" },
-    { icon: "📋", number: "1000+", label: "автоматизированных договоров" },
-    { icon: "⏱️", number: "80%+", label: "экономия времени юротдела" },
-    { icon: "🏢", number: "20+", label: "компаний-клиентов" },
+    { IconComponent: ChartIcon, gradient: "from-blue-500 to-cyan-500", number: "200+", label: "процедур банкротства" },
+    { IconComponent: DocumentIcon, gradient: "from-green-500 to-emerald-500", number: "1000+", label: "автоматизированных договоров" },
+    { IconComponent: ClockIcon, gradient: "from-amber-500 to-orange-500", number: "80%+", label: "экономия времени юротдела" },
+    { IconComponent: BuildingIcon, gradient: "from-indigo-500 to-purple-500", number: "20+", label: "компаний-клиентов" },
   ];
 
   const technologies = {
@@ -98,8 +216,10 @@ export default function AboutTeam() {
               key={index}
               className={`stagger-item ${expertiseVisible ? 'visible' : ''} bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/40 transition-all duration-500`}
             >
-              {/* Icon */}
-              <div className="text-5xl mb-4">{item.icon}</div>
+              {/* Icon with gradient background */}
+              <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${item.gradient} shadow-lg mb-4`}>
+                <item.IconComponent />
+              </div>
 
               {/* Title */}
               <h3 className="text-2xl font-bold text-white mb-2">
@@ -133,7 +253,11 @@ export default function AboutTeam() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {achievements.map((achievement, index) => (
               <div key={index} className="text-center">
-                <div className="text-4xl mb-2">{achievement.icon}</div>
+                <div className="flex justify-center mb-3">
+                  <div className={`p-3 rounded-xl bg-gradient-to-br ${achievement.gradient} shadow-lg`}>
+                    <achievement.IconComponent />
+                  </div>
+                </div>
                 <div className="text-4xl font-bold text-amber-400 mb-2">
                   {achievement.number}
                 </div>
