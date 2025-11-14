@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-"""AI-powered content improvement script for SEO optimization"""
+"""AI-powered content improvement script for SEO optimization - FIXED VERSION"""
 
 import os
 import json
 import re
 from pathlib import Path
 from openai import OpenAI
-from bs4 import BeautifulSoup
 from github import Github
 
 # Configuration
@@ -41,128 +40,71 @@ def identify_improvement_type(issue):
     else:
         return 'general'
 
-def improve_readability(text):
-    """Улучшить читаемость текста через GPT"""
-
-    prompt = f"""Ты — эксперт по SEO-копирайтингу. Улучши читаемость этого текста:
-
-ТРЕБОВАНИЯ:
-1. Сократи предложения: средняя длина 15-20 слов (сейчас ~33)
-2. Разбей длинные абзацы на короткие (2-3 предложения)
-3. Замени сложные термины простыми аналогами:
-   - "мультиагентная система" → "система с несколькими AI-помощниками"
-   - "Due Diligence" → "проверка документов при сделках"
-   - "автоматизация юридической работы" → "автоматизация для юристов"
-4. Добавь переходные слова: "поэтому", "например", "кроме того"
-5. СОХРАНИ всю важную информацию и цифры
-6. СОХРАНИ HTML-теги, классы, структуру
-
-ТЕКСТ:
-{text}
-
-ВЕРНИ ТОЛЬКО УЛУЧШЕННЫЙ ТЕКСТ БЕЗ КОММЕНТАРИЕВ."""
-
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {"role": "system", "content": "Ты эксперт по SEO-копирайтингу. Улучшаешь читаемость текста, сохраняя всю информацию."},
-            {"role": "user", "content": prompt}
-        ],
-        temperature=0.3,
-        max_tokens=4000
-    )
-
-    return response.choices[0].message.content.strip()
-
-def add_trust_signals(content):
-    """Добавить сигналы доверия"""
-
-    from datetime import datetime
-
-    # Добавляем дату обновления в footer
-    footer_date = f'<p class="text-sm text-gray-500 mt-4">Последнее обновление: {datetime.now().strftime("%d.%m.%Y")}</p>'
-
-    # Ищем footer и добавляем дату
-    if '<footer' in content:
-        content = content.replace('</footer>', f'{footer_date}</footer>')
-
-    return content
-
-def expand_content(text, target_words=1200):
-    """Расширить контент до целевого количества слов"""
-
-    current_words = len(text.split())
-    words_needed = target_words - current_words
-
-    if words_needed <= 0:
-        return text
-
-    prompt = f"""Расширь этот контент, добавив {words_needed} слов:
-
-ТРЕБОВАНИЯ:
-1. Добавь конкретные примеры и детали
-2. Раскрой каждый пункт подробнее
-3. Добавь данные и статистику
-4. НЕ добавляй воду — только ценную информацию
-5. СОХРАНИ HTML-структуру
-
-ТЕКСТ:
-{text}
-
-ВЕРНИ РАСШИРЕННУЮ ВЕРСИЮ:"""
-
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {"role": "system", "content": "Ты эксперт по контент-маркетингу. Расширяешь тексты, добавляя ценную информацию."},
-            {"role": "user", "content": prompt}
-        ],
-        temperature=0.4,
-        max_tokens=4000
-    )
-
-    return response.choices[0].message.content.strip()
-
-def process_tsx_file(file_path, improvement_type):
-    """Обработать TSX файл - упрощенный подход через целый файл"""
+def improve_component_content(file_path, improvement_type):
+    """Улучшить контент в TSX компоненте - ПРАВИЛЬНЫЙ ПОДХОД"""
 
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
 
-    print(f'📄 File size: {len(content)} characters')
+    print(f'📄 Processing: {file_path}')
+    print(f'📏 File size: {len(content)} characters')
 
-    # Упрощенный подход: передаем весь контент GPT для улучшения
-    # GPT сам найдет текстовые блоки и улучшит их, сохраняя JSX структуру
+    # Проверяем что есть текстовый контент для улучшения
+    # Ищем строки с русским текстом внутри JSX
+    russian_text_pattern = r'>[А-Яа-яЁё\s\-,\.!?]+<|"[А-Яа-яЁё\s\-,\.!?]+"'
+    if not re.search(russian_text_pattern, content):
+        print(f'⏭️  No Russian text found in {file_path}, skipping')
+        return content
 
-    prompt = f"""Ты — эксперт по SEO и React/Next.js. Улучши ТОЛЬКО ТЕКСТОВЫЙ КОНТЕНТ в этом TSX файле:
+    # Формируем промпт для GPT-4
+    prompt = f"""Ты — эксперт по SEO-копирайтингу и React/TypeScript. Твоя задача: улучшить ТОЛЬКО ТЕКСТОВЫЙ КОНТЕНТ, полностью сохранив код.
 
-ТРЕБОВАНИЯ:
-1. СОХРАНИ ВСЮ JSX структуру, компоненты, импорты, экспорты
-2. СОХРАНИ все {{переменные}}, классы, стили
-3. Улучши только русский текст внутри тегов:
-   - Сократи длинные предложения (до 20 слов)
-   - Упрости сложные термины
-   - Добавь связанные термины для семантической связности
-   - Добавь переходы между разделами
-4. НЕ трогай код, только текст
-5. ВЕРНИ ВЕСЬ ФАЙЛ с улучшенным текстом
+ВАЖНЫЕ ПРАВИЛА:
+1. СОХРАНИ ВСЮ структуру JSX/TSX абсолютно неизменной
+2. СОХРАНИ все классы Tailwind CSS
+3. СОХРАНИ все компоненты, импорты, экспорты
+4. СОХРАНИ все переменные, функции, хуки
+5. НЕ добавляй комментарии или пояснения
 
-ФАЙЛ:
+ЧТО УЛУЧШАТЬ:
+✅ Русский текст внутри тегов: <h1>ЭТОТ ТЕКСТ</h1>
+✅ Русский текст в строках: "ЭТОТ ТЕКСТ"
+✅ Контент параграфов, заголовков, кнопок
+
+КАК УЛУЧШАТЬ (в зависимости от типа):
+{get_improvement_instructions(improvement_type)}
+
+ЧТО НЕ ТРОГАТЬ:
+❌ Код TypeScript/JavaScript
+❌ Классы и стили
+❌ Структуру компонентов
+❌ Английский текст (ссылки, классы, и т.д.)
+❌ Числа и статистику (20+, 80%, 4-6 мес)
+
+ИСХОДНЫЙ ФАЙЛ:
 ```tsx
-{content[:10000]}
+{content}
 ```
 
-ВЕРНИ УЛУЧШЕННЫЙ ФАЙЛ ПОЛНОСТЬЮ:"""
+ВЕРНИ УЛУЧШЕННУЮ ВЕРСИЮ ФАЙЛА ПОЛНОСТЬЮ (без markdown блоков, без пояснений):"""
 
     try:
+        print(f'🤖 Calling GPT-4 to improve {file_path.name}...')
+
         response = client.chat.completions.create(
-            model="gpt-4o",  # Используем GPT-4 для лучшего понимания кода
+            model="gpt-4o",
             messages=[
-                {"role": "system", "content": "Ты эксперт по SEO-копирайтингу и React. Улучшаешь текст в TSX, сохраняя всю структуру кода."},
-                {"role": "user", "content": prompt}
+                {
+                    "role": "system",
+                    "content": "Ты эксперт по SEO-копирайтингу и React/TypeScript. Улучшаешь ТОЛЬКО текстовый контент, сохраняя весь код абсолютно неизменным."
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
             ],
-            temperature=0.3,
-            max_tokens=10000
+            temperature=0.3,  # Низкая температура для точности
+            max_tokens=8000
         )
 
         improved_content = response.choices[0].message.content.strip()
@@ -170,14 +112,53 @@ def process_tsx_file(file_path, improvement_type):
         # Убираем markdown code blocks если GPT их добавил
         if improved_content.startswith('```'):
             lines = improved_content.split('\n')
-            improved_content = '\n'.join(lines[1:-1])  # Убираем первую и последнюю строку
+            # Убираем первую строку (```tsx) и последнюю (```)
+            improved_content = '\n'.join(lines[1:-1]) if len(lines) > 2 else improved_content
 
-        print(f'✅ Content improved by GPT-4')
+        # Проверяем что код валидный (хотя бы базово)
+        if 'export default' not in improved_content:
+            print(f'⚠️  Warning: GPT removed export statement, using original')
+            return content
+
+        print(f'✅ Content improved successfully')
         return improved_content
 
     except Exception as e:
-        print(f'❌ Error improving content: {e}')
+        print(f'❌ Error improving {file_path}: {e}')
         return content  # Возвращаем оригинал при ошибке
+
+def get_improvement_instructions(improvement_type):
+    """Получить инструкции по улучшению в зависимости от типа"""
+
+    instructions = {
+        'readability': """
+- Сократи длинные предложения (максимум 20 слов)
+- Упрости сложные термины:
+  * "автоматизация юридической работы" → "автоматизация для юристов"
+  * "мультиагентная система" → "система с AI-помощниками"
+  * "Due Diligence" → "проверка документов"
+- Разбей длинные абзацы на короткие (2-3 предложения)
+- Добавь переходные слова ("например", "поэтому", "кроме того")
+""",
+        'content_length': """
+- Добавь конкретные примеры и детали
+- Раскрой каждый пункт подробнее
+- Добавь данные и статистику (где уместно)
+- НЕ добавляй воду — только ценную информацию
+""",
+        'trust_signals': """
+- Добавь конкретику и факты
+- Замени общие фразы на конкретные примеры
+- Добавь цифры и данные (где уместно)
+""",
+        'general': """
+- Сократи длинные предложения (до 20 слов)
+- Упрости сложные термины
+- Сохрани всю информацию
+"""
+    }
+
+    return instructions.get(improvement_type, instructions['general'])
 
 def main():
     print(f'🤖 Starting AI improvements for Issue #{ISSUE_NUMBER}')
@@ -193,23 +174,58 @@ def main():
     improvement_type = identify_improvement_type(issue)
     print(f'🎯 Improvement type: {improvement_type}')
 
-    # Находим файл главной страницы
-    main_page = Path('app/page.tsx')
+    # Находим компоненты для обработки
+    components_dir = Path('components')
 
-    if not main_page.exists():
-        print(f'❌ File not found: {main_page}')
+    if not components_dir.exists():
+        print(f'❌ Components directory not found')
         return
 
-    print(f'📝 Processing: {main_page}')
+    # Обрабатываем только компоненты с контентом
+    # (не трогаем Header, Footer - там мало текста)
+    target_components = [
+        'Hero.tsx',
+        'Features.tsx',
+        'Services.tsx',
+        'CaseStudies.tsx',
+        'AboutTeam.tsx',
+        'LeadMagnets.tsx'
+    ]
 
-    # Обрабатываем файл
-    modified_content = process_tsx_file(main_page, improvement_type)
+    modified_files = []
 
-    # Сохраняем изменения
-    with open(main_page, 'w', encoding='utf-8') as f:
-        f.write(modified_content)
+    for component_name in target_components:
+        component_path = components_dir / component_name
 
-    print(f'✅ File updated: {main_page}')
+        if not component_path.exists():
+            print(f'⏭️  Skipping {component_name} (not found)')
+            continue
+
+        print(f'\n📝 Processing: {component_name}')
+
+        # Обрабатываем компонент
+        improved_content = improve_component_content(component_path, improvement_type)
+
+        # Сохраняем только если есть изменения
+        with open(component_path, 'r', encoding='utf-8') as f:
+            original_content = f.read()
+
+        if improved_content != original_content:
+            with open(component_path, 'w', encoding='utf-8') as f:
+                f.write(improved_content)
+
+            modified_files.append(str(component_path))
+            print(f'✅ {component_name} updated')
+        else:
+            print(f'⏭️  {component_name} - no changes')
+
+    if not modified_files:
+        print('\n⚠️  No files were modified')
+        return
+
+    print(f'\n✅ Modified {len(modified_files)} files:')
+    for file in modified_files:
+        print(f'  - {file}')
 
     # Добавляем комментарий к Issue
     issue_obj = repo.get_issue(ISSUE_NUMBER)
@@ -217,11 +233,13 @@ def main():
         f'🤖 AI improvements generated!\n\n'
         f'A Pull Request will be created with the following improvements:\n'
         f'- Type: {improvement_type}\n'
-        f'- File: {main_page}\n\n'
-        f'Please review the PR carefully before merging.'
+        f'- Modified files: {len(modified_files)}\n\n'
+        f'Files changed:\n' +
+        '\n'.join([f'- `{f}`' for f in modified_files]) +
+        f'\n\nPlease review the PR carefully before merging.'
     )
 
-    print('✅ Done!')
+    print('\n✅ Done!')
 
 if __name__ == '__main__':
     main()
