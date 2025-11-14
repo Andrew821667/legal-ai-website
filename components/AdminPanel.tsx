@@ -23,6 +23,10 @@ import {
   AlertCircle,
   ExternalLink
 } from 'lucide-react';
+import SEOChart from './admin/SEOChart';
+import ExportButton from './admin/ExportButton';
+import NotificationBadge from './admin/NotificationBadge';
+import IssueFilters from './admin/IssueFilters';
 
 interface AdminPanelProps {
   password?: string; // Пароль для доступа (по умолчанию: "admin123")
@@ -37,6 +41,11 @@ export default function AdminPanel({ password = "admin123" }: AdminPanelProps) {
   const [activeTab, setActiveTab] = useState<'seo' | 'technical' | 'github'>('seo');
   const [githubData, setGithubData] = useState<any>(null);
   const [isLoadingGithub, setIsLoadingGithub] = useState(false);
+  const [filters, setFilters] = useState({
+    priority: 'all',
+    status: 'all',
+    dateRange: 'all'
+  });
 
   // Глобальный обработчик комбинации клавиш Ctrl+Shift+A
   useEffect(() => {
@@ -73,6 +82,23 @@ export default function AdminPanel({ password = "admin123" }: AdminPanelProps) {
     } finally {
       setIsLoadingGithub(false);
     }
+  };
+
+  // Фильтрация задач
+  const getFilteredTasks = () => {
+    if (!githubData || !githubData.top_seo_tasks) return [];
+
+    let filtered = [...githubData.top_seo_tasks];
+
+    // Фильтр по приоритету
+    if (filters.priority !== 'all') {
+      filtered = filtered.filter((task: any) => task.priority === filters.priority);
+    }
+
+    // Фильтр по статусу уже применен в API (мы берем только открытые)
+    // Но можно добавить дополнительную логику если нужно
+
+    return filtered;
   };
 
   const handleClose = () => {
@@ -201,6 +227,12 @@ export default function AdminPanel({ password = "admin123" }: AdminPanelProps) {
                   )}
                 </div>
                 <div className="flex items-center gap-2">
+                  {isAuthenticated && githubData && (
+                    <>
+                      <NotificationBadge githubData={githubData} />
+                      <ExportButton data={githubData} filename="admin-panel-data" />
+                    </>
+                  )}
                   {isAuthenticated && (
                     <button
                       onClick={handleLogout}
@@ -617,15 +649,23 @@ export default function AdminPanel({ password = "admin123" }: AdminPanelProps) {
                               </div>
                             </div>
 
+                            {/* SEO Score Chart */}
+                            {githubData.seo_history && githubData.seo_history.length > 0 && (
+                              <SEOChart data={githubData.seo_history} />
+                            )}
+
                             {/* Top SEO Tasks */}
                             {githubData.top_seo_tasks && githubData.top_seo_tasks.length > 0 && (
                               <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700/50">
-                                <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-                                  <TrendingUp className="w-5 h-5 text-amber-400" />
-                                  Приоритетные SEO задачи
-                                </h3>
+                                <div className="flex items-center justify-between mb-4">
+                                  <h3 className="text-white font-semibold flex items-center gap-2">
+                                    <TrendingUp className="w-5 h-5 text-amber-400" />
+                                    Приоритетные SEO задачи
+                                  </h3>
+                                  <IssueFilters onFilterChange={setFilters} />
+                                </div>
                                 <div className="space-y-3">
-                                  {githubData.top_seo_tasks.map((task: any, idx: number) => (
+                                  {getFilteredTasks().map((task: any, idx: number) => (
                                     <div key={task.id} className="flex items-center justify-between p-3 bg-slate-900/50 rounded-lg hover:bg-slate-900 transition-colors">
                                       <div className="flex items-center gap-3 flex-1">
                                         <span className={`px-2 py-1 rounded text-xs font-semibold ${
@@ -679,42 +719,6 @@ export default function AdminPanel({ password = "admin123" }: AdminPanelProps) {
                                       {run.html_url && (
                                         <a
                                           href={run.html_url}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                          className="text-amber-400 hover:text-amber-300"
-                                        >
-                                          <ExternalLink className="w-4 h-4" />
-                                        </a>
-                                      )}
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-
-                            {/* SEO History */}
-                            {githubData.seo_history && githubData.seo_history.length > 0 && (
-                              <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700/50">
-                                <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-                                  <BarChart3 className="w-5 h-5 text-amber-400" />
-                                  История SEO отчетов
-                                </h3>
-                                <div className="space-y-2">
-                                  {githubData.seo_history.map((report: any, idx: number) => (
-                                    <div key={idx} className="flex items-center justify-between p-3 bg-slate-900/50 rounded-lg">
-                                      <div className="flex items-center gap-4">
-                                        <span className="text-slate-400">{report.date}</span>
-                                        <span className={`font-bold ${
-                                          (report.score || 0) >= 80 ? 'text-green-400' :
-                                          (report.score || 0) >= 60 ? 'text-yellow-400' :
-                                          'text-red-400'
-                                        }`}>
-                                          Score: {report.score || 'N/A'}/100
-                                        </span>
-                                      </div>
-                                      {report.url && (
-                                        <a
-                                          href={report.url}
                                           target="_blank"
                                           rel="noopener noreferrer"
                                           className="text-amber-400 hover:text-amber-300"
