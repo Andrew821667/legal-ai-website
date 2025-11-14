@@ -24,22 +24,22 @@ export default function Hero() {
 
         {/* Subtitle */}
         <p className="text-xl md:text-2xl text-slate-300 mb-8 max-w-3xl mx-auto animate-fade-in-delay-1">
-          Мы создаем системы для автоматизации юридических процессов и повышения их эффективности. Наша специализация — разработка и внедрение инноваций, а не консультации.
+          Мы создаем передовые системы для автоматизации юридических процессов, которые значительно повышают их эффективность. Наша специализация заключается в разработке и внедрении инновационных решений, которые позволяют юридическим фирмам оптимизировать рабочие процессы и сократить затраты времени и ресурсов. Мы не занимаемся консультациями, а фокусируемся исключительно на создании технологий, которые меняют подход к юридической практике. Например, наши системы помогают автоматизировать обработку документов, что позволяет юристам сосредоточиться на более сложных задачах.
         </p>
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 animate-fade-in-delay-2">
           <div className="group bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 hover:border-amber-400/50 transition-all duration-300 hover:bg-white/15 transform hover:-translate-y-1">
             <div className="text-4xl font-bold text-amber-400 mb-2 group-hover:scale-110 transition-transform">20+</div>
-            <div className="text-slate-300">лет успешной юридической практики</div>
+            <div className="text-slate-300">лет успешной юридической практики, что подтверждает наш опыт и надежность в отрасли</div>
           </div>
           <div className="group bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 hover:border-amber-400/50 transition-all duration-300 hover:bg-white/15 transform hover:-translate-y-1">
             <div className="text-4xl font-bold text-amber-400 mb-2 group-hover:scale-110 transition-transform">80%+</div>
-            <div className="text-slate-300">сокращение времени на рутинные задачи</div>
+            <div className="text-slate-300">сокращение времени на рутинные задачи, что позволяет юристам сэкономить до 120-150 часов в месяц</div>
           </div>
           <div className="group bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 hover:border-amber-400/50 transition-all duration-300 hover:bg-white/15 transform hover:-translate-y-1">
             <div className="text-4xl font-bold text-amber-400 mb-2 group-hover:scale-110 transition-transform">4-6 мес</div>
-            <div className="text-slate-300">срок окупаемости инвестиций</div>
+            <div className="text-slate-300">срок окупаемости инвестиций, что делает наши решения экономически выгодными для бизнеса</div>
           </div>
         </div>
 
