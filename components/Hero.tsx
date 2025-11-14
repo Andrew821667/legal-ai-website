@@ -27,22 +27,24 @@ export default function Hero() {
 
             {/* Subtitle */}
             <p className="text-xl md:text-2xl text-slate-300 mb-8 animate-fade-in-delay-1">
-              Мы создаем уникальные системы, которые помогают автоматизировать юридические процессы и значительно повышают их эффективность.
+              Мы создаем системы для автоматизации юридических процессов. Повышаем эффективность вашей работы.
+              Наша специализация — разработка AI-решений, а не консультации. Используем передовые технологии
+              для реальной пользы вашего бизнеса.
             </p>
 
             {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in-delay-2">
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
                 <div className="text-3xl font-bold text-amber-400 mb-1">20+</div>
-                <div className="text-sm text-slate-300">лет практики</div>
+                <div className="text-sm text-slate-300">лет успешной юридической практики. Огромный опыт работы. Находим оптимальные решения для сложных задач.</div>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
                 <div className="text-3xl font-bold text-amber-400 mb-1">80%+</div>
-                <div className="text-sm text-slate-300">экономия времени</div>
+                <div className="text-sm text-slate-300">сокращение времени на рутинные задачи. Системы помогают юристам сосредоточиться на важном. Минимизируем затраты времени на рутину.</div>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
                 <div className="text-3xl font-bold text-amber-400 mb-1">4-6 мес</div>
-                <div className="text-sm text-slate-300">окупаемость</div>
+                <div className="text-sm text-slate-300">срок окупаемости инвестиций. Решения быстро начинают приносить выгоду. Быстрая отдача от вложений.</div>
               </div>
             </div>
 
