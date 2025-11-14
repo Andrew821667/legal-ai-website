@@ -3,6 +3,8 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AdminPanel from "@/components/AdminPanel";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
+import YandexMetrika from "@/components/YandexMetrika";
 
 export const metadata: Metadata = {
   title: "Legal AI PRO - Юристы, разрабатывающие AI-решения",
@@ -17,6 +19,16 @@ export default function RootLayout({
   return (
     <html lang="ru" className="scroll-smooth">
       <body className="antialiased">
+        {/* Google Analytics 4 */}
+        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+          <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
+        )}
+
+        {/* Yandex Metrika */}
+        {process.env.NEXT_PUBLIC_YM_COUNTER_ID && (
+          <YandexMetrika counterId={process.env.NEXT_PUBLIC_YM_COUNTER_ID} />
+        )}
+
         <Header />
         {children}
         <Footer />
