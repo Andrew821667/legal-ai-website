@@ -10,12 +10,12 @@ export default function Features() {
   const features = [
     {
       icon: Briefcase,
-      title: "20+ лет практики",
+      title: "20+ лет опыта",
       description: "Опыт в юриспруденции и программировании. Глубокое знание отрасли."
     },
     {
       icon: Bot,
-      title: "Сами пишем код",
+      title: "Сами создаем код",
       description: "Полный цикл разработки AI-систем. От идеи до внедрения."
     },
     {
@@ -41,7 +41,7 @@ export default function Features() {
         {/* Section Header */}
         <div ref={sectionRef} className={`text-center mb-16 scroll-reveal ${sectionVisible ? 'visible' : ''}`}>
           <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
-            Почему мы?
+            Почему выбирают нас?
           </h2>
           <p className="text-xl text-slate-600 max-w-2xl mx-auto">
             Уникальное сочетание юридической экспертизы и технических навыков
