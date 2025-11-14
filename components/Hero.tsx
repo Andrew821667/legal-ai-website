@@ -24,22 +24,22 @@ export default function Hero() {
 
         {/* Subtitle */}
         <p className="text-xl md:text-2xl text-slate-300 mb-8 max-w-3xl mx-auto animate-fade-in-delay-1">
-          Мы создаем системы для автоматизации юридических процессов и повышения их эффективности. Наша специализация — разработка и внедрение инноваций, а не консультации.
+          Мы создаем передовые системы для автоматизации юридических процессов, что позволяет значительно повысить их эффективность. Наша специализация заключается в разработке и внедрении инновационных решений, которые помогают юридическим командам работать быстрее и эффективнее, а не в предоставлении консультационных услуг. Например, наши системы позволяют сократить время на обработку документов и выполнение рутинных задач, освобождая до 80% времени юристов для более сложных и важных дел. Представьте: ваш юрист получает договор, и система автоматически анализирует его, выделяя ключевые моменты и потенциальные риски, что экономит часы работы и снижает вероятность ошибок.
         </p>
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 animate-fade-in-delay-2">
           <div className="group bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 hover:border-amber-400/50 transition-all duration-300 hover:bg-white/15 transform hover:-translate-y-1">
             <div className="text-4xl font-bold text-amber-400 mb-2 group-hover:scale-110 transition-transform">20+</div>
-            <div className="text-slate-300">лет успешной юридической практики</div>
+            <div className="text-slate-300">лет успешной юридической практики, что подтверждает нашу надежность и компетентность в области права. Мы накопили обширный опыт, который позволяет нам разрабатывать решения, идеально подходящие для нужд наших клиентов.</div>
           </div>
           <div className="group bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 hover:border-amber-400/50 transition-all duration-300 hover:bg-white/15 transform hover:-translate-y-1">
             <div className="text-4xl font-bold text-amber-400 mb-2 group-hover:scale-110 transition-transform">80%+</div>
-            <div className="text-slate-300">сокращение времени на рутинные задачи</div>
+            <div className="text-slate-300">сокращение времени на рутинные задачи, что позволяет командам сосредоточиться на более стратегически важных проектах. Это достигается за счет автоматизации процессов, таких как проверка соответствия и анализ документов, что существенно ускоряет рабочий процесс.</div>
           </div>
           <div className="group bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 hover:border-amber-400/50 transition-all duration-300 hover:bg-white/15 transform hover:-translate-y-1">
             <div className="text-4xl font-bold text-amber-400 mb-2 group-hover:scale-110 transition-transform">4-6 мес</div>
-            <div className="text-slate-300">срок окупаемости инвестиций</div>
+            <div className="text-slate-300">срок окупаемости инвестиций, что делает наши решения экономически выгодными для компаний любого размера. Внедрение наших систем позволяет быстро вернуть вложенные средства за счет повышения производительности и снижения затрат на выполнение рутинных операций.</div>
           </div>
         </div>
 
