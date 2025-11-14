@@ -47,10 +47,11 @@ export default function AdminPanel({ password = "admin123" }: AdminPanelProps) {
     dateRange: 'all'
   });
 
-  // Глобальный обработчик комбинации клавиш Ctrl+Shift+A
+  // Глобальный обработчик комбинации клавиш Ctrl+Shift+A (Windows/Linux) или Cmd+Shift+A (Mac)
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+      // Поддержка Mac (Cmd) и Windows/Linux (Ctrl)
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'A') {
         e.preventDefault();
         setIsOpen(true);
       }
