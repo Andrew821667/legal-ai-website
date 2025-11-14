@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import AdminPanel from "@/components/AdminPanel";
 
 export const metadata: Metadata = {
   title: "Legal AI PRO - Юристы, разрабатывающие AI-решения",
@@ -19,6 +20,7 @@ export default function RootLayout({
         <Header />
         {children}
         <Footer />
+        <AdminPanel password={process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "admin123"} />
       </body>
     </html>
   );
