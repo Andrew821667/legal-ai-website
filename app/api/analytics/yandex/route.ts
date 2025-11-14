@@ -150,7 +150,7 @@ async function fetchYandexMetrikaData(): Promise<YMMetricData | null> {
       ),
       // Топ страниц
       fetchYMData(
-        'ym:s:pageviews,ym:s:avgPageViewDuration',
+        'ym:s:pageviews,ym:s:avgVisitDurationSeconds',
         'ym:s:startURL',
         month,
         today
