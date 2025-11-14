@@ -41,6 +41,8 @@ export default function AdminPanel({ password = "admin123" }: AdminPanelProps) {
   const [activeTab, setActiveTab] = useState<'seo' | 'technical' | 'github'>('seo');
   const [githubData, setGithubData] = useState<any>(null);
   const [isLoadingGithub, setIsLoadingGithub] = useState(false);
+  const [analyticsData, setAnalyticsData] = useState<any>(null);
+  const [isLoadingAnalytics, setIsLoadingAnalytics] = useState(false);
   const [filters, setFilters] = useState({
     priority: 'all',
     status: 'all',
@@ -72,6 +74,13 @@ export default function AdminPanel({ password = "admin123" }: AdminPanelProps) {
     }
   }, [isAuthenticated, activeTab]);
 
+  // Загрузка Analytics данных при открытии вкладки SEO
+  useEffect(() => {
+    if (isAuthenticated && activeTab === 'seo' && !analyticsData) {
+      loadAnalyticsData();
+    }
+  }, [isAuthenticated, activeTab]);
+
   const loadGithubData = async () => {
     setIsLoadingGithub(true);
     try {
@@ -82,6 +91,19 @@ export default function AdminPanel({ password = "admin123" }: AdminPanelProps) {
       console.error('Failed to load GitHub data:', error);
     } finally {
       setIsLoadingGithub(false);
+    }
+  };
+
+  const loadAnalyticsData = async () => {
+    setIsLoadingAnalytics(true);
+    try {
+      const response = await fetch('/api/analytics/combined');
+      const result = await response.json();
+      setAnalyticsData(result);
+    } catch (error) {
+      console.error('Failed to load Analytics data:', error);
+    } finally {
+      setIsLoadingAnalytics(false);
     }
   };
 
@@ -128,44 +150,34 @@ export default function AdminPanel({ password = "admin123" }: AdminPanelProps) {
     setError('');
   };
 
-  // Mock данные для SEO (в реальности через API или MCP)
-  const seoData = {
+  // Данные для SEO - используем реальные данные из Analytics API или fallback на mock
+  const seoData = analyticsData?.data || {
     today: {
-      visits: 247,
-      pageviews: 892,
-      uniqueVisitors: 189,
-      bounceRate: 42.3,
-      avgDuration: '3:24',
-      conversions: 12
+      visits: 0,
+      pageviews: 0,
+      uniqueVisitors: 0,
+      bounceRate: 0,
+      avgDuration: '0:00',
+      conversions: 0
     },
     week: {
-      visits: 1834,
-      pageviews: 6521,
-      uniqueVisitors: 1456,
-      bounceRate: 38.7,
-      avgDuration: '3:52',
-      conversions: 89
+      visits: 0,
+      pageviews: 0,
+      uniqueVisitors: 0,
+      bounceRate: 0,
+      avgDuration: '0:00',
+      conversions: 0
     },
     month: {
-      visits: 7921,
-      pageviews: 28453,
-      uniqueVisitors: 6234,
-      bounceRate: 35.2,
-      avgDuration: '4:12',
-      conversions: 378
+      visits: 0,
+      pageviews: 0,
+      uniqueVisitors: 0,
+      bounceRate: 0,
+      avgDuration: '0:00',
+      conversions: 0
     },
-    topPages: [
-      { page: '/', visits: 3421, avgTime: '4:32' },
-      { page: '/services', visits: 1892, avgTime: '3:45' },
-      { page: '/cases', visits: 1234, avgTime: '5:12' },
-      { page: '/calculator', visits: 892, avgTime: '6:23' },
-    ],
-    sources: [
-      { name: 'Organic Search', percentage: 45.2 },
-      { name: 'Direct', percentage: 28.7 },
-      { name: 'Social Media', percentage: 15.3 },
-      { name: 'Referral', percentage: 10.8 },
-    ]
+    topPages: [],
+    sources: [],
   };
 
   // Технические данные
@@ -360,6 +372,39 @@ export default function AdminPanel({ password = "admin123" }: AdminPanelProps) {
                         animate={{ opacity: 1, y: 0 }}
                         className="space-y-6"
                       >
+                        {/* Loading Indicator & Sources */}
+                        {isLoadingAnalytics ? (
+                          <div className="flex items-center justify-center py-12">
+                            <div className="flex flex-col items-center gap-3">
+                              <RefreshCw className="w-8 h-8 text-amber-400 animate-spin" />
+                              <p className="text-slate-400">Загрузка данных аналитики...</p>
+                            </div>
+                          </div>
+                        ) : analyticsData?.sources && analyticsData.sources.length > 0 ? (
+                          <div className="bg-gradient-to-r from-amber-500/10 to-green-500/10 border border-amber-500/20 rounded-lg p-3">
+                            <div className="flex items-center gap-2">
+                              <Activity className="w-4 h-4 text-amber-400" />
+                              <span className="text-sm text-slate-300">
+                                Источники данных: <span className="text-amber-400 font-semibold">{analyticsData.sources.join(', ')}</span>
+                              </span>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-4">
+                            <div className="flex items-center gap-2">
+                              <AlertCircle className="w-5 h-5 text-yellow-400" />
+                              <div>
+                                <p className="text-slate-300 text-sm">
+                                  Аналитика не настроена. Настройте Google Analytics 4 или Yandex Metrika для получения реальных данных.
+                                </p>
+                                <p className="text-slate-500 text-xs mt-1">
+                                  См. документацию: docs/ADMIN_PANEL.md
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
                         {/* Period Stats */}
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           {[
@@ -406,7 +451,7 @@ export default function AdminPanel({ password = "admin123" }: AdminPanelProps) {
                             Топ страниц
                           </h3>
                           <div className="space-y-3">
-                            {seoData.topPages.map((page, idx) => (
+                            {seoData.topPages.map((page: any, idx: number) => (
                               <div key={idx} className="flex items-center justify-between p-3 bg-slate-900/50 rounded-lg">
                                 <div className="flex items-center gap-3">
                                   <span className="text-amber-400 font-bold text-sm">#{idx + 1}</span>
@@ -428,7 +473,7 @@ export default function AdminPanel({ password = "admin123" }: AdminPanelProps) {
                             Источники трафика
                           </h3>
                           <div className="space-y-3">
-                            {seoData.sources.map((source, idx) => (
+                            {seoData.sources.map((source: any, idx: number) => (
                               <div key={idx}>
                                 <div className="flex justify-between mb-1">
                                   <span className="text-slate-300">{source.name}</span>
