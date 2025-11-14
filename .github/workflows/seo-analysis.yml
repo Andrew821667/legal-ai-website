@@ -49,7 +49,7 @@ jobs:
           cat seo-reports/SUMMARY.md
 
       - name: Create Summary Issue
-        if: github.event_name == 'schedule'
+        if: always()
         uses: actions/github-script@v7
         with:
           script: |
@@ -70,7 +70,7 @@ jobs:
             });
 
       - name: Create Priority Issues
-        if: github.event_name == 'schedule'
+        if: always()
         uses: actions/github-script@v7
         with:
           script: |
