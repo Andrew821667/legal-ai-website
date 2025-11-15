@@ -1,3 +1,7 @@
+"use client";
+
+import AnimatedStat from "./AnimatedStat";
+
 export default function Hero() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700">
@@ -34,15 +38,17 @@ export default function Hero() {
 
             {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in-delay-2">
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-                <div className="text-3xl font-bold text-amber-400 mb-1">20+</div>
-                <div className="text-sm text-slate-300">лет успешной юридической практики. Огромный опыт работы. Находим оптимальные решения для сложных задач.</div>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-                <div className="text-3xl font-bold text-amber-400 mb-1">80%+</div>
-                <div className="text-sm text-slate-300">сокращение времени на рутинные задачи. Системы помогают юристам сосредоточиться на важном. Минимизируем затраты времени на рутину.</div>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+              <AnimatedStat
+                value={20}
+                suffix="+"
+                label="лет успешной юридической практики. Огромный опыт работы. Находим оптимальные решения для сложных задач."
+              />
+              <AnimatedStat
+                value={80}
+                suffix="%+"
+                label="сокращение времени на рутинные задачи. Системы помогают юристам сосредоточиться на важном. Минимизируем затраты времени на рутину."
+              />
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20 hover:bg-white/15 hover:border-amber-400/50 hover:scale-105 transition-all duration-300">
                 <div className="text-3xl font-bold text-amber-400 mb-1">4-6 мес</div>
                 <div className="text-sm text-slate-300">срок окупаемости инвестиций. Решения быстро начинают приносить выгоду. Быстрая отдача от вложений.</div>
               </div>
@@ -52,9 +58,10 @@ export default function Hero() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-in-delay-3">
               <a
                 href="#calculator"
-                className="group relative bg-amber-600 hover:bg-amber-700 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all transform hover:scale-105 shadow-xl hover:shadow-2xl overflow-hidden"
+                className="group relative bg-amber-600 hover:bg-amber-700 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all transform hover:scale-105 shadow-xl hover:shadow-2xl overflow-hidden animate-pulse-subtle"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-amber-400 to-orange-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="absolute inset-0 bg-amber-400 rounded-lg opacity-20 animate-ping"></div>
                 <span className="relative z-10">Рассчитать экономию</span>
               </a>
               <a

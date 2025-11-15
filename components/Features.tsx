@@ -2,6 +2,7 @@
 
 import { useScrollAnimation } from "@/lib/hooks/useScrollAnimation";
 import { Briefcase, Bot, Flag, TrendingUp, Zap } from "lucide-react";
+import Card3D from "./Card3D";
 
 export default function Features() {
   const { ref: sectionRef, isVisible: sectionVisible } = useScrollAnimation();
@@ -57,9 +58,9 @@ export default function Features() {
         {/* Features Grid */}
         <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {features.map((feature, index) => (
-            <div
+            <Card3D
               key={index}
-              className={`stagger-item ${gridVisible ? 'visible' : ''} group bg-white rounded-xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 border border-slate-200 hover:border-amber-300 relative overflow-hidden`}
+              className={`stagger-item ${gridVisible ? 'visible' : ''} group bg-white rounded-xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-slate-200 hover:border-amber-300 relative overflow-hidden`}
             >
               {/* Glow effect on hover */}
               <div className="absolute inset-0 bg-gradient-to-br from-amber-400/0 to-amber-600/0 group-hover:from-amber-400/5 group-hover:to-amber-600/5 transition-all duration-500 rounded-xl"></div>
@@ -80,7 +81,7 @@ export default function Features() {
                   {feature.description}
                 </p>
               </div>
-            </div>
+            </Card3D>
           ))}
         </div>
 
