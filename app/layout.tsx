@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import AdminPanel from "@/components/AdminPanel";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import YandexMetrika from "@/components/YandexMetrika";
+import StickyCTA from "@/components/StickyCTA";
 
 export const metadata: Metadata = {
   title: "Legal AI PRO - Юристы, разрабатывающие AI-решения",
@@ -32,6 +33,7 @@ export default function RootLayout({
         <Header />
         {children}
         <Footer />
+        <StickyCTA />
         <AdminPanel password={process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "admin123"} />
       </body>
     </html>
