@@ -30,12 +30,37 @@ export default function Hero() {
             </h1>
 
             {/* Subtitle */}
-            <p className="text-xl md:text-2xl text-slate-300 mb-8 animate-fade-in-delay-1">
-              Мы создаем системы для автоматизации юридических процессов. Повышаем эффективность вашей работы.
-              Наша специализация — разработка AI-решений, а не консультации. Используем передовые технологии
-              для реальной пользы вашего бизнеса.
-            </p>
-
+<div className="space-y-6 mb-8 animate-fade-in-delay-1">
+              {/* Автоматизация юридических процессов */}
+              <div>
+                <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">
+                  Автоматизация юридических процессов
+                </h2>
+                <p className="text-lg text-slate-300">
+                  Мы создаем системы для автоматизации юридических процессов. Повышаем эффективность вашей работы.
+                </p>
+              </div>
+              
+              {/* Наша специализация */}
+              <div>
+                <h3 className="text-xl md:text-2xl font-semibold text-amber-400 mb-2">
+                  Наша специализация
+                </h3>
+                <p className="text-lg text-slate-300">
+                  Разработка AI-решений, а не консультации.
+                </p>
+              </div>
+              
+              {/* Передовые технологии */}
+              <div>
+                <h3 className="text-xl md:text-2xl font-semibold text-amber-400 mb-2">
+                  Передовые технологии
+                </h3>
+                <p className="text-lg text-slate-300">
+                  Используем передовые технологии для реальной пользы вашего бизнеса.
+                </p>
+              </div>
+            </div>
             {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in-delay-2">
               <AnimatedStat
