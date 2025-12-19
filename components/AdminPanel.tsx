@@ -27,6 +27,7 @@ import SEOChart from './admin/SEOChart';
 import ExportButton from './admin/ExportButton';
 import NotificationBadge from './admin/NotificationBadge';
 import IssueFilters from './admin/IssueFilters';
+import { verifyPassword } from '@/lib/auth';
 
 interface AdminPanelProps {
   password?: string; // Пароль для доступа (по умолчанию: "admin123")
