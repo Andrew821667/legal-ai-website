@@ -37,6 +37,11 @@ export default function Services() {
         "Мониторинг КАД",
       ],
       gradient: "from-purple-500 to-violet-500",
+          sources: [
+      "Российское федеральное законодательство",
+      "Юриспруденция арбитражных судов",
+      "Профессиональные стандарты"
+    ],
     },
     {
       icon: Building2,
@@ -67,6 +72,7 @@ export default function Services() {
         "Агробизнес",
       ],
       gradient: "from-green-500 to-emerald-500",
+          sources: ["Законодательство РФ", "Судебная практика", "Юридические консультации"],
     },
     {
       icon: ShieldCheck,
@@ -97,6 +103,7 @@ export default function Services() {
         "Отчетность",
       ],
       gradient: "from-cyan-500 to-teal-500",
+          sources: ["Корпоративные стандарты", "Лучшая практика", "Инновации"],
     },
     {
       icon: Settings,
@@ -127,6 +134,7 @@ export default function Services() {
         "Гибкая модель",
       ],
       gradient: "from-orange-500 to-amber-500",
+          sources: ["Налоговые кодексы", "Практика ФУ (НАЛОГ)", "Министерство Налоговые"],
     },
     {
       icon: Coins,
