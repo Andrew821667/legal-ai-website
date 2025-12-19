@@ -4,6 +4,9 @@ on:
   schedule:
     - cron: '0 3 * * 0'
   workflow_dispatch:
+  push:
+    branches:
+      - claude/fix-seo-analysis-error-U7WF6
 
 jobs:
   seo-analysis:
