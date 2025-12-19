@@ -13,30 +13,34 @@ export default function Home() {
   return (
     <main>
       <section id="hero">
-      <Hero />
+        <Hero />
       </section>
+
       <section id="features">
-      <Features />
+        <Features />
       </section>
-      <section id="services">
-      </section>
+
+      <section id="services"></section>
+
       <section id="calculator">
-      <ComparisonTable />
-      <ROICalculator />
+        <ComparisonTable />
+        <ROICalculator />
       </section>
+
       <section id="roi-calculator">
-      <Services />
+        <Services />
       </section>
+
       <section id="testimonials">
-      <ProcessTimeline />
-      <CaseStudies />
-      <Testimonials />
+        <ProcessTimeline />
+        <CaseStudies />
+        <Testimonials />
       </section>
-      <section id="cases">
-      </section>
-      <section id="offers">
-      </section>
-      </main>
+
+      <section id="cases"></section>
+
+      <section id="offers"></section>
+
       <LeadMagnets />
       <AboutTeam />
     </main>
