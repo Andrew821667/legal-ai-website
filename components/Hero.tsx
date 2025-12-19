@@ -25,24 +25,17 @@ export default function Hero() {
           <div className="text-center lg:text-left">
             {/* Main heading */}
             <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 animate-fade-in">
-              Юристы, самостоятельно <br />
-              <span className="text-amber-400">разрабатывающие AI-решения</span>
+              Автоматизация юридической работы <br />
+              <span className="text-amber-400">на базе Искусственного Интеллекта</span>
             </h1>
 
             {/* Subtitle */}
             <div className="space-y-6 mb-8 animate-fade-in-delay-1">
-              {/* Автоматизация юридических процессов */}
+              {/* Основное описание */}
               <div>
                 <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">
-                  Автоматизация юридических процессов
+                  Мы — юристы-разработчики. Создаем системы, которые проверяют договоры, ищут риски и готовят документы в 10 раз быстрее человека.
                 </h2>
-                <p className="text-lg text-slate-300">
-                  Создаем системы на базе искусственного интеллекта (ИИ).<br />
-                  Автоматизируем рутину и освобождаем время юристов.<br />
-                  <br />
-                  Эффективность работы повышается на 80%+.
-                  Первый результат виден уже через 2 недели.
-                </p>
               </div>
 
               {/* Наша специализация */}
