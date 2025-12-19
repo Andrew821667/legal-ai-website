@@ -57,8 +57,11 @@ export async function GET() {
       run_number: run.run_number
     })) || [];
 
-    // Найдем последний SEO Analysis run
-    const lastSeoRun = workflows.find((w: any) => w.name === 'Automatic SEO Analysis');
+    // Найдем последний SEO Analysis run (самый свежий)
+    const seoRuns = workflows
+      .filter((w: any) => w.name === 'Automatic SEO Analysis')
+      .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    const lastSeoRun = seoRuns[0] || null;
 
     // Обработка issues
     const allIssues = issues || [];
@@ -117,10 +120,9 @@ export async function GET() {
       if (eeatMatch) eeatScore = parseFloat(eeatMatch[1]);
     }
 
-    // Топ открытых SEO задач
+    // Топ открытых SEO задач (сортируем по приоритету и дате)
     const topSeoTasks = seoIssuesList
       .filter((i: any) => i.state === 'open' && !i.labels.some((l: any) => l.name === 'report'))
-      .slice(0, 5)
       .map((i: any) => ({
         id: i.id,
         number: i.number,
@@ -130,7 +132,17 @@ export async function GET() {
         html_url: i.html_url,
         priority: i.labels.some((l: any) => l.name === 'seo-critical') ? 'critical' :
                  i.labels.some((l: any) => l.name === 'seo-high') ? 'high' : 'medium'
-      }));
+      }))
+      .sort((a: any, b: any) => {
+        // Сначала сортируем по приоритету
+        const priorityOrder: Record<string, number> = { critical: 0, high: 1, medium: 2 };
+        const priorityDiff = priorityOrder[a.priority] - priorityOrder[b.priority];
+        if (priorityDiff !== 0) return priorityDiff;
+
+        // Затем по дате создания (новые сначала)
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      })
+      .slice(0, 5);
 
     // Формируем ответ
     const response = {
