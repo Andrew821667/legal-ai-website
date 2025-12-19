@@ -4,12 +4,25 @@
 import json
 import sys
 from datetime import datetime
+from dataclasses import asdict, is_dataclass
 import requests
 from bs4 import BeautifulSoup
 
 sys.path.insert(0, 'seo-tools')
 
 SITE_URL = 'https://legal-ai-website-iota.vercel.app'
+
+
+def dataclass_to_dict(obj):
+    """Конвертирует dataclass объекты в словари для JSON сериализации"""
+    if is_dataclass(obj):
+        return asdict(obj)
+    elif isinstance(obj, dict):
+        return {k: dataclass_to_dict(v) for k, v in obj.items()}
+    elif isinstance(obj, (list, tuple)):
+        return [dataclass_to_dict(item) for item in obj]
+    else:
+        return obj
 
 def main():
     try:
@@ -84,13 +97,13 @@ def main():
         seo_report = advisor.analyze_content(markdown_content, target_keywords)
 
         # seo_report это SEOAnalysisReport dataclass, нужно извлечь данные
-        predicted_position = seo_report.predicted_position
+        predicted_position = float(seo_report.predicted_position) if seo_report.predicted_position else 50.0
         overall_score = max(0, min(100, int((1 - (predicted_position / 100)) * 100)))  # Конвертируем позицию в score
 
         print(f'  Predicted Position: {predicted_position:.1f}')
         print(f'  SEO Score: {overall_score}/100')
 
-        # Сборка результатов
+        # Сборка результатов с конвертацией dataclass в dict
         results = {
             'timestamp': datetime.now().isoformat(),
             'site_url': SITE_URL,
@@ -110,11 +123,11 @@ def main():
             },
             'seo_analysis': {
                 'predicted_position': predicted_position,
-                'content_metrics': seo_report.content_metrics,
-                'keyword_analysis': seo_report.keyword_analysis,
-                'feature_scores': seo_report.feature_scores,
-                'recommendations': seo_report.recommendations if hasattr(seo_report, 'recommendations') else {},
-                'priorities': seo_report.priorities if hasattr(seo_report, 'priorities') else []
+                'content_metrics': dataclass_to_dict(seo_report.content_metrics),
+                'keyword_analysis': dataclass_to_dict(seo_report.keyword_analysis),
+                'feature_scores': dataclass_to_dict(seo_report.feature_scores),
+                'recommendations': dataclass_to_dict(seo_report.recommendations) if hasattr(seo_report, 'recommendations') else {},
+                'priorities': dataclass_to_dict(seo_report.priorities) if hasattr(seo_report, 'priorities') else []
             },
             'raw_page_data': {
                 'status_code': status_code,
