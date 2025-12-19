@@ -87,10 +87,12 @@ export async function GET() {
       ).length
     };
 
-    // Последний SEO отчет (ищем issue с меткой 'report')
-    const latestSeoReport = seoIssuesList.find((i: any) =>
-      i.labels.some((l: any) => l.name === 'report') && i.state === 'open'
-    );
+    // Последний SEO отчет (ищем самый свежий issue с меткой 'report')
+    const reportIssues = seoIssuesList
+      .filter((i: any) => i.labels.some((l: any) => l.name === 'report'))
+      .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+    const latestSeoReport = reportIssues[0]; // Берем самый свежий
 
     // Парсим SEO score из title (формат: "📊 SEO Report 2024-01-15 - Score: 85/100")
     let seoScore = null;
@@ -160,6 +162,7 @@ export async function GET() {
       // История (последние 5 SEO отчетов)
       seo_history: seoIssuesList
         .filter((i: any) => i.labels.some((l: any) => l.name === 'report'))
+        .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
         .slice(0, 5)
         .map((i: any) => {
           const scoreMatch = i.title.match(/Score:\s*(\d+)\/100/);
