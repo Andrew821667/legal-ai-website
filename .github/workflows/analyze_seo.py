@@ -15,13 +15,27 @@ SITE_URL = 'https://legal-ai-website-iota.vercel.app'
 
 def dataclass_to_dict(obj):
     """Конвертирует dataclass объекты в словари для JSON сериализации"""
-    if is_dataclass(obj):
-        return asdict(obj)
+    if obj is None:
+        return None
+    elif is_dataclass(obj) and not isinstance(obj, type):
+        # Конвертируем dataclass в dict, затем рекурсивно обрабатываем значения
+        result = {}
+        for field_name, field_value in asdict(obj).items():
+            result[field_name] = dataclass_to_dict(field_value)
+        return result
     elif isinstance(obj, dict):
         return {k: dataclass_to_dict(v) for k, v in obj.items()}
     elif isinstance(obj, (list, tuple)):
         return [dataclass_to_dict(item) for item in obj]
+    elif isinstance(obj, (int, float, str, bool)):
+        return obj
+    elif hasattr(obj, '__float__'):
+        # Для numpy типов и подобных
+        return float(obj)
+    elif hasattr(obj, '__int__'):
+        return int(obj)
     else:
+        # Для всех остальных случаев пытаемся вернуть как есть
         return obj
 
 def main():
@@ -137,10 +151,19 @@ def main():
 
         # Сохранение JSON отчета
         report_file = f'seo-reports/report-{datetime.now().strftime("%Y-%m-%d")}.json'
-        with open(report_file, 'w', encoding='utf-8') as f:
-            json.dump(results, f, ensure_ascii=False, indent=2)
 
-        print(f'\n💾 JSON отчет сохранен: {report_file}')
+        print(f'\n💾 Сохраняю JSON отчет...')
+        try:
+            with open(report_file, 'w', encoding='utf-8') as f:
+                json.dump(results, f, ensure_ascii=False, indent=2)
+            print(f'✅ JSON отчет сохранен: {report_file}')
+        except TypeError as e:
+            print(f'❌ Ошибка сериализации JSON: {e}')
+            print(f'Тип проблемного объекта: {type(e).__name__}')
+            # Пытаемся сохранить с default handler
+            with open(report_file, 'w', encoding='utf-8') as f:
+                json.dump(results, f, ensure_ascii=False, indent=2, default=str)
+            print(f'⚠️ JSON отчет сохранен с конвертацией в строки: {report_file}')
 
         # Создание Markdown summary
         create_markdown_summary(results)
