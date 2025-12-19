@@ -12,14 +12,31 @@ import AboutTeam from "@/components/AboutTeam";
 export default function Home() {
   return (
     <main>
+      <section id="hero">
       <Hero />
+      </section>
+      <section id="features">
       <Features />
+      </section>
+      <section id="services">
+      </section>
+      <section id="calculator">
       <ComparisonTable />
       <ROICalculator />
+      </section>
+      <section id="roi-calculator">
       <Services />
+      </section>
+      <section id="testimonials">
       <ProcessTimeline />
       <CaseStudies />
       <Testimonials />
+      </section>
+      <section id="cases">
+      </section>
+      <section id="offers">
+      </section>
+      </main>
       <LeadMagnets />
       <AboutTeam />
     </main>
