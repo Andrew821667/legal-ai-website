@@ -55,8 +55,6 @@ export default function AdminPanel({ password = "admin123" }: AdminPanelProps) {
       const params = new URLSearchParams(window.location.search)
       if (params.get('admin') === 'true') {
         setIsOpen(true)
-        // Очищаем параметр из URL после открытия
-        window.history.replaceState({}, '', window.location.pathname)
       }
     }
   }, [])
