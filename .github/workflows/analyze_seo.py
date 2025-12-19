@@ -44,8 +44,41 @@ async def fetch_page_with_playwright(url):
     print('📥 Запускаю браузер для загрузки SPA...')
 
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True)
-        page = await browser.new_page()
+        browser = await p.chromium.launch(
+            headless=True,
+            args=[
+                '--disable-blink-features=AutomationControlled',
+                '--no-sandbox'
+            ]
+        )
+
+        context = await browser.new_context(
+            user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            viewport={'width': 1920, 'height': 1080},
+            locale='ru-RU',
+            timezone_id='Europe/Moscow',
+            extra_http_headers={
+                'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+                'Accept-Encoding': 'gzip, deflate, br',
+                'Connection': 'keep-alive',
+                'Upgrade-Insecure-Requests': '1',
+                'Sec-Fetch-Dest': 'document',
+                'Sec-Fetch-Mode': 'navigate',
+                'Sec-Fetch-Site': 'none',
+                'Sec-Fetch-User': '?1',
+                'Cache-Control': 'max-age=0'
+            }
+        )
+
+        # Скрываем признаки автоматизации
+        await context.add_init_script("""
+            Object.defineProperty(navigator, 'webdriver', {get: () => undefined});
+            Object.defineProperty(navigator, 'plugins', {get: () => [1, 2, 3, 4, 5]});
+            Object.defineProperty(navigator, 'languages', {get: () => ['ru-RU', 'ru', 'en-US', 'en']});
+        """)
+
+        page = await context.new_page()
 
         print(f'🌐 Загружаю {url}...')
         response = await page.goto(url, wait_until='networkidle', timeout=60000)
