@@ -1,15 +1,100 @@
 #!/usr/bin/env python3
-"""SEO Analysis Script for GitHub Actions - Fixed to work around ParsingPipeline bug"""
+"""SEO Analysis Script for GitHub Actions - Fixed to work with SPA on Vercel"""
 
 import json
 import sys
 from datetime import datetime
-import requests
-from bs4 import BeautifulSoup
+from dataclasses import asdict, is_dataclass
+import asyncio
 
 sys.path.insert(0, 'seo-tools')
 
-SITE_URL = 'https://legal-ai-website-iota.vercel.app'
+SITE_URL = 'https://legalaipro.ru'
+
+
+def dataclass_to_dict(obj):
+    """Конвертирует dataclass объекты в словари для JSON сериализации"""
+    if obj is None:
+        return None
+    elif is_dataclass(obj) and not isinstance(obj, type):
+        # Конвертируем dataclass в dict, затем рекурсивно обрабатываем значения
+        result = {}
+        for field_name, field_value in asdict(obj).items():
+            result[field_name] = dataclass_to_dict(field_value)
+        return result
+    elif isinstance(obj, dict):
+        return {k: dataclass_to_dict(v) for k, v in obj.items()}
+    elif isinstance(obj, (list, tuple)):
+        return [dataclass_to_dict(item) for item in obj]
+    elif isinstance(obj, (int, float, str, bool)):
+        return obj
+    elif hasattr(obj, '__float__'):
+        # Для numpy типов и подобных
+        return float(obj)
+    elif hasattr(obj, '__int__'):
+        return int(obj)
+    else:
+        # Для всех остальных случаев пытаемся вернуть как есть
+        return obj
+
+async def fetch_page_with_playwright(url):
+    """Загружает страницу с помощью Playwright для рендеринга SPA"""
+    from playwright.async_api import async_playwright
+
+    print('📥 Запускаю браузер для загрузки SPA...')
+
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(
+            headless=True,
+            args=[
+                '--disable-blink-features=AutomationControlled',
+                '--no-sandbox'
+            ]
+        )
+
+        context = await browser.new_context(
+            user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            viewport={'width': 1920, 'height': 1080},
+            locale='ru-RU',
+            timezone_id='Europe/Moscow',
+            extra_http_headers={
+                'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+                'Accept-Encoding': 'gzip, deflate, br',
+                'Connection': 'keep-alive',
+                'Upgrade-Insecure-Requests': '1',
+                'Sec-Fetch-Dest': 'document',
+                'Sec-Fetch-Mode': 'navigate',
+                'Sec-Fetch-Site': 'none',
+                'Sec-Fetch-User': '?1',
+                'Cache-Control': 'max-age=0'
+            }
+        )
+
+        # Скрываем признаки автоматизации
+        await context.add_init_script("""
+            Object.defineProperty(navigator, 'webdriver', {get: () => undefined});
+            Object.defineProperty(navigator, 'plugins', {get: () => [1, 2, 3, 4, 5]});
+            Object.defineProperty(navigator, 'languages', {get: () => ['ru-RU', 'ru', 'en-US', 'en']});
+        """)
+
+        page = await context.new_page()
+
+        print(f'🌐 Загружаю {url}...')
+        response = await page.goto(url, wait_until='networkidle', timeout=60000)
+        status_code = response.status
+
+        print(f'⏳ Жду полного рендеринга React...')
+        # Ждем рендеринга контента
+        await page.wait_for_timeout(3000)
+
+        # Получаем полный HTML после рендеринга
+        html_content = await page.content()
+
+        await browser.close()
+
+        return html_content, status_code
+
 
 def main():
     try:
@@ -27,15 +112,8 @@ def main():
 
         print(f'🌐 Анализирую сайт: {SITE_URL}')
 
-        # Парсинг страницы напрямую через requests
-        print('📥 Загружаю HTML...')
-        response = requests.get(SITE_URL, headers={
-            'User-Agent': 'Mozilla/5.0 (compatible; SEO-Analyzer/1.0)'
-        }, timeout=30)
-        response.raise_for_status()
-
-        html_content = response.text
-        status_code = response.status_code
+        # Парсинг SPA страницы через Playwright
+        html_content, status_code = asyncio.run(fetch_page_with_playwright(SITE_URL))
 
         print(f'\n📊 Результат парсинга:')
         print(f'  Status code: {status_code}')
@@ -46,7 +124,7 @@ def main():
             create_error_report({'error': f'HTTP {status_code}'})
             sys.exit(1)
 
-        print(f'  ✅ Страница успешно загружена')
+        print(f'  ✅ Страница успешно загружена и отрендерена')
 
         # Извлечение контента через seo-ai-models экстракторы
         print('🔬 Извлекаю контент и метаданные...')
@@ -84,13 +162,13 @@ def main():
         seo_report = advisor.analyze_content(markdown_content, target_keywords)
 
         # seo_report это SEOAnalysisReport dataclass, нужно извлечь данные
-        predicted_position = seo_report.predicted_position
+        predicted_position = float(seo_report.predicted_position) if seo_report.predicted_position else 50.0
         overall_score = max(0, min(100, int((1 - (predicted_position / 100)) * 100)))  # Конвертируем позицию в score
 
         print(f'  Predicted Position: {predicted_position:.1f}')
         print(f'  SEO Score: {overall_score}/100')
 
-        # Сборка результатов
+        # Сборка результатов с конвертацией dataclass в dict
         results = {
             'timestamp': datetime.now().isoformat(),
             'site_url': SITE_URL,
@@ -110,11 +188,11 @@ def main():
             },
             'seo_analysis': {
                 'predicted_position': predicted_position,
-                'content_metrics': seo_report.content_metrics,
-                'keyword_analysis': seo_report.keyword_analysis,
-                'feature_scores': seo_report.feature_scores,
-                'recommendations': seo_report.recommendations if hasattr(seo_report, 'recommendations') else {},
-                'priorities': seo_report.priorities if hasattr(seo_report, 'priorities') else []
+                'content_metrics': dataclass_to_dict(seo_report.content_metrics),
+                'keyword_analysis': dataclass_to_dict(seo_report.keyword_analysis),
+                'feature_scores': dataclass_to_dict(seo_report.feature_scores),
+                'recommendations': dataclass_to_dict(seo_report.recommendations) if hasattr(seo_report, 'recommendations') else {},
+                'priorities': dataclass_to_dict(seo_report.priorities) if hasattr(seo_report, 'priorities') else []
             },
             'raw_page_data': {
                 'status_code': status_code,
@@ -124,10 +202,19 @@ def main():
 
         # Сохранение JSON отчета
         report_file = f'seo-reports/report-{datetime.now().strftime("%Y-%m-%d")}.json'
-        with open(report_file, 'w', encoding='utf-8') as f:
-            json.dump(results, f, ensure_ascii=False, indent=2)
 
-        print(f'\n💾 JSON отчет сохранен: {report_file}')
+        print(f'\n💾 Сохраняю JSON отчет...')
+        try:
+            with open(report_file, 'w', encoding='utf-8') as f:
+                json.dump(results, f, ensure_ascii=False, indent=2)
+            print(f'✅ JSON отчет сохранен: {report_file}')
+        except TypeError as e:
+            print(f'❌ Ошибка сериализации JSON: {e}')
+            print(f'Тип проблемного объекта: {type(e).__name__}')
+            # Пытаемся сохранить с default handler
+            with open(report_file, 'w', encoding='utf-8') as f:
+                json.dump(results, f, ensure_ascii=False, indent=2, default=str)
+            print(f'⚠️ JSON отчет сохранен с конвертацией в строки: {report_file}')
 
         # Создание Markdown summary
         create_markdown_summary(results)
