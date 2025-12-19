@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""SEO Analysis Script for GitHub Actions - Fixed to work around ParsingPipeline bug"""
+"""SEO Analysis Script for GitHub Actions - Fixed to work with SPA on Vercel"""
 
 import json
 import sys
 from datetime import datetime
 from dataclasses import asdict, is_dataclass
-import requests
-from bs4 import BeautifulSoup
+import asyncio
 
 sys.path.insert(0, 'seo-tools')
 
+# TODO: Update to production URL (legalaipro.com or similar)
 SITE_URL = 'https://legal-ai-website-iota.vercel.app'
 
 
@@ -38,6 +38,32 @@ def dataclass_to_dict(obj):
         # Для всех остальных случаев пытаемся вернуть как есть
         return obj
 
+async def fetch_page_with_playwright(url):
+    """Загружает страницу с помощью Playwright для рендеринга SPA"""
+    from playwright.async_api import async_playwright
+
+    print('📥 Запускаю браузер для загрузки SPA...')
+
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        page = await browser.new_page()
+
+        print(f'🌐 Загружаю {url}...')
+        response = await page.goto(url, wait_until='networkidle', timeout=60000)
+        status_code = response.status
+
+        print(f'⏳ Жду полного рендеринга React...')
+        # Ждем рендеринга контента
+        await page.wait_for_timeout(3000)
+
+        # Получаем полный HTML после рендеринга
+        html_content = await page.content()
+
+        await browser.close()
+
+        return html_content, status_code
+
+
 def main():
     try:
         print('🔍 Импортирую модули...')
@@ -54,15 +80,8 @@ def main():
 
         print(f'🌐 Анализирую сайт: {SITE_URL}')
 
-        # Парсинг страницы напрямую через requests
-        print('📥 Загружаю HTML...')
-        response = requests.get(SITE_URL, headers={
-            'User-Agent': 'Mozilla/5.0 (compatible; SEO-Analyzer/1.0)'
-        }, timeout=30)
-        response.raise_for_status()
-
-        html_content = response.text
-        status_code = response.status_code
+        # Парсинг SPA страницы через Playwright
+        html_content, status_code = asyncio.run(fetch_page_with_playwright(SITE_URL))
 
         print(f'\n📊 Результат парсинга:')
         print(f'  Status code: {status_code}')
@@ -73,7 +92,7 @@ def main():
             create_error_report({'error': f'HTTP {status_code}'})
             sys.exit(1)
 
-        print(f'  ✅ Страница успешно загружена')
+        print(f'  ✅ Страница успешно загружена и отрендерена')
 
         # Извлечение контента через seo-ai-models экстракторы
         print('🔬 Извлекаю контент и метаданные...')

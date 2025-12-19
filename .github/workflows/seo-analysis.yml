@@ -57,10 +57,30 @@ jobs:
         with:
           script: |
             const fs = require('fs');
+
+            // Проверяем наличие файлов
+            if (!fs.existsSync('seo-reports/SUMMARY.md')) {
+              console.log('⚠️ SUMMARY.md не найден, пропускаем создание issues');
+              return;
+            }
+
             const summary = fs.readFileSync('seo-reports/SUMMARY.md', 'utf8');
 
             // Читаем JSON отчет для детальных данных
             const reportFiles = fs.readdirSync('seo-reports').filter(f => f.endsWith('.json'));
+
+            if (reportFiles.length === 0) {
+              console.log('⚠️ JSON отчеты не найдены, создаем issue только с summary');
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: `❌ SEO Analysis Failed - ${new Date().toISOString().split('T')[0]}`,
+                body: `${summary}\n\n---\n\n**Status:** Analysis failed to complete\n\n[Check logs](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})`,
+                labels: ['seo', 'error', 'automated']
+              });
+              return;
+            }
+
             const reportData = JSON.parse(fs.readFileSync(`seo-reports/${reportFiles[0]}`, 'utf8'));
 
             // Создаем основной issue с summary
@@ -78,8 +98,27 @@ jobs:
         with:
           script: |
             const fs = require('fs');
+
+            // Проверяем наличие JSON отчетов
+            if (!fs.existsSync('seo-reports')) {
+              console.log('⚠️ Директория seo-reports не найдена, пропускаем');
+              return;
+            }
+
             const reportFiles = fs.readdirSync('seo-reports').filter(f => f.endsWith('.json'));
+
+            if (reportFiles.length === 0) {
+              console.log('⚠️ JSON отчеты не найдены, пропускаем создание priority issues');
+              return;
+            }
+
             const reportData = JSON.parse(fs.readFileSync(`seo-reports/${reportFiles[0]}`, 'utf8'));
+
+            // Проверяем наличие priorities
+            if (!reportData.seo_analysis || !reportData.seo_analysis.priorities || reportData.seo_analysis.priorities.length === 0) {
+              console.log('⚠️ Приоритетные задачи не найдены, пропускаем');
+              return;
+            }
 
             // Берем топ-5 приоритетных задач
             const topTasks = reportData.seo_analysis.priorities.slice(0, 5);
