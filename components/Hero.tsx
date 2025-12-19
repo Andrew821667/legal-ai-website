@@ -30,40 +30,9 @@ export default function Hero() {
             </h1>
 
             {/* Subtitle */}
-            <div className="space-y-6 mb-8 animate-fade-in-delay-1">
-              {/* Основное описание */}
-              <div>
-                <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">
-                  Мы — юристы-разработчики. Создаем системы, которые проверяют договоры, ищут риски и готовят документы в 10 раз быстрее человека.
-                </h2>
-              </div>
-
-              {/* Наша специализация */}
-              <div>
-                <h3 className="text-xl md:text-2xl font-semibold text-amber-400 mb-2">
-                  Наша специализация
-                </h3>
-                <p className="text-lg text-slate-300">
-                  Мы — юристы-разработчики с 20+ летним опытом.<br />
-                  Объединяем юридическую экспертизу и технические навыки.<br />
-                  Сами создаем ИИ-решения, а не просто консультируем.
-                </p>
-              </div>
-
-              {/* Передовые технологии */}
-              <div>
-                <h3 className="text-xl md:text-2xl font-semibold text-amber-400 mb-2">
-                  Передовые технологии
-                </h3>
-                <p className="text-lg text-slate-300">
-                  Используем YandexGPT, GigaChat и современные LLM.<br />
-                  Применяем RAG-системы и мультиагентную архитектуру.<br />
-                  <br />
-                  Решения адаптированы под специфику российского права.
-                  Работают на реальную пользу вашего бизнеса.
-                </p>
-              </div>
-            </div>
+            <h2 className="text-2xl md:text-3xl font-semibold text-slate-200 mb-8 animate-fade-in-delay-1">
+              Мы — юристы-разработчики. Создаем системы, которые проверяют договоры, ищут риски и готовят документы в 10 раз быстрее человека.
+            </h2>
             
             {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in-delay-2">
