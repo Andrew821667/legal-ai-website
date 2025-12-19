@@ -106,9 +106,9 @@ export async function GET() {
     }
 
     if (latestSeoReport?.body) {
-      const posMatch = latestSeoReport.body.match(/Predicted Position:\*\*\s*([\d.]+)/);
-      const readMatch = latestSeoReport.body.match(/Readability:\*\*\s*([\d.]+)\/100/);
-      const eeatMatch = latestSeoReport.body.match(/E-E-A-T Score:\*\*\s*([\d.]+)\/100/);
+      const posMatch = latestSeoReport.body.match(/\*\*Predicted Position:\*\*\s*([\d.]+)/);
+      const readMatch = latestSeoReport.body.match(/\*\*Readability:\*\*\s*([\d.]+)\/100/);
+      const eeatMatch = latestSeoReport.body.match(/\*\*E-E-A-T Score:\*\*\s*([\d.]+)\/100/);
 
       if (posMatch) predictedPosition = parseFloat(posMatch[1]);
       if (readMatch) readability = parseFloat(readMatch[1]);
