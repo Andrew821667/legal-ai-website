@@ -9,8 +9,7 @@ import asyncio
 
 sys.path.insert(0, 'seo-tools')
 
-# TODO: Update to production URL (legalaipro.com or similar)
-SITE_URL = 'https://legal-ai-website-iota.vercel.app'
+SITE_URL = 'https://legalaipro.ru'
 
 
 def dataclass_to_dict(obj):
