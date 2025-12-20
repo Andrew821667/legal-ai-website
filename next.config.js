@@ -1,7 +1,35 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  
+
+  // Redirects from old Vercel domain to new domain
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'legal-ai-website-iota.vercel.app',
+          },
+        ],
+        destination: 'https://legalaipro.ru/:path*',
+        permanent: true, // 301 redirect
+      },
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: '*.vercel.app',
+          },
+        ],
+        destination: 'https://legalaipro.ru/:path*',
+        permanent: true, // 301 redirect
+      },
+    ];
+  },
+
   // Security Headers
   async headers() {
     return [
