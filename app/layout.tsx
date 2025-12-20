@@ -157,6 +157,14 @@ export const metadata: Metadata = {
     google: 'mTUEyeu5VGZOmD8i8uGmxG-XhDHU6MacydZDAWry8U0',
     yandex: '3448a4683f1cad05',
   },
+  icons: {
+    icon: [
+      { url: '/icon?<generated>', type: 'image/png', sizes: '32x32' },
+    ],
+    apple: [
+      { url: '/apple-icon?<generated>', type: 'image/png', sizes: '180x180' },
+    ],
+  },
 };
 
 export default function RootLayout({
