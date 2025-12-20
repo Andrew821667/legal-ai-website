@@ -112,27 +112,28 @@ async function fetchGA4Data(): Promise<GA4MetricData | null> {
 }
 
 /**
- * Создание JWT для Service Account
+ * Создание JWT для Service Account с использованием jose
  */
 async function createJWT(credentials: any): Promise<string> {
-  // Для production используйте библиотеку jsonwebtoken или jose
-  // Это упрощенная версия, в реальности нужна правильная подпись
-  const header = {
-    alg: 'RS256',
-    typ: 'JWT',
-  };
+  const { SignJWT, importPKCS8 } = await import('jose');
 
   const now = Math.floor(Date.now() / 1000);
-  const payload = {
-    iss: credentials.client_email,
-    scope: 'https://www.googleapis.com/auth/analytics.readonly',
-    aud: 'https://oauth2.googleapis.com/token',
-    exp: now + 3600,
-    iat: now,
-  };
 
-  // В production используйте crypto.sign() или библиотеку для JWT
-  throw new Error('JWT signing not implemented - use proper JWT library in production');
+  // Импортируем приватный ключ из credentials
+  const privateKey = await importPKCS8(credentials.private_key, 'RS256');
+
+  // Создаем и подписываем JWT
+  const jwt = await new SignJWT({
+    scope: 'https://www.googleapis.com/auth/analytics.readonly',
+  })
+    .setProtectedHeader({ alg: 'RS256', typ: 'JWT' })
+    .setIssuer(credentials.client_email)
+    .setAudience('https://oauth2.googleapis.com/token')
+    .setIssuedAt(now)
+    .setExpirationTime(now + 3600)
+    .sign(privateKey);
+
+  return jwt;
 }
 
 /**

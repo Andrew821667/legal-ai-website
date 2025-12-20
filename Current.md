@@ -123,6 +123,153 @@
 
 ---
 
+## ✅ Analytics Integration (ЗАВЕРШЕН)
+
+### 3. Интеграция аналитики и мониторинга (ЗАВЕРШЕНО ✅)
+**Начато:** 2025-12-20
+**Завершено:** 2025-12-20
+
+**Цель:** Максимальная интеграция метрик и аналитики
+
+**Что реализовано:**
+
+#### ✅ Фаза 1: Tracking Scripts
+- ✅ Компонент GoogleAnalytics.tsx - готов к использованию
+- ✅ Компонент YandexMetrika.tsx - готов к использованию
+- ✅ Интеграция в layout.tsx
+- ✅ Автоматическая активация при наличии env переменных
+
+**Статус:** Готово к запуску после добавления `NEXT_PUBLIC_GA_MEASUREMENT_ID` и `NEXT_PUBLIC_YM_COUNTER_ID`
+
+---
+
+#### ✅ Фаза 2: Analytics API Endpoints
+- ✅ `/api/analytics/google` - Google Analytics 4 Data API
+  - JWT подпись через jose library (RS256)
+  - Service Account аутентификация
+  - Метрики: visits, pageviews, users, bounce rate, duration, conversions
+  - Топ страницы и источники трафика
+- ✅ `/api/analytics/yandex` - Yandex Metrika API
+  - OAuth аутентификация
+  - Метрики за день/неделю/месяц
+  - Топ страницы и источники
+- ✅ `/api/analytics/combined` - объединенные данные
+  - Комбинирование GA4 + Yandex Metrika
+  - Приоритет Yandex для российской аудитории
+  - Fallback на mock данные
+
+**Статус:** Готово к использованию после настройки credentials
+
+---
+
+#### ✅ Фаза 3: Search Console Integration
+- ✅ `/api/analytics/search-console` - Google Search Console API
+  - Service Account аутентификация (RS256 JWT)
+  - Метрики: clicks, impressions, CTR, positions
+  - Топ 10 запросов с метриками
+  - Топ 10 страниц по кликам
+  - Статистика по устройствам (mobile/desktop/tablet)
+  - Данные за последние 28 дней (минус 3 дня задержки GSC)
+
+**Статус:** Готово к использованию после добавления `GSC_PROPERTY_URL` и `GSC_CREDENTIALS`
+
+---
+
+#### ✅ Фаза 4: Performance Monitoring
+- ✅ `/api/analytics/pagespeed` - PageSpeed Insights API
+  - Mobile и Desktop метрики
+  - Core Web Vitals:
+    - FCP (First Contentful Paint)
+    - LCP (Largest Contentful Paint)
+    - CLS (Cumulative Layout Shift)
+  - Дополнительные метрики:
+    - SI (Speed Index)
+    - TBT (Total Blocking Time)
+    - TTI (Time to Interactive)
+  - Рейтинги: good/needs-improvement/poor
+  - Работает без API ключа (25 req/day) или с ключом (25k req/day)
+
+**Статус:** Готово к использованию, опционально добавить `PAGESPEED_API_KEY`
+
+---
+
+#### ✅ Фаза 5: Uptime Monitoring
+- ✅ `/api/monitoring/uptime` - Мониторинг доступности
+  - Проверка 3 критичных endpoints:
+    - Homepage
+    - API health check
+    - Sitemap
+  - Метрики:
+    - Общий статус: up/down/degraded
+    - Response time для каждого endpoint
+    - HTTP status codes
+  - Параллельные проверки с 10s timeout
+- ✅ `/api/health` - Health check endpoint
+  - Простой GET/HEAD endpoint для мониторинга
+  - Возвращает uptime и environment
+
+**Статус:** Полностью готово, не требует настройки
+
+---
+
+**Созданные файлы:**
+- `components/GoogleAnalytics.tsx` - уже существовал ✅
+- `components/YandexMetrika.tsx` - уже существовал ✅
+- `app/api/analytics/google/route.ts` - исправлен JWT signing ✅
+- `app/api/analytics/yandex/route.ts` - уже существовал ✅
+- `app/api/analytics/combined/route.ts` - уже существовал ✅
+- `app/api/analytics/search-console/route.ts` - создан ✅
+- `app/api/analytics/pagespeed/route.ts` - создан ✅
+- `app/api/monitoring/uptime/route.ts` - создан ✅
+- `app/api/health/route.ts` - создан ✅
+
+**Обновленные файлы:**
+- `.env.example` - добавлены переменные для GSC и PageSpeed ✅
+
+---
+
+**Все API endpoints защищены:** withAuth middleware требует JWT токен ✅
+
+---
+
+**Инструкции по развертыванию:**
+
+#### Шаг 1: Безопасность (КРИТИЧНО!)
+1. Сгенерировать пароль: `node scripts/hash-password.js YourStrongPassword`
+2. Добавить в Vercel: `ADMIN_PASSWORD_HASH=...`
+3. Сгенерировать JWT: `openssl rand -base64 32`
+4. Добавить в Vercel: `JWT_SECRET=...`
+
+#### Шаг 2: Базовые счетчики (15 мин)
+1. Создать GA4 property → получить G-XXXXXXXXXX
+2. Добавить в Vercel: `NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX`
+3. Создать Yandex Metrika → получить 12345678
+4. Добавить в Vercel: `NEXT_PUBLIC_YM_COUNTER_ID=12345678`
+
+#### Шаг 3: GA4 API (20 мин)
+1. Google Cloud → IAM → Service Accounts
+2. Включить Google Analytics Data API
+3. Скачать JSON credentials
+4. Добавить в Vercel: `GA4_PROPERTY_ID=...` и `GA4_CREDENTIALS={...}`
+
+#### Шаг 4: Yandex Metrika API (10 мин)
+1. https://oauth.yandex.ru/authorize?response_type=token&client_id=c2e6111dbaff4ae883c43a9bf8ac9231
+2. Добавить в Vercel: `YM_COUNTER_ID=...` и `YM_ACCESS_TOKEN=y0_...`
+
+#### Шаг 5: Search Console (15 мин)
+1. Использовать тот же Service Account из Шага 3
+2. Search Console → Settings → Users → Add service account email
+3. Добавить в Vercel: `GSC_PROPERTY_URL=https://legalaipro.ru` и `GSC_CREDENTIALS={...}`
+
+#### Шаг 6: PageSpeed (опционально, 5 мин)
+1. Google Cloud → APIs & Services → Credentials
+2. Create API Key → Enable PageSpeed Insights API
+3. Добавить в Vercel: `PAGESPEED_API_KEY=AIza...`
+
+**Общее время настройки:** ~1-1.5 часа
+
+---
+
 ## 📌 Следующие этапы (планируются)
 
 ### 3. UI/UX улучшения (ЗАПЛАНИРОВАНО 📅)
