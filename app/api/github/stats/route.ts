@@ -1,4 +1,5 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { withAuth } from '@/lib/authMiddleware';
 
 const GITHUB_API = 'https://api.github.com';
 const OWNER = 'Andrew821667';
@@ -31,7 +32,8 @@ async function fetchGitHub(endpoint: string) {
   return response.json();
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  return withAuth(request, async () => {
   try {
     // Получаем данные параллельно
     const [workflowRuns, issues, seoIssues] = await Promise.all([
@@ -234,4 +236,5 @@ export async function GET() {
       seo_history: []
     });
   }
+  });
 }

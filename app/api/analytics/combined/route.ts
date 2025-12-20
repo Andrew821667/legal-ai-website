@@ -1,4 +1,5 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { withAuth } from '@/lib/authMiddleware';
 
 /**
  * API endpoint для получения объединенных данных из Google Analytics 4 и Yandex Metrika
@@ -250,7 +251,8 @@ function getMockData(): AnalyticsData {
   };
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  return withAuth(request, async () => {
   try {
     const result = await fetchCombinedAnalytics();
 
@@ -280,4 +282,5 @@ export async function GET() {
       { status: 500 }
     );
   }
+  });
 }
