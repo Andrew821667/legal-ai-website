@@ -181,7 +181,7 @@ export default function RootLayout({
         {children}
         <Footer />
         <StickyCTA />
-        <AdminPanel password={process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "admin123"} />
+        <AdminPanel />
       </body>
     </html>
   );

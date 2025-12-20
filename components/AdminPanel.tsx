@@ -27,13 +27,11 @@ import SEOChart from './admin/SEOChart';
 import ExportButton from './admin/ExportButton';
 import NotificationBadge from './admin/NotificationBadge';
 import IssueFilters from './admin/IssueFilters';
-import { verifyPassword } from '@/lib/auth';
-
 interface AdminPanelProps {
-  password?: string; // Пароль для доступа (по умолчанию: "admin123")
+  // Нет props - аутентификация теперь только через сервер
 }
 
-export default function AdminPanel({ password = "admin123" }: AdminPanelProps) {
+export default function AdminPanel({}: AdminPanelProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [inputPassword, setInputPassword] = useState('');
@@ -143,23 +141,68 @@ export default function AdminPanel({ password = "admin123" }: AdminPanelProps) {
     // Не сбрасываем аутентификацию при закрытии
   };
 
-  const handleAuth = (e: React.FormEvent) => {
+  const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (inputPassword === password) {
-      setIsAuthenticated(true);
-      setError('');
-      setInputPassword('');
-    } else {
-      setError('Неверный пароль');
+    setError('');
+
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password: inputPassword }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setIsAuthenticated(true);
+        setInputPassword('');
+      } else {
+        setError(data.error || 'Неверный пароль');
+        setInputPassword('');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('Ошибка подключения к серверу');
       setInputPassword('');
     }
   };
 
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    setInputPassword('');
-    setError('');
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+      });
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      setIsAuthenticated(false);
+      setInputPassword('');
+      setError('');
+    }
   };
+
+  // Проверка токена при открытии панели
+  useEffect(() => {
+    const checkAuth = async () => {
+      if (isOpen && !isAuthenticated) {
+        try {
+          const response = await fetch('/api/auth/verify');
+          const data = await response.json();
+
+          if (data.authenticated) {
+            setIsAuthenticated(true);
+          }
+        } catch (error) {
+          console.error('Auth check error:', error);
+        }
+      }
+    };
+
+    checkAuth();
+  }, [isOpen, isAuthenticated]);
 
   // Данные для SEO - используем реальные данные из Analytics API или fallback на mock
   const seoData = analyticsData?.data || {
