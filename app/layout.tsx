@@ -56,8 +56,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    // Добавьте ваши verification коды:
-    // google: 'your-google-site-verification',
+    google: 'mTUEyeu5VGZOmD8i8uGmxG-XhDHU6MacydZDAWry8U0',
     // yandex: 'your-yandex-verification',
   },
 };
