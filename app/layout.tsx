@@ -104,7 +104,7 @@ export const metadata: Metadata = {
   },
   verification: {
     google: 'mTUEyeu5VGZOmD8i8uGmxG-XhDHU6MacydZDAWry8U0',
-    // yandex: 'your-yandex-verification',
+    yandex: '3448a4683f1cad05',
   },
 };
 
