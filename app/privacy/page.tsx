@@ -168,6 +168,7 @@ export default function PrivacyPage() {
                 По вопросам обработки персональных данных обращайтесь:
               </p>
               <ul className="list-none text-slate-300 space-y-2">
+                <li>Телефон: <a href="tel:+79092330909" className="text-amber-400 hover:text-amber-300">+7 909 233-09-09</a></li>
                 <li>Email: <a href="mailto:a.popov.gv@gmail.com" className="text-amber-400 hover:text-amber-300">a.popov.gv@gmail.com</a></li>
                 <li>Telegram: <a href="https://t.me/legal_ai_helper_new_bot" className="text-amber-400 hover:text-amber-300" target="_blank" rel="noopener noreferrer">@legal_ai_helper_new_bot</a></li>
               </ul>

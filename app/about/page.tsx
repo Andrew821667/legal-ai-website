@@ -54,9 +54,10 @@ export default function AboutPage() {
             </div>
 
             <div className="md:col-span-2">
-              <h3 className="text-2xl font-bold text-white mb-2">Алексей Попов</h3>
+              <h3 className="text-2xl font-bold text-white mb-2">Андрей Попов</h3>
               <p className="text-amber-400 font-semibold mb-4">Основатель Legal AI PRO</p>
-              <p className="text-slate-300 mb-4">Email: <a href="mailto:a.popov.gv@gmail.com" className="text-amber-400 hover:text-amber-300">a.popov.gv@gmail.com</a></p>
+              <p className="text-slate-300 mb-2">Email: <a href="mailto:a.popov.gv@gmail.com" className="text-amber-400 hover:text-amber-300">a.popov.gv@gmail.com</a></p>
+              <p className="text-slate-300 mb-4">Телефон: <a href="tel:+79092330909" className="text-amber-400 hover:text-amber-300">+7 909 233-09-09</a></p>
 
               <div className="space-y-4">
                 <div>
@@ -180,7 +181,15 @@ export default function AboutPage() {
             Готовы обсудить ваш проект? Свяжитесь с нами любым удобным способом.
           </p>
 
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div className="text-center">
+              <div className="text-4xl mb-3">📞</div>
+              <div className="text-white font-semibold mb-2">Телефон</div>
+              <a href="tel:+79092330909" className="text-amber-400 hover:text-amber-300 text-sm">
+                +7 909 233-09-09
+              </a>
+            </div>
+
             <div className="text-center">
               <div className="text-4xl mb-3">📧</div>
               <div className="text-white font-semibold mb-2">Email</div>
