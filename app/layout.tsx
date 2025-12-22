@@ -6,6 +6,7 @@ import AdminPanel from "@/components/AdminPanel";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import YandexMetrika from "@/components/YandexMetrika";
 import StickyCTA from "@/components/StickyCTA";
+import StructuredData from "@/components/StructuredData";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://legalaipro.ru';
 
@@ -184,6 +185,9 @@ export default function RootLayout({
         {process.env.NEXT_PUBLIC_YM_COUNTER_ID && (
           <YandexMetrika counterId={process.env.NEXT_PUBLIC_YM_COUNTER_ID} />
         )}
+
+        {/* Structured Data for SEO */}
+        <StructuredData />
 
         <Header />
         {children}
