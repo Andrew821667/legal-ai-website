@@ -9,6 +9,8 @@ import CaseStudies from "@/components/CaseStudies";
 import Testimonials from "@/components/Testimonials";
 import LeadMagnets from "@/components/LeadMagnets";
 import AboutTeam from "@/components/AboutTeam";
+import ExpertiseProof from "@/components/ExpertiseProof";
+import Sources from "@/components/Sources";
 
 export const metadata: Metadata = {
   title: "Legal AI PRO - Автоматизация юридической работы с ИИ | YandexGPT, GigaChat, Claude",
@@ -66,6 +68,8 @@ export default function Home() {
 
       <LeadMagnets />
       <AboutTeam />
+      <ExpertiseProof />
+      <Sources />
     </main>
   );
 }
