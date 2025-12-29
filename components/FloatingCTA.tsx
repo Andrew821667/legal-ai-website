@@ -15,7 +15,7 @@ export default function FloatingCTA() {
   const [isHovered, setIsHovered] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number | null>(null);
   const buttonRef = useRef<HTMLAnchorElement>(null);
 
   // Следим за позицией мыши
