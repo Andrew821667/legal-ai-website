@@ -20,6 +20,8 @@ export default function FloatingCTA() {
 
   // Следим за позицией мыши
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
@@ -30,6 +32,8 @@ export default function FloatingCTA() {
 
   // Показываем кнопку после прокрутки
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     const handleScroll = () => {
       if (window.scrollY > 200) {
         setIsVisible(true);
@@ -93,6 +97,8 @@ export default function FloatingCTA() {
 
   // Обработчик окончания перетаскивания
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     const handleMouseUp = () => {
       setIsDragging(false);
     };
@@ -103,8 +109,12 @@ export default function FloatingCTA() {
 
   // Вычисляем позицию кнопки относительно экрана
   const buttonSize = isMinimized ? 60 : 80;
-  const constrainedX = Math.max(buttonSize / 2, Math.min(window.innerWidth - buttonSize / 2, buttonPosition.x));
-  const constrainedY = Math.max(buttonSize / 2, Math.min(window.innerHeight - buttonSize / 2, buttonPosition.y));
+  const constrainedX = typeof window !== 'undefined'
+    ? Math.max(buttonSize / 2, Math.min(window.innerWidth - buttonSize / 2, buttonPosition.x))
+    : buttonPosition.x;
+  const constrainedY = typeof window !== 'undefined'
+    ? Math.max(buttonSize / 2, Math.min(window.innerHeight - buttonSize / 2, buttonPosition.y))
+    : buttonPosition.y;
 
   return (
     <>

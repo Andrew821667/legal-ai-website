@@ -5,7 +5,11 @@ import Footer from "@/components/Footer";
 import AdminPanel from "@/components/AdminPanel";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import YandexMetrika from "@/components/YandexMetrika";
-import FloatingCTA from "@/components/FloatingCTA";
+import dynamic from "next/dynamic";
+
+const FloatingCTA = dynamic(() => import("@/components/FloatingCTA"), {
+  ssr: false,
+});
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://legalaipro.ru';
 
