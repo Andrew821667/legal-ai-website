@@ -30,20 +30,22 @@ export default function FloatingCTA() {
     return () => document.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // Показываем кнопку после прокрутки
+  // Устанавливаем начальную позицию и показываем кнопку
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const handleScroll = () => {
-      if (window.scrollY > 200) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
-    };
+    // Начальная позиция в правом нижнем углу
+    setButtonPosition({
+      x: window.innerWidth - 100,
+      y: window.innerHeight - 100
+    });
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    // Небольшая задержка перед появлением для плавности
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 1000);
+
+    return () => clearTimeout(timer);
   }, []);
 
   // Анимация плавного движения кнопки за курсором
@@ -55,12 +57,12 @@ export default function FloatingCTA() {
         const dx = mousePosition.x - prev.x;
         const dy = mousePosition.y - prev.y;
 
-        // Уменьшаем скорость движения для плавности
-        const speed = isHovered ? 0.15 : 0.08;
+        // Очень медленное следование за курсором
+        const speed = isHovered ? 0.02 : 0.015; // Уменьшена скорость в 4-5 раз
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        // Если курсор близко к кнопке, замедляем движение
-        const proximityFactor = Math.max(0.1, Math.min(1, distance / 200));
+        // Кнопка следует только если курсор далеко (ленивое поведение)
+        const proximityFactor = Math.max(0.05, Math.min(0.3, distance / 400)); // Уменьшен фактор близости
 
         return {
           x: prev.x + dx * speed * proximityFactor,
