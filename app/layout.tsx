@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import AdminPanel from "@/components/AdminPanel";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import YandexMetrika from "@/components/YandexMetrika";
-import StickyCTA from "@/components/StickyCTA";
+import FloatingCTA from "@/components/FloatingCTA";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://legalaipro.ru';
 
@@ -180,7 +180,7 @@ export default function RootLayout({
         <Header />
         {children}
         <Footer />
-        <StickyCTA />
+        <FloatingCTA />
         <AdminPanel password={process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "admin123"} />
       </body>
     </html>
