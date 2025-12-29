@@ -5,11 +5,7 @@ import Footer from "@/components/Footer";
 import AdminPanel from "@/components/AdminPanel";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import YandexMetrika from "@/components/YandexMetrika";
-import dynamic from "next/dynamic";
-
-const FloatingCTA = dynamic(() => import("@/components/FloatingCTA"), {
-  ssr: false,
-});
+import FloatingCTAWrapper from "@/components/FloatingCTAWrapper";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://legalaipro.ru';
 
@@ -184,7 +180,7 @@ export default function RootLayout({
         <Header />
         {children}
         <Footer />
-        <FloatingCTA />
+        <FloatingCTAWrapper />
         <AdminPanel password={process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "admin123"} />
       </body>
     </html>
