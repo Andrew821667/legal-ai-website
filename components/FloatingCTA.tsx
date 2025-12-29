@@ -34,10 +34,10 @@ export default function FloatingCTA() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    // Начальная позиция в правом нижнем углу
+    // Начальная позиция в правом нижнем углу, но не слишком близко к краю
     setButtonPosition({
-      x: window.innerWidth - 100,
-      y: window.innerHeight - 100
+      x: window.innerWidth - 120,
+      y: window.innerHeight - 120
     });
 
     // Небольшая задержка перед появлением для плавности
@@ -56,17 +56,22 @@ export default function FloatingCTA() {
       setButtonPosition(prev => {
         const dx = mousePosition.x - prev.x;
         const dy = mousePosition.y - prev.y;
-
-        // Очень медленное следование за курсором
-        const speed = isHovered ? 0.02 : 0.015; // Уменьшена скорость в 4-5 раз
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        // Кнопка следует только если курсор далеко (ленивое поведение)
-        const proximityFactor = Math.max(0.05, Math.min(0.3, distance / 400)); // Уменьшен фактор близости
+        // Кнопка следует только если курсор достаточно далеко (> 150px)
+        if (distance < 150) {
+          return prev; // Не двигаемся, если курсор близко
+        }
+
+        // Очень медленное следование - в 10 раз медленнее
+        const speed = isHovered ? 0.002 : 0.0015;
+
+        // Добавляем небольшое случайное отклонение для естественности
+        const randomOffset = (Math.random() - 0.5) * 0.5;
 
         return {
-          x: prev.x + dx * speed * proximityFactor,
-          y: prev.y + dy * speed * proximityFactor,
+          x: prev.x + (dx * speed) + randomOffset,
+          y: prev.y + (dy * speed) + randomOffset,
         };
       });
 
