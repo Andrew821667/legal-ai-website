@@ -21,13 +21,23 @@ export default function FloatingCTA() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    setButtonPosition({
-      x: window.innerWidth - 140, // Учитываем увеличенный размер кнопки
-      y: window.innerHeight - 80
-    });
+    const updatePosition = () => {
+      // Начальная позиция в правом нижнем углу с учетом размера кнопки
+      const currentButtonWidth = window.innerWidth < 768 ? 80 : 160;
+      const currentButtonHeight = window.innerWidth < 768 ? 40 : 80;
+      setButtonPosition({
+        x: window.innerWidth - currentButtonWidth - 20, // Отступ от края
+        y: window.innerHeight - currentButtonHeight - 20
+      });
+    };
 
+    updatePosition();
     // Показываем кнопку сразу
     setIsVisible(true);
+
+    // Обновляем позицию при изменении размера окна
+    window.addEventListener('resize', updatePosition);
+    return () => window.removeEventListener('resize', updatePosition);
   }, []);
 
   // Логика drag & drop (мышь и touch)
@@ -117,9 +127,11 @@ export default function FloatingCTA() {
     }
   };
 
-  // Вычисляем позицию кнопки относительно экрана (увеличенная овальная кнопка)
-  const buttonWidth = 160; // Увеличена в 2 раза от 80
-  const buttonHeight = 80; // Овальная форма
+  // Определяем размер кнопки в зависимости от устройства
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const buttonWidth = isMobile ? 80 : 160; // На мобильных - исходный размер, на десктопе - увеличенный
+  const buttonHeight = isMobile ? 40 : 80; // Пропорционально уменьшаем высоту
+
   const constrainedX = typeof window !== 'undefined'
     ? Math.max(buttonWidth / 2, Math.min(window.innerWidth - buttonWidth / 2, buttonPosition.x))
     : buttonPosition.x;
@@ -135,7 +147,9 @@ export default function FloatingCTA() {
         href="https://t.me/legal_ai_helper_new_bot"
         target="_blank"
         rel="noopener noreferrer"
-        className={`fixed z-50 transition-all duration-300 transform w-40 h-20 ${
+        className={`fixed z-50 transition-all duration-300 transform ${
+          isMobile ? 'w-20 h-10' : 'w-40 h-20'
+        } ${
           isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-0 pointer-events-none'
         } ${
           isHovered ? 'scale-105' : 'scale-100'
@@ -165,9 +179,11 @@ export default function FloatingCTA() {
         </div>
 
         {/* Иконка и текст */}
-        <div className="relative flex items-center justify-center h-full text-white font-semibold px-4">
-          <MessageCircle className="w-6 h-6 mr-2 flex-shrink-0" />
-          <span className="text-sm whitespace-nowrap">Связаться с нами</span>
+        <div className="relative flex items-center justify-center h-full text-white font-semibold px-2">
+          <MessageCircle className={`flex-shrink-0 mr-1 ${isMobile ? 'w-4 h-4' : 'w-6 h-6'}`} />
+          <span className={`whitespace-nowrap ${isMobile ? 'text-xs' : 'text-sm'}`}>
+            {isMobile ? 'Написать' : 'Связаться с нами'}
+          </span>
         </div>
       </a>
 
