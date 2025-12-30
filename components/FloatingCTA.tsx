@@ -30,7 +30,7 @@ export default function FloatingCTA() {
     setIsVisible(true);
   }, []);
 
-  // Логика drag & drop
+  // Логика drag & drop (мышь и touch)
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
@@ -45,22 +45,42 @@ export default function FloatingCTA() {
       }
     };
 
+    const handleTouchMove = (e: TouchEvent) => {
+      if (isDragging && e.touches.length === 1) {
+        // Если происходит перемещение - отмечаем что было перетаскивание
+        setWasDragged(true);
+        const touch = e.touches[0];
+        setButtonPosition({
+          x: touch.clientX - dragOffset.x,
+          y: touch.clientY - dragOffset.y,
+        });
+      }
+    };
+
     const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    const handleTouchEnd = () => {
       setIsDragging(false);
     };
 
     if (isDragging) {
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener('touchmove', handleTouchMove, { passive: false });
+      document.addEventListener('touchend', handleTouchEnd);
     }
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleTouchEnd);
     };
   }, [isDragging, dragOffset]);
 
-  // Обработчик начала перетаскивания
+  // Обработчик начала перетаскивания (мышь)
   const handleMouseDown = (e: React.MouseEvent) => {
     setWasDragged(false); // Сбрасываем флаг перетаскивания
     if (buttonRef.current) {
@@ -68,6 +88,21 @@ export default function FloatingCTA() {
       setDragOffset({
         x: e.clientX - rect.left,
         y: e.clientY - rect.top,
+      });
+    }
+    setIsDragging(true);
+    e.preventDefault();
+  };
+
+  // Обработчик начала перетаскивания (touch)
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setWasDragged(false); // Сбрасываем флаг перетаскивания
+    if (buttonRef.current && e.touches.length === 1) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      const touch = e.touches[0];
+      setDragOffset({
+        x: touch.clientX - rect.left,
+        y: touch.clientY - rect.top,
       });
     }
     setIsDragging(true);
@@ -115,6 +150,7 @@ export default function FloatingCTA() {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
         onClick={handleClick}
       >
         {/* Фон с градиентом - овальная форма */}
