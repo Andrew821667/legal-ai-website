@@ -14,6 +14,7 @@ export default function FloatingCTA() {
   const [isHovered, setIsHovered] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState<MousePosition>({ x: 0, y: 0 });
+  const [wasDragged, setWasDragged] = useState(false);
   const buttonRef = useRef<HTMLAnchorElement>(null);
 
   // Устанавливаем начальную позицию в правом нижнем углу
@@ -35,6 +36,8 @@ export default function FloatingCTA() {
 
     const handleMouseMove = (e: MouseEvent) => {
       if (isDragging) {
+        // Если происходит перемещение - отмечаем что было перетаскивание
+        setWasDragged(true);
         setButtonPosition({
           x: e.clientX - dragOffset.x,
           y: e.clientY - dragOffset.y,
@@ -59,6 +62,7 @@ export default function FloatingCTA() {
 
   // Обработчик начала перетаскивания
   const handleMouseDown = (e: React.MouseEvent) => {
+    setWasDragged(false); // Сбрасываем флаг перетаскивания
     if (buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
       setDragOffset({
@@ -68,6 +72,14 @@ export default function FloatingCTA() {
     }
     setIsDragging(true);
     e.preventDefault();
+  };
+
+  // Обработчик клика - предотвращает переход если было перетаскивание
+  const handleClick = (e: React.MouseEvent) => {
+    if (wasDragged) {
+      e.preventDefault();
+      setWasDragged(false); // Сбрасываем флаг после использования
+    }
   };
 
   // Вычисляем позицию кнопки относительно экрана (увеличенная овальная кнопка)
@@ -103,6 +115,7 @@ export default function FloatingCTA() {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         onMouseDown={handleMouseDown}
+        onClick={handleClick}
       >
         {/* Фон с градиентом - овальная форма */}
         <div className="absolute inset-0 bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 rounded-full shadow-2xl">
