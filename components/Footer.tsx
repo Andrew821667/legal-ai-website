@@ -208,10 +208,10 @@ export default function Footer() {
             © {new Date().getFullYear()} Legal AI PRO. Все права защищены.
           </p>
           <div className="flex gap-6 text-sm">
-            <a href="#" className="text-slate-500 hover:text-amber-500 transition-colors">
+            <a href="/privacy" className="text-slate-500 hover:text-amber-500 transition-colors">
               Политика конфиденциальности
             </a>
-            <a href="#" className="text-slate-500 hover:text-amber-500 transition-colors">
+            <a href="/terms" className="text-slate-500 hover:text-amber-500 transition-colors">
               Условия использования
             </a>
           </div>
