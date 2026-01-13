@@ -2,8 +2,19 @@
 
 import { ExternalLink, CheckCircle2, Calendar } from "lucide-react";
 
+interface SourceItem {
+  name: string;
+  text: string;
+  url?: string;
+}
+
+interface SourceCategory {
+  category: string;
+  items: SourceItem[];
+}
+
 export default function TrustSignals() {
-  const sources = [
+  const sources: SourceCategory[] = [
     {
       category: "Исследования и статистика",
       items: [
