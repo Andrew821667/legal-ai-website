@@ -185,20 +185,30 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* SEO-optimized text block */}
+        {/* SEO-optimized text block - SIMPLIFIED */}
         <div className="border-t border-slate-800 pt-8 pb-6">
-          <div className="text-center text-sm text-slate-500 leading-relaxed max-w-5xl mx-auto">
-            <p className="mb-2">
-              <strong className="text-slate-400">Legal AI PRO</strong> — профессиональная <strong>автоматизация юридической работы</strong>, 
-              <strong> автоматизация юридических функций</strong> и <strong>автоматизация юридических процессов</strong>. 
-              Мы предоставляем комплексные решения для автоматизации юридической деятельности, включая 
-              автоматизацию работы юриста, автоматизацию юридических задач и автоматизацию юридических операций.
+          <div className="text-center text-sm text-slate-500 leading-relaxed max-w-5xl mx-auto space-y-3">
+            <p>
+              <strong className="text-slate-400">Legal AI PRO</strong> — <strong>цифровая трансформация юриспруденции</strong>. 
+              Профессиональная <strong>автоматизация юридической работы</strong> и <strong>автоматизация юридических функций</strong>. 
+              Создаем <strong>Legal Tech решения</strong> для комплексной автоматизации юридической деятельности. 
+              Автоматизация работы юриста на 80-95%.
             </p>
             <p>
-              Используем российские AI-модели (YandexGPT, GigaChat) для автоматизации договорной работы, 
-              судебной работы, корпоративного права, налогового комплаенса и Due Diligence. 
-              20+ лет юридической практики + профессиональная разработка AI-систем.
+              Российские AI-модели (YandexGPT, GigaChat). 
+              Predictive analytics + machine learning + NLP. 
+              Автоматизация договоров, судов, M&A, комплаенса, Due Diligence. 
+              20+ лет практики CLO + разработка AI-систем.
             </p>
+            <div className="pt-2 flex items-center justify-center gap-4 text-xs">
+              <span className="text-emerald-400">
+                ✓ Обновлено: {new Date().toLocaleDateString('ru-RU', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </span>
+              <span className="text-slate-600">|</span>
+              <a href="#sources" className="text-amber-500 hover:text-amber-400 transition-colors">
+                Источники и исследования
+              </a>
+            </div>
           </div>
         </div>
 

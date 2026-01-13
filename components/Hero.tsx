@@ -29,37 +29,47 @@ export default function Hero() {
               <span className="text-amber-400">на базе Искусственного Интеллекта</span>
             </h1>
 
-            {/* Subtitle */}
+            {/* Subtitle - SIMPLIFIED for readability */}
             <h2 className="text-2xl md:text-3xl font-semibold text-slate-200 mb-6 animate-fade-in-delay-1">
-              Мы — юристы-разработчики. Создаем системы, которые проверяют договоры, ищут риски и готовят документы в 10 раз быстрее человека.
+              Мы — юристы-разработчики. 
+              Создаем системы на базе ИИ. 
+              Они проверяют договоры в 10 раз быстрее.
             </h2>
 
-            {/* SEO-optimized paragraph with key phrases */}
-            <p className="text-lg text-slate-300 mb-8 max-w-4xl mx-auto lg:mx-0 animate-fade-in-delay-1">
+            {/* SEO-optimized paragraph with LSI keywords */}
+            <p className="text-lg text-slate-300 mb-4 max-w-4xl mx-auto lg:mx-0 animate-fade-in-delay-1">
+              <strong className="text-amber-400">Цифровая трансформация юриспруденции</strong> начинается здесь. 
               Комплексная <strong className="text-amber-400">автоматизация юридических функций</strong>, процессов и задач. 
-              От договоров до судебной работы — полная <strong className="text-amber-400">автоматизация юридической деятельности</strong> вашей компании.
-              Автоматизируем работу юриста, юридические операции и все юридические процессы.
+              От договоров до судебной работы — полная <strong className="text-amber-400">автоматизация юридической деятельности</strong>.
             </p>
             
-            {/* Stats */}
+            {/* Additional SEO paragraph with LSI keywords */}
+            <p className="text-base text-slate-400 mb-8 max-w-4xl mx-auto lg:mx-0 animate-fade-in-delay-1">
+              <strong>Legal Tech решения</strong> для оптимизации работы юридического отдела. 
+              <strong>Предиктивная аналитика</strong>, <strong>machine learning</strong> и <strong>обработка естественного языка (NLP)</strong> для юристов. 
+              Сокращаем время на рутину на 80-95%. 
+              Быстрая окупаемость: ROI за 4-6 месяцев.
+            </p>
+            
+            {/* Stats - SIMPLIFIED for readability */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in-delay-2">
               <AnimatedStat
                 value={20}
                 suffix="+"
-                label="лет успешной юридической практики. Огромный опыт работы. Находим оптимальные решения для сложных задач."
+                label="лет успешной юридической практики. CLO в крупных компаниях. 200+ процедур банкротства."
               />
               <AnimatedStat
                 value={80}
                 suffix="%+"
-                label="сокращение времени на рутинные задачи. Системы помогают юристам сосредоточиться на важном. Минимизируем затраты времени на рутину."
+                label="сокращение времени на рутину. Юристы фокусируются на стратегии. Рутину делает ИИ."
               />
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20 hover:bg-white/15 hover:border-amber-400/50 hover:scale-105 transition-all duration-300">
                 <div className="text-3xl font-bold text-amber-400 mb-1">4-6 мес</div>
-                <div className="text-sm text-slate-300">срок окупаемости инвестиций. Решения быстро начинают приносить выгоду. Быстрая отдача от вложений.</div>
+                <div className="text-sm text-slate-300">окупаемость инвестиций. Подтверждено кейсами. Быстрый возврат средств.</div>
               </div>
             </div>
 
-            {/* CTA Buttons */}
+            {/* CTA Buttons - added more internal links */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-in-delay-3">
               <a
                 href="#calculator"
@@ -70,12 +80,16 @@ export default function Hero() {
                 <span className="relative z-10">Рассчитать экономию</span>
               </a>
               <a
-                href="https://t.me/legal_ai_helper_new_bot?start=demo"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="#services"
+                className="group relative bg-blue-600/90 hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all backdrop-blur-sm border border-blue-500/50 hover:border-blue-400 transform hover:scale-105 shadow-lg"
+              >
+                <span className="relative z-10">Наши услуги</span>
+              </a>
+              <a
+                href="#faq"
                 className="group relative bg-white/10 hover:bg-white/20 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all backdrop-blur-sm border border-white/30 hover:border-white/60 transform hover:scale-105 shadow-lg"
               >
-                <span className="relative z-10">Смотреть демо →</span>
+                <span className="relative z-10">Узнать больше</span>
               </a>
             </div>
           </div>

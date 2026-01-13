@@ -9,6 +9,7 @@ import Testimonials from "@/components/Testimonials";
 import LeadMagnets from "@/components/LeadMagnets";
 import AboutTeam from "@/components/AboutTeam";
 import FAQ from "@/components/FAQ";
+import TrustSignals from "@/components/TrustSignals";
 
 export default function Home() {
   return (
@@ -44,6 +45,9 @@ export default function Home() {
 
       <LeadMagnets />
       <AboutTeam />
+      
+      {/* Trust Signals & Sources for SEO */}
+      <TrustSignals />
       
       {/* FAQ Section for SEO */}
       <FAQ />
