@@ -129,7 +129,19 @@ export default function Footer() {
 
         {/* Contact Info */}
         <div className="border-t border-slate-800 pt-8 pb-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="flex items-start gap-3">
+              <div className="text-amber-500 text-xl">📞</div>
+              <div>
+                <div className="text-white font-medium mb-1">Телефон</div>
+                <a
+                  href="tel:+79092330909"
+                  className="text-slate-400 hover:text-amber-500 transition-colors text-sm"
+                >
+                  +7 909 233-09-09
+                </a>
+              </div>
+            </div>
             <div className="flex items-start gap-3">
               <div className="text-amber-500 text-xl">📧</div>
               <div>
@@ -173,8 +185,25 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* SEO-optimized text block */}
+        <div className="border-t border-slate-800 pt-8 pb-6">
+          <div className="text-center text-sm text-slate-500 leading-relaxed max-w-5xl mx-auto">
+            <p className="mb-2">
+              <strong className="text-slate-400">Legal AI PRO</strong> — профессиональная <strong>автоматизация юридической работы</strong>, 
+              <strong> автоматизация юридических функций</strong> и <strong>автоматизация юридических процессов</strong>. 
+              Мы предоставляем комплексные решения для автоматизации юридической деятельности, включая 
+              автоматизацию работы юриста, автоматизацию юридических задач и автоматизацию юридических операций.
+            </p>
+            <p>
+              Используем российские AI-модели (YandexGPT, GigaChat) для автоматизации договорной работы, 
+              судебной работы, корпоративного права, налогового комплаенса и Due Diligence. 
+              20+ лет юридической практики + профессиональная разработка AI-систем.
+            </p>
+          </div>
+        </div>
+
         {/* Bottom Bar */}
-        <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="border-t border-slate-800 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-slate-500 text-sm">
             © {new Date().getFullYear()} Legal AI PRO. Все права защищены.
           </p>

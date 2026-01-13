@@ -8,6 +8,7 @@ import CaseStudies from "@/components/CaseStudies";
 import Testimonials from "@/components/Testimonials";
 import LeadMagnets from "@/components/LeadMagnets";
 import AboutTeam from "@/components/AboutTeam";
+import FAQ from "@/components/FAQ";
 
 export default function Home() {
   return (
@@ -43,6 +44,9 @@ export default function Home() {
 
       <LeadMagnets />
       <AboutTeam />
+      
+      {/* FAQ Section for SEO */}
+      <FAQ />
     </main>
   );
 }

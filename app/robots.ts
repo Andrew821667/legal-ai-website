@@ -10,6 +10,18 @@ export default function robots(): MetadataRoute.Robots {
         allow: '/',
         disallow: ['/api/', '/admin/'],
       },
+      {
+        userAgent: 'Googlebot',
+        allow: '/',
+        disallow: ['/api/', '/admin/'],
+        crawlDelay: 1,
+      },
+      {
+        userAgent: 'Yandex',
+        allow: '/',
+        disallow: ['/api/', '/admin/'],
+        crawlDelay: 1,
+      },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,
   }

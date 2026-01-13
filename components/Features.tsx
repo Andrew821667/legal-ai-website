@@ -63,11 +63,13 @@ export default function Features() {
         {/* Section Header */}
         <div ref={sectionRef} className={`text-center mb-16 scroll-reveal ${sectionVisible ? 'visible' : ''}`}>
           <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
-            Почему выбирают нас?
+            Эксперты по автоматизации юридических функций
           </h2>
-          <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-            Мы предлагаем уникальное сочетание юридической экспертизы и технических навыков.
-            Это делает нас идеальным выбором для вашего бизнеса.
+          <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+            Мы специализируемся на комплексной <strong>автоматизации юридической работы</strong> и 
+            <strong> автоматизации юридических процессов</strong>. 
+            Уникальное сочетание 20+ лет юридической практики и профессиональной разработки AI-систем 
+            позволяет нам создавать решения, которые действительно работают.
           </p>
         </div>
 

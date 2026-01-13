@@ -30,9 +30,16 @@ export default function Hero() {
             </h1>
 
             {/* Subtitle */}
-            <h2 className="text-2xl md:text-3xl font-semibold text-slate-200 mb-8 animate-fade-in-delay-1">
+            <h2 className="text-2xl md:text-3xl font-semibold text-slate-200 mb-6 animate-fade-in-delay-1">
               Мы — юристы-разработчики. Создаем системы, которые проверяют договоры, ищут риски и готовят документы в 10 раз быстрее человека.
             </h2>
+
+            {/* SEO-optimized paragraph with key phrases */}
+            <p className="text-lg text-slate-300 mb-8 max-w-4xl mx-auto lg:mx-0 animate-fade-in-delay-1">
+              Комплексная <strong className="text-amber-400">автоматизация юридических функций</strong>, процессов и задач. 
+              От договоров до судебной работы — полная <strong className="text-amber-400">автоматизация юридической деятельности</strong> вашей компании.
+              Автоматизируем работу юриста, юридические операции и все юридические процессы.
+            </p>
             
             {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in-delay-2">

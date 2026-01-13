@@ -6,13 +6,14 @@ import AdminPanel from "@/components/AdminPanel";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import YandexMetrika from "@/components/YandexMetrika";
 import FloatingCTAWrapper from "@/components/FloatingCTAWrapper";
+import StructuredData from "@/components/StructuredData";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://legalaipro.ru';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Legal AI PRO - Юристы, разрабатывающие AI-решения для юридической автоматизации",
-  description: "Создаем интеллектуальные системы для автоматизации юридической работы. 20+ лет практики + программирование. Налоговый комплаенс, договоры, суды. YandexGPT, GigaChat.",
+  title: "Автоматизация юридической работы и функций | Legal AI PRO",
+  description: "Автоматизация юридической работы, функций и процессов с помощью AI. Автоматизируем договоры, суды, комплаенс, юридическую деятельность. 20+ лет опыта. YandexGPT, GigaChat. Экономия времени 80%. ROI 4-6 месяцев.",
   keywords: [
     // Основные услуги
     'автоматизация юридической работы',
@@ -232,14 +233,23 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'ru_RU',
     url: siteUrl,
-    title: 'Legal AI PRO - Автоматизация юридической работы на базе ИИ',
-    description: 'Мы — юристы-разработчики. Создаем системы, которые проверяют договоры, ищут риски и готовят документы в 10 раз быстрее человека.',
+    title: 'Автоматизация юридической работы и функций | Legal AI PRO',
+    description: 'Автоматизация юридической работы, функций и процессов с помощью AI. 20+ лет опыта. Экономия времени 80%. YandexGPT, GigaChat.',
     siteName: 'Legal AI PRO',
+    images: [
+      {
+        url: `${siteUrl}/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: 'Legal AI PRO - Автоматизация юридической работы',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Legal AI PRO - Автоматизация юридической работы на базе ИИ',
-    description: 'Мы — юристы-разработчики. Создаем системы, которые проверяют договоры, ищут риски и готовят документы в 10 раз быстрее человека.',
+    title: 'Автоматизация юридической работы и функций | Legal AI PRO',
+    description: 'Автоматизация юридической работы, функций и процессов с помощью AI. 20+ лет опыта. Экономия времени 80%.',
+    images: [`${siteUrl}/og-image.png`],
   },
   robots: {
     index: true,
@@ -265,6 +275,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru" className="scroll-smooth">
+      <head>
+        {/* Structured Data for SEO (Schema.org) */}
+        <StructuredData siteUrl={siteUrl} />
+      </head>
       <body className="antialiased">
         {/* Google Analytics 4 */}
         {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
