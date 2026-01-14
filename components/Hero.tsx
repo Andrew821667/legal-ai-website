@@ -102,7 +102,7 @@ export default function Hero() {
 
           {/* Right side - Illustration */}
           <div className="hidden lg:block animate-fade-in-delay-2">
-            </div>
+            <HeroIllustration />
           </div>
         </div>
 
