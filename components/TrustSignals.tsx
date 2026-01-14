@@ -1,6 +1,7 @@
 "use client";
 
 import { ExternalLink, CheckCircle2, Calendar } from "lucide-react";
+import { useMemo } from "react";
 
 interface SourceItem {
   name: string;
@@ -13,8 +14,8 @@ interface SourceCategory {
   items: SourceItem[];
 }
 
-export default function TrustSignals() {
-  const sources: SourceCategory[] = [
+// Move static data outside component for better performance
+const SOURCES_DATA: SourceCategory[] = [
     {
       category: "Исследования и статистика",
       items: [
@@ -40,11 +41,17 @@ export default function TrustSignals() {
     },
   ];
 
-  const updateInfo = {
-    lastUpdated: new Date().toLocaleDateString('ru-RU', { year: 'numeric', month: 'long', day: 'numeric' }),
-    frequency: "Еженедельно",
-    nextUpdate: "В течение 7 дней",
-  };
+// Move date formatting outside component
+const UPDATE_INFO = {
+  lastUpdated: new Date().toLocaleDateString('ru-RU', { year: 'numeric', month: 'long', day: 'numeric' }),
+  frequency: "Еженедельно",
+  nextUpdate: "В течение 7 дней",
+};
+
+export default function TrustSignals() {
+  // Use memoized data
+  const sources = useMemo(() => SOURCES_DATA, []);
+  const updateInfo = useMemo(() => UPDATE_INFO, []);
 
   return (
     <section id="sources" className="py-16 bg-slate-900">
