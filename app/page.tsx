@@ -46,8 +46,8 @@ export default function Home() {
       <LeadMagnets />
       <AboutTeam />
       
-      {/* Trust Signals & Sources for SEO */}
-      <TrustSignals />
+      {/* Trust Signals & Sources for SEO - TEMPORARILY DISABLED */}
+      {/* <TrustSignals /> */}
       
       {/* FAQ Section for SEO */}
       <FAQ />
