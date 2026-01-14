@@ -1,12 +1,7 @@
 "use client";
 
 import AnimatedStat from "./AnimatedStat";
-import dynamic from "next/dynamic";
-
-// Lazy load heavy SVG illustration
-const HeroIllustration = dynamic(() => import("./HeroIllustration"), {
-  loading: () => <div className="w-full h-[500px] bg-slate-800/20 animate-pulse rounded-xl"></div>,
-});
+import HeroIllustration from "./HeroIllustration";
 
 export default function Hero() {
   return (

@@ -9,12 +9,7 @@ import Testimonials from "@/components/Testimonials";
 import LeadMagnets from "@/components/LeadMagnets";
 import AboutTeam from "@/components/AboutTeam";
 import FAQ from "@/components/FAQ";
-import dynamic from "next/dynamic";
-
-// Lazy load TrustSignals for better performance
-const TrustSignals = dynamic(() => import("@/components/TrustSignals"), {
-  loading: () => <div className="py-16 bg-slate-900 text-center text-slate-400">Загрузка...</div>,
-});
+import TrustSignals from "@/components/TrustSignals";
 
 export default function Home() {
   return (
