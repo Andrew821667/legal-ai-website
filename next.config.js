@@ -21,7 +21,8 @@ const nextConfig = {
         has: [
           {
             type: 'host',
-            value: '*.vercel.app',
+            // Next.js treats host matcher as RegExp source, so "*.vercel.app" is invalid.
+            value: '(.+)\\.vercel\\.app',
           },
         ],
         destination: 'https://legalaipro.ru/:path*',

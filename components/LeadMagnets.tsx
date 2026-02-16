@@ -43,7 +43,7 @@ export default function LeadMagnets() {
       title: "Демо-анализ договора",
       subtitle: "Бесплатная проверка",
       description:
-        "Отправьте нам ваш договор для анализа с помощью нашей AI-системы и получите ценные рекомендации по его улучшению. Мы выявим потенциальные риски и предложим оптимальные условия, чтобы ваш бизнес оставался защищенным и успешным. Все данные обрабатываются конфиденциально.",
+        "Отправьте договор и получите краткий разбор рисков и рекомендаций. Конфиденциальность сохраняем.",
       features: [
         "Выявление рисков",
         "Анализ условий",
@@ -56,7 +56,7 @@ export default function LeadMagnets() {
   ];
 
   return (
-    <section className="py-20 bg-slate-50">
+    <section id="lead-magnets" className="py-20 bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div ref={headerRef} className={`text-center mb-16 scroll-reveal ${headerVisible ? 'visible' : ''}`}>
@@ -64,7 +64,7 @@ export default function LeadMagnets() {
             Начните бесплатно
           </h2>
           <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-            Выберите наиболее удобный для вас способ познакомиться с нашими AI-решениями и оцените, какую пользу они могут принести вашему бизнесу. Мы предлагаем несколько вариантов, чтобы вы могли выбрать оптимальный.
+            Выберите удобный формат: консультация, гайд или демо-проверка договора.
           </p>
         </div>
 
@@ -145,7 +145,7 @@ export default function LeadMagnets() {
               Все материалы — бесплатно
             </h3>
             <p className="text-xl text-slate-300 mb-6 max-w-2xl mx-auto">
-              Узнайте, как AI может трансформировать ваш юридический отдел и сделать его более эффективным. Все это без скрытых платежей и дополнительных затрат. Мы предлагаем вам возможность попробовать наши решения без каких-либо обязательств.
+              Без обязательств и скрытых платежей.
             </p>
             <div className="flex flex-wrap justify-center gap-4 text-slate-300">
               <div className="flex items-center gap-2">

@@ -1,8 +1,24 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Политика конфиденциальности | Legal AI PRO",
+  title: "Политика конфиденциальности",
   description: "Политика конфиденциальности и обработки персональных данных Legal AI PRO. Защита информации пользователей в соответствии с 152-ФЗ.",
+  alternates: {
+    canonical: "/privacy",
+  },
+  openGraph: {
+    title: "Политика конфиденциальности | Legal AI PRO",
+    description:
+      "Как Legal AI PRO обрабатывает и защищает персональные данные пользователей.",
+    url: "/privacy",
+    type: "article",
+  },
+  twitter: {
+    card: "summary",
+    title: "Политика конфиденциальности | Legal AI PRO",
+    description:
+      "Как Legal AI PRO обрабатывает и защищает персональные данные пользователей.",
+  },
   robots: {
     index: true,
     follow: true,

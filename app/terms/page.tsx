@@ -1,8 +1,23 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Условия использования | Legal AI PRO",
+  title: "Условия использования",
   description: "Условия использования сайта legalaipro.ru. Правила предоставления услуг по разработке AI-решений для автоматизации юридической работы.",
+  alternates: {
+    canonical: "/terms",
+  },
+  openGraph: {
+    title: "Условия использования | Legal AI PRO",
+    description:
+      "Правила использования сайта и оказания услуг Legal AI PRO.",
+    url: "/terms",
+    type: "article",
+  },
+  twitter: {
+    card: "summary",
+    title: "Условия использования | Legal AI PRO",
+    description: "Правила использования сайта и оказания услуг Legal AI PRO.",
+  },
   robots: {
     index: true,
     follow: true,

@@ -1,23 +1,28 @@
 export default function Footer() {
   const navigation = {
     company: [
-      { name: "О команде", href: "#about" },
-      { name: "Почему мы", href: "#features" },
-      { name: "Кейсы", href: "#cases" },
-      { name: "Технологии", href: "#tech" },
+      { name: "Преимущества", href: "/#features" },
+      { name: "Услуги", href: "/#services" },
+      { name: "FAQ", href: "/#faq" },
+      { name: "Источники", href: "/#sources" },
+      { name: "Бесплатно начать", href: "/#lead-magnets" },
+      { name: "Кейсы (подробно)", href: "/cases" },
+      { name: "О команде", href: "/team" },
+      { name: "Регионы", href: "/regions" },
     ],
     services: [
-      { name: "Договорная работа", href: "#services" },
-      { name: "Судебная работа", href: "#services" },
-      { name: "Корпоративное право", href: "#services" },
-      { name: "Комплаенс", href: "#services" },
-      { name: "Все услуги", href: "#services" },
+      { name: "Договорная работа", href: "/services/contracts-ai" },
+      { name: "Судебная работа", href: "/services/litigation-ai" },
+      { name: "Корпоративное право и M&A", href: "/services/corporate-ma-ai" },
+      { name: "Комплаенс", href: "/services/compliance-ai" },
+      { name: "Налоговый комплаенс", href: "/services/tax-compliance-ai" },
+      { name: "Все услуги", href: "/services" },
     ],
     resources: [
-      { name: "Калькулятор ROI", href: "#calculator" },
-      { name: "Бесплатная консультация", href: "#lead-magnets" },
-      { name: "Чек-лист по договорам", href: "#lead-magnets" },
-      { name: "Демо-анализ", href: "#lead-magnets" },
+      { name: "Калькулятор ROI", href: "/#calculator" },
+      { name: "Бесплатная консультация", href: "/#lead-magnets" },
+      { name: "Чек-лист по договорам", href: "/#lead-magnets" },
+      { name: "Демо-анализ", href: "/#lead-magnets" },
     ],
   };
 
@@ -30,8 +35,7 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <h3 className="text-2xl font-bold text-white mb-4">Legal AI PRO</h3>
             <p className="text-slate-400 mb-6 leading-relaxed">
-              Юристы, самостоятельно разрабатывающие AI-решения для автоматизации
-              юридической работы.
+              Помогаем юридическим командам автоматизировать рутину и быстрее принимать решения.
             </p>
             <div className="space-y-2 mb-6">
               <div className="flex items-center gap-2">
@@ -189,23 +193,15 @@ export default function Footer() {
         <div className="border-t border-slate-800 pt-8 pb-6">
           <div className="text-center text-sm text-slate-500 leading-relaxed max-w-5xl mx-auto space-y-3">
             <p>
-              <strong className="text-slate-400">Legal AI PRO</strong> — <strong>цифровая трансформация юриспруденции</strong>. 
-              Профессиональная <strong>автоматизация юридической работы</strong> и <strong>автоматизация юридических функций</strong>. 
-              Создаем <strong>Legal Tech решения</strong> для комплексной автоматизации юридической деятельности. 
-              Автоматизация работы юриста на 80-95%.
-            </p>
-            <p>
-              Российские AI-модели (YandexGPT, GigaChat). 
-              Predictive analytics + machine learning + NLP. 
-              Автоматизация договоров, судов, M&A, комплаенса, Due Diligence. 
-              20+ лет практики CLO + разработка AI-систем.
+              <strong className="text-slate-400">Legal AI PRO</strong>: автоматизация юридической работы, договоров,
+              судебных задач и комплаенса с помощью AI.
             </p>
             <div className="pt-2 flex items-center justify-center gap-4 text-xs">
               <span className="text-emerald-400">
                 ✓ Обновлено: {new Date().toLocaleDateString('ru-RU', { year: 'numeric', month: 'long', day: 'numeric' })}
               </span>
               <span className="text-slate-600">|</span>
-              <a href="#sources" className="text-amber-500 hover:text-amber-400 transition-colors">
+              <a href="/#sources" className="text-amber-500 hover:text-amber-400 transition-colors">
                 Источники и исследования
               </a>
             </div>

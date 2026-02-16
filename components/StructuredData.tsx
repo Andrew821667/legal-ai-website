@@ -1,5 +1,3 @@
-"use client";
-
 /**
  * Структурированные данные Schema.org для улучшения SEO
  * Критично для YMYL-сайтов (юридические услуги)
@@ -74,7 +72,8 @@ export default function StructuredData({ siteUrl = 'https://legalaipro.ru' }: St
           "itemOffered": {
             "@type": "Service",
             "name": "Автоматизация договорной работы",
-            "description": "AI-анализ договоров, выявление рисков, автоматическая генерация документов. Сокращение времени проверки с 2-3 часов до 5-10 минут."
+            "description": "AI-анализ договоров, выявление рисков, автоматическая генерация документов. Сокращение времени проверки с 2-3 часов до 5-10 минут.",
+            "url": `${siteUrl}/services/contracts-ai`
           }
         },
         {
@@ -82,7 +81,8 @@ export default function StructuredData({ siteUrl = 'https://legalaipro.ru' }: St
           "itemOffered": {
             "@type": "Service",
             "name": "Судебная и претензионная работа",
-            "description": "Автоматизация мониторинга арбитражных дел, анализ судебной практики, генерация процессуальных документов."
+            "description": "Автоматизация мониторинга арбитражных дел, анализ судебной практики, генерация процессуальных документов.",
+            "url": `${siteUrl}/services/litigation-ai`
           }
         },
         {
@@ -90,7 +90,17 @@ export default function StructuredData({ siteUrl = 'https://legalaipro.ru' }: St
           "itemOffered": {
             "@type": "Service",
             "name": "Корпоративное право и M&A",
-            "description": "Автоматизация Due Diligence, корпоративный документооборот. Сокращение времени проверки с 2-3 недель до 2 дней."
+            "description": "Автоматизация Due Diligence, корпоративный документооборот. Сокращение времени проверки с 2-3 недель до 2 дней.",
+            "url": `${siteUrl}/services/corporate-ma-ai`
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Комплаенс и регуляторный контроль с AI",
+            "description": "Мониторинг изменений законодательства, прогнозирование рисков и автоматическая проверка соответствия.",
+            "url": `${siteUrl}/services/compliance-ai`
           }
         },
         {
@@ -98,7 +108,26 @@ export default function StructuredData({ siteUrl = 'https://legalaipro.ru' }: St
           "itemOffered": {
             "@type": "Service",
             "name": "Налоговый комплаенс с AI",
-            "description": "Мониторинг изменений законодательства, прогнозирование налоговых рисков, автоматическая проверка соответствия."
+            "description": "Мониторинг налоговых изменений, анализ налоговых рисков и автоматизация регулярной отчетности.",
+            "url": `${siteUrl}/services/tax-compliance-ai`
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Земельное право с AI",
+            "description": "Анализ правоустанавливающих документов, кадастровых данных и сопровождение земельных сделок.",
+            "url": `${siteUrl}/services/land-law-ai`
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Юридическая аналитика с AI",
+            "description": "Риск-дашборды, KPI юридической функции и аналитика для управленческих решений.",
+            "url": `${siteUrl}/services/legal-analytics-ai`
           }
         },
         {
@@ -106,7 +135,17 @@ export default function StructuredData({ siteUrl = 'https://legalaipro.ru' }: St
           "itemOffered": {
             "@type": "Service",
             "name": "Кастомные AI-решения",
-            "description": "Разработка индивидуальных AI-систем для автоматизации специфических юридических задач вашего бизнеса."
+            "description": "Разработка индивидуальных AI-систем для автоматизации специфических юридических задач вашего бизнеса.",
+            "url": `${siteUrl}/services/custom-ai`
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Юридический аутсорсинг + AI",
+            "description": "Гибридная модель, в которой юридическая экспертиза усиливается AI-инструментами для рутинных процессов.",
+            "url": `${siteUrl}/services/outsourcing-ai`
           }
         }
       ]
@@ -123,14 +162,6 @@ export default function StructuredData({ siteUrl = 'https://legalaipro.ru' }: St
     "description": "Автоматизация юридической работы на базе искусственного интеллекта",
     "publisher": {
       "@id": `${siteUrl}/#organization`
-    },
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": {
-        "@type": "EntryPoint",
-        "urlTemplate": `${siteUrl}/?s={search_term_string}`
-      },
-      "query-input": "required name=search_term_string"
     },
     "inLanguage": "ru-RU"
   };
@@ -149,20 +180,26 @@ export default function StructuredData({ siteUrl = 'https://legalaipro.ru' }: St
       {
         "@type": "ListItem",
         "position": 2,
-        "name": "Услуги",
-        "item": `${siteUrl}/#services`
+        "name": "Преимущества",
+        "item": `${siteUrl}/#features`
       },
       {
         "@type": "ListItem",
         "position": 3,
-        "name": "О команде",
-        "item": `${siteUrl}/#about`
+        "name": "Услуги",
+        "item": `${siteUrl}/#services`
       },
       {
         "@type": "ListItem",
         "position": 4,
         "name": "Калькулятор ROI",
         "item": `${siteUrl}/#calculator`
+      },
+      {
+        "@type": "ListItem",
+        "position": 5,
+        "name": "FAQ",
+        "item": `${siteUrl}/#faq`
       }
     ]
   };

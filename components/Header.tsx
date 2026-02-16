@@ -16,11 +16,10 @@ export default function Header() {
   }, []);
 
   const navigation = [
-    { name: "Преимущества", href: "#features" },
-    { name: "Калькулятор", href: "#calculator" },
-    { name: "Услуги", href: "#services" },
-    { name: "Кейсы", href: "#cases" },
-    { name: "Команда", href: "#about" },
+    { name: "Преимущества", href: "/#features" },
+    { name: "Услуги", href: "/#services" },
+    { name: "Калькулятор", href: "/#calculator" },
+    { name: "FAQ", href: "/#faq" },
   ];
 
   return (
@@ -35,7 +34,7 @@ export default function Header() {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <a href="#" className="flex items-center gap-3 group">
+            <a href="/" className="flex items-center gap-3 group">
               {/* AI Legal Scales Logo */}
               <svg width="40" height="40" viewBox="0 0 100 100" className="transition-transform group-hover:scale-110">
                 {/* Весы - основа */}

@@ -1,56 +1,45 @@
+import type { Metadata } from "next";
 import Hero from "@/components/Hero";
 import Features from "@/components/Features";
 import ComparisonTable from "@/components/ComparisonTable";
 import ROICalculator from "@/components/ROICalculator";
 import Services from "@/components/Services";
 import ProcessTimeline from "@/components/ProcessTimeline";
-import CaseStudies from "@/components/CaseStudies";
 import Testimonials from "@/components/Testimonials";
 import LeadMagnets from "@/components/LeadMagnets";
-import AboutTeam from "@/components/AboutTeam";
 import FAQ from "@/components/FAQ";
 import TrustSignals from "@/components/TrustSignals";
+import FloatingCTAWrapper from "@/components/FloatingCTAWrapper";
+import AdminPanel from "@/components/AdminPanel";
+import FAQStructuredData from "@/components/FAQStructuredData";
+
+export const metadata: Metadata = {
+  title: "Автоматизация юридической работы",
+  description:
+    "AI-решения для юридических команд: договоры, судебная работа, комплаенс и ROI-калькулятор для оценки эффекта.",
+  alternates: {
+    canonical: "/",
+  },
+};
 
 export default function Home() {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://legalaipro.ru";
+
   return (
     <main>
-      <section id="hero">
-        <Hero />
-      </section>
-
-      <section id="features">
-        <Features />
-      </section>
-
-      <section id="services"></section>
-
-      <section id="calculator">
-        <ComparisonTable />
-        <ROICalculator />
-      </section>
-
-      <section id="roi-calculator">
-        <Services />
-      </section>
-
-      <section id="testimonials">
-        <ProcessTimeline />
-        <CaseStudies />
-        <Testimonials />
-      </section>
-
-      <section id="cases"></section>
-
-      <section id="offers"></section>
-
+      <FAQStructuredData siteUrl={siteUrl} />
+      <Hero />
+      <Features />
+      <Services />
+      <ComparisonTable />
+      <ROICalculator />
+      <ProcessTimeline />
+      <Testimonials />
       <LeadMagnets />
-      <AboutTeam />
-      
-      {/* Trust Signals & Sources for SEO */}
-      <TrustSignals />
-      
-      {/* FAQ Section for SEO */}
       <FAQ />
+      <TrustSignals />
+      <FloatingCTAWrapper />
+      <AdminPanel password={process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "admin123"} />
     </main>
   );
 }

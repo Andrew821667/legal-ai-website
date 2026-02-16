@@ -26,30 +26,18 @@ export default function Hero() {
           <div className="text-center lg:text-left">
             {/* Main heading */}
             <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 animate-fade-in">
-              Автоматизация юридической работы <br />
-              <span className="text-amber-400">на базе Искусственного Интеллекта</span>
+              AI для юридического отдела <br />
+              <span className="text-amber-400">меньше рутины, больше контроля</span>
             </h1>
 
-            {/* Subtitle - SIMPLIFIED for readability */}
+            {/* Subtitle */}
             <h2 className="text-2xl md:text-3xl font-semibold text-slate-200 mb-6 animate-fade-in-delay-1">
-              Мы — юристы-разработчики. 
-              Создаем системы на базе ИИ. 
-              Они проверяют договоры в 10 раз быстрее.
+              Помогаем юристам работать быстрее и спокойнее.
             </h2>
 
-            {/* SEO-optimized paragraph with LSI keywords */}
-            <p className="text-lg text-slate-300 mb-4 max-w-4xl mx-auto lg:mx-0 animate-fade-in-delay-1">
-              <strong className="text-amber-400">Цифровая трансформация юриспруденции</strong> начинается здесь. 
-              Комплексная <strong className="text-amber-400">автоматизация юридических функций</strong>, процессов и задач. 
-              От договоров до судебной работы — полная <strong className="text-amber-400">автоматизация юридической деятельности</strong>.
-            </p>
-            
-            {/* Additional SEO paragraph with LSI keywords */}
             <p className="text-base text-slate-400 mb-8 max-w-4xl mx-auto lg:mx-0 animate-fade-in-delay-1">
-              <strong>Legal Tech решения</strong> для оптимизации работы юридического отдела. 
-              <strong>Предиктивная аналитика</strong>, <strong>machine learning</strong> и <strong>обработка естественного языка (NLP)</strong> для юристов. 
-              Сокращаем время на рутину на 80-95%. 
-              Быстрая окупаемость: ROI за 4-6 месяцев.
+              Автоматизируем договоры, суды и комплаенс.
+              В среднем сокращаем рутину до 80% и выходим на окупаемость за 4-6 месяцев.
             </p>
             
             {/* Stats - SIMPLIFIED for readability */}
@@ -57,16 +45,16 @@ export default function Hero() {
               <AnimatedStat
                 value={20}
                 suffix="+"
-                label="лет успешной юридической практики. CLO в крупных компаниях. 200+ процедур банкротства."
+                label="лет юридической практики"
               />
               <AnimatedStat
                 value={80}
                 suffix="%+"
-                label="сокращение времени на рутину. Юристы фокусируются на стратегии. Рутину делает ИИ."
+                label="меньше рутины в типовых задачах"
               />
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20 hover:bg-white/15 hover:border-amber-400/50 hover:scale-105 transition-all duration-300">
                 <div className="text-3xl font-bold text-amber-400 mb-1">4-6 мес</div>
-                <div className="text-sm text-slate-300">окупаемость инвестиций. Подтверждено кейсами. Быстрый возврат средств.</div>
+                <div className="text-sm text-slate-300">средний срок окупаемости</div>
               </div>
             </div>
 
@@ -90,7 +78,7 @@ export default function Hero() {
                 href="#faq"
                 className="group relative bg-white/10 hover:bg-white/20 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all backdrop-blur-sm border border-white/30 hover:border-white/60 transform hover:scale-105 shadow-lg"
               >
-                <span className="relative z-10">Узнать больше</span>
+                <span className="relative z-10">FAQ</span>
               </a>
             </div>
           </div>
@@ -103,7 +91,7 @@ export default function Hero() {
 
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="text-white/50 text-sm mb-2 text-center">Прокрутить вниз</div>
+          <div className="text-white/50 text-sm mb-2 text-center">Листайте вниз</div>
           <svg className="w-6 h-6 text-white/50 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
           </svg>

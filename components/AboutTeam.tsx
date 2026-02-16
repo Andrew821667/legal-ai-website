@@ -128,13 +128,11 @@ export default function AboutTeam() {
       title: "Юридическая практика",
       description: "20+ лет в ведущих российских компаниях (2004-2026)",
       details: [
-        "CLO в агрохолдингах, банках, холдингах (оборот 10+ млрд ₽)",
-        "200+ процедур банкротства. 98% успешных завершений",
-        "Сделки M&A на сумму 10+ млрд ₽",
-        "Договорное, корпоративное, земельное право, ВЭД",
-        "Международные переговоры (English, EU, Asia)",
+        "Опыт CLO в крупных компаниях",
+        "200+ процедур банкротства",
+        "Сделки M&A на 10+ млрд ₽",
       ],
-      authority: "Опыт подтвержден: реальные кейсы в агрохолдингах (TOP-10 РФ), банковском секторе и холдингах."
+      authority: "Подтверждено реальными кейсами клиентов."
     },
     {
       IconComponent: CodeIcon,
@@ -142,13 +140,11 @@ export default function AboutTeam() {
       title: "Разработка ПО",
       description: "От идеи до production за 1-3 месяца",
       details: [
-        "Python: AI/ML, backend, автоматизация",
-        "TypeScript/React/Next.js: современный frontend",
-        "AI: GPT-4, Claude, YandexGPT, GigaChat, векторные БД",
-        "Production системы. Обработка 1000+ документов/день",
-        "Интеграции: 1С, CRM, ЭДО, REST API",
+        "Python и TypeScript для production-решений",
+        "Интеграции с 1С, CRM и API",
+        "Автоматизация 1000+ документов в день",
       ],
-      authority: "50,000+ юридических документов обработано нашими AI-системами с точностью 90%+."
+      authority: "50 000+ документов обработано AI-системами."
     },
     {
       IconComponent: AIIcon,
@@ -156,12 +152,11 @@ export default function AboutTeam() {
       title: "AI/ML экспертиза",
       description: "Интеллектуальные системы на передовых технологиях",
       details: [
-        "RAG системы (Retrieval-Augmented Generation)",
-        "Fine-tuning под юридическую отрасль",
-        "Prompt engineering и оптимизация",
-        "Мультиагентные AI-архитектуры",
+        "RAG и отраслевые базы знаний",
+        "Тонкая настройка моделей под юрзадачи",
+        "Prompt engineering и контроль качества",
       ],
-      authority: "Соответствие E-E-A-T: экспертиза подтверждена реальным опытом в Legal Tech и YMYL-контенте."
+      authority: "Экспертиза подтверждена практическими внедрениями."
     },
   ];
 
@@ -210,14 +205,7 @@ export default function AboutTeam() {
             О нашей команде
           </h2>
           <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-3">
-            Юристы-разработчики с уникальным опытом. 
-            20+ лет юридической практики в ТОП компаниях РФ. 
-            Профессиональная разработка AI-систем.
-          </p>
-          <p className="text-base text-slate-400 max-w-2xl mx-auto mb-2">
-            Мы решаем реальные юридические задачи бизнеса. 
-            Не просто технологии, а практический опыт CLO. 
-            Знаем боли юротделов изнутри.
+            Мы юристы-разработчики: соединяем практику права и AI-разработку.
           </p>
           <p className="text-sm text-emerald-400 flex items-center justify-center gap-2">
             <span>✓</span>
@@ -315,7 +303,7 @@ export default function AboutTeam() {
               </h4>
             </div>
             <p className="text-slate-300 text-sm">
-              Мы активно используем такие решения, как YandexGPT и GigaChat, чтобы соответствовать требованиям импортозамещения и обеспечивать нашим клиентам лучшие технологии.
+              Используем YandexGPT и GigaChat для задач, где важны локальные данные и требования РФ.
             </p>
           </div>
 
@@ -402,7 +390,7 @@ export default function AboutTeam() {
               Готовы обсудить ваш проект?
             </h3>
             <p className="text-xl text-slate-300 mb-6 max-w-2xl mx-auto">
-              Свяжитесь с нами через Telegram — мы с удовольствием ответим на все ваши вопросы и проконсультируем по вашей задаче, чтобы предложить наилучшие решения.
+              Напишите в Telegram, разберем задачу и предложим рабочий план.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <a
